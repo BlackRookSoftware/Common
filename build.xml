@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<!-- ====================================================================== 
+     Black Rook Common Build File    
+     Matt Tropiano                                                                
+     ====================================================================== -->
+<project name="build" default="compile">
+
+	<description>Black Rook Common</description>
+
+	<property file="build.properties" />
+
+	<!-- Dependencies -->
+	<property name="dev.base" value=".." />
+	<property name="S" value="${path.separator}" />
+
+	<!-- Project Libs -->
+	
+	<!-- Project Info -->
+	<property name="project.archive" value="blackrook-common" />
+	<property name="project.javadoc.title" value="Black Rook Common" />
+	<property name="project.classpath" value=""/>
+	<property name="project.javadoc.packages" value="
+		com.blackrook.commons,
+		com.blackrook.commons.bank,
+		com.blackrook.commons.comparators,
+		com.blackrook.commons.grid,
+		com.blackrook.commons.hash,
+		com.blackrook.commons.linkedlist,
+		com.blackrook.commons.list,
+		com.blackrook.commons.map,
+		com.blackrook.commons.math,
+		com.blackrook.commons.math.geometry,
+		com.blackrook.commons.math.wave,
+		com.blackrook.commons.scene,
+		com.blackrook.commons.search,
+		com.blackrook.commons.spatialhash,
+		com.blackrook.commons.vector
+		"
+	/>
+	
+	<import file="build-import.xml" />
+
+	<target name="javadoc" depends="init.docs" description="Builds the documentation.">
+        <javadoc access="protected" 
+        	additionalparam="-J-Xmx512m  " author="true" 
+        	classpath="${project.classpath}${path.separator}${bin.dir}" 
+        	doctitle="${project.javadoc.title}" 
+        	sourcepath="${src.dir}" 
+        	packagenames="${project.javadoc.packages}"
+        	destdir="${docs.dir}" 
+    		source="1.6" 
+        	splitindex="true" 
+        	use="true" 
+        	version="true" 
+        	nodeprecated="false" 
+        	nodeprecatedlist="false" 
+        	noindex="false" 
+        	nonavbar="false" 
+        	notree="false"
+    		>
+            <link href="http://download.oracle.com/javase/6/docs/api/"/>
+        </javadoc>
+    </target>	
+
+</project>
