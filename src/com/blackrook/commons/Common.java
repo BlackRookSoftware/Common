@@ -67,6 +67,8 @@ public final class Common
 	/** The size of a double in bytes. */
 	public static final int SIZEOF_DOUBLE = Double.SIZE/Byte.SIZE;
 
+	private static final String PARSE_ARRAY_SEPARATOR_PATTERN = "(\\s|\\,)+";
+
 	/** Is this running on an x86 architecture? */
 	private static boolean IS_X86 = false;
 	/** Is this running on an x64 architecture? */
@@ -2158,13 +2160,14 @@ public final class Common
 	}
 	
 	/**
-	 * Attempts to parse a byte from a string.
+	 * Attempts to parse a char from a string.
 	 * If the string is null or the empty string, this returns '\0'.
 	 * @param s the input string.
+	 * @return the first character in the string.
 	 */
 	public static char parseChar(String s)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return '\0';
 		else
 			return s.charAt(0);
@@ -2242,7 +2245,7 @@ public final class Common
 	 */
 	public static boolean parseBoolean(String s, boolean def)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return def;
 		else if (!s.equalsIgnoreCase("true"))
 			return false;
@@ -2257,7 +2260,7 @@ public final class Common
 	 */
 	public static byte parseByte(String s, byte def)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return def;
 		try {
 			return Byte.parseByte(s);
@@ -2273,7 +2276,7 @@ public final class Common
 	 */
 	public static short parseShort(String s, short def)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return def;
 		try {
 			return Short.parseShort(s);
@@ -2286,10 +2289,11 @@ public final class Common
 	 * Attempts to parse a byte from a string.
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
+	 * @return the first character in the string.
 	 */
 	public static char parseChar(String s, char def)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return def;
 		else
 			return s.charAt(0);
@@ -2302,7 +2306,7 @@ public final class Common
 	 */
 	public static int parseInt(String s, int def)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return def;
 		try {
 			return Integer.parseInt(s);
@@ -2318,7 +2322,7 @@ public final class Common
 	 */
 	public static long parseLong(String s, long def)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return def;
 		try {
 			return Long.parseLong(s);
@@ -2334,7 +2338,7 @@ public final class Common
 	 */
 	public static float parseFloat(String s, float def)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return def;
 		try {
 			return Float.parseFloat(s);
@@ -2350,7 +2354,7 @@ public final class Common
 	 */
 	public static double parseDouble(String s, double def)
 	{
-		if (s == null || s.length() == 0)
+		if (isEmpty(s))
 			return def;
 		try {
 			return Double.parseDouble(s);
@@ -2359,6 +2363,302 @@ public final class Common
 		}
 	}
 	
+	/**
+	 * Attempts to parse an array of booleans from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
+	 * <p>
+	 * Example: <code>"true, false, apple, false"</code> -> <code>[true, false, false, false]</code>
+	 * @param s the input string.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseBoolean(String)
+	 */
+	public static boolean[] parseBooleanArray(String s, boolean[] def)
+	{
+		return parseBooleanArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+	}
+	
+	/**
+	 * Attempts to parse an array of bytes from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
+	 * <p>
+	 * Example: <code>"0, -5, 2, grape"</code> -> <code>[0, -5, 2, 0]</code>
+	 * @param s the input string.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseByte(String)
+	 */
+	public static byte[] parseByteArray(String s, byte[] def)
+	{
+		return parseByteArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+	}
+	
+	/**
+	 * Attempts to parse an array of shorts from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
+	 * <p>
+	 * Example: <code>"0, -5, 2, grape"</code> -> <code>[0, -5, 2, 0]</code>
+	 * @param s the input string.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseShort(String)
+	 */
+	public static short[] parseShortArray(String s, short[] def)
+	{
+		return parseShortArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+	}
+	
+	/**
+	 * Attempts to parse an array of chars from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
+	 * <p>
+	 * Example: <code>"apple, pear, b, g"</code> -> <code>['a', 'p', 'b', 'g']</code>
+	 * @param s the input string.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseChar(String)
+	 */
+	public static char[] parseCharArray(String s, char[] def)
+	{
+		return parseCharArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+	}
+	
+	/**
+	 * Attempts to parse an array of integers from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
+	 * <p>
+	 * Example: <code>"0, -5, 2.1, grape"</code> -> <code>[0, -5, 2, 0]</code>
+	 * @param s the input string.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseInt(String)
+	 */
+	public static int[] parseIntArray(String s, int[] def)
+	{
+		return parseIntArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+	}
+	
+	/**
+	 * Attempts to parse an array of floats from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
+	 * <p>
+	 * Example: <code>"0.5, -5.4, 2, grape"</code> -> <code>[0.5f, -5.4f, 2.0f, 0f]</code>
+	 * @param s the input string.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseFloat(String)
+	 */
+	public static float[] parseFloatArray(String s, float[] def)
+	{
+		return parseFloatArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+	}
+	
+	/**
+	 * Attempts to parse an array of longs from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
+	 * <p>
+	 * Example: <code>"0, -5, 2, grape"</code> -> <code>[0, -5, 2, 0]</code>
+	 * @param s the input string.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseLong(String)
+	 */
+	public static long[] parseLongArray(String s, long[] def)
+	{
+		return parseLongArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+	}
+	
+	/**
+	 * Attempts to parse an array of doubles from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
+	 * <p>
+	 * Example: <code>"0.5, -5.4, 2, grape"</code> -> <code>[0.5, -5.4, 2.0, 0.0]</code>
+	 * @param s the input string.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseDouble(String)
+	 */
+	public static double[] parseDoubleArray(String s, double[] def)
+	{
+		return parseDoubleArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+	}
+	
+	/**
+	 * Attempts to parse an array of booleans from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * @param s the input string.
+	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseBoolean(String)
+	 */
+	public static boolean[] parseBooleanArray(String s, String separatorRegex, boolean[] def)
+	{
+		if (isEmpty(s))
+			return def;
+		String[] tokens = s.split(separatorRegex);
+		boolean[] out = new boolean[tokens.length];
+		int i = 0;
+		for (String token : tokens)
+			out[i++] = parseBoolean(token);
+		return out;
+	}
+
+	/**
+	 * Attempts to parse an array of bytes from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * @param s the input string.
+	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseByte(String)
+	 */
+	public static byte[] parseByteArray(String s, String separatorRegex, byte[] def)
+	{
+		if (isEmpty(s))
+			return def;
+		String[] tokens = s.split(separatorRegex);
+		byte[] out = new byte[tokens.length];
+		int i = 0;
+		for (String token : tokens)
+			out[i++] = parseByte(token);
+		return out;
+	}
+
+	/**
+	 * Attempts to parse an array of shorts from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * @param s the input string.
+	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseShort(String)
+	 */
+	public static short[] parseShortArray(String s, String separatorRegex, short[] def)
+	{
+		if (isEmpty(s))
+			return def;
+		String[] tokens = s.split(separatorRegex);
+		short[] out = new short[tokens.length];
+		int i = 0;
+		for (String token : tokens)
+			out[i++] = parseShort(token);
+		return out;
+	}
+
+	/**
+	 * Attempts to parse an array of chars from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * @param s the input string.
+	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseChar(String)
+	 */
+	public static char[] parseCharArray(String s, String separatorRegex, char[] def)
+	{
+		if (isEmpty(s))
+			return def;
+		String[] tokens = s.split(separatorRegex);
+		char[] out = new char[tokens.length];
+		int i = 0;
+		for (String token : tokens)
+			out[i++] = parseChar(token);
+		return out;
+	}
+
+	/**
+	 * Attempts to parse an array of integers from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * @param s the input string.
+	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseInt(String)
+	 */
+	public static int[] parseIntArray(String s, String separatorRegex, int[] def)
+	{
+		if (isEmpty(s))
+			return def;
+		String[] tokens = s.split(separatorRegex);
+		int[] out = new int[tokens.length];
+		int i = 0;
+		for (String token : tokens)
+			out[i++] = parseInt(token);
+		return out;
+	}
+
+	/**
+	 * Attempts to parse an array of floats from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * @param s the input string.
+	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseFloat(String)
+	 */
+	public static float[] parseFloatArray(String s, String separatorRegex, float[] def)
+	{
+		if (isEmpty(s))
+			return def;
+		String[] tokens = s.split(separatorRegex);
+		float[] out = new float[tokens.length];
+		int i = 0;
+		for (String token : tokens)
+			out[i++] = parseFloat(token);
+		return out;
+	}
+
+	/**
+	 * Attempts to parse an array of longs from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * @param s the input string.
+	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseLong(String)
+	 */
+	public static long[] parseLongArray(String s, String separatorRegex, long[] def)
+	{
+		if (isEmpty(s))
+			return def;
+		String[] tokens = s.split(separatorRegex);
+		long[] out = new long[tokens.length];
+		int i = 0;
+		for (String token : tokens)
+			out[i++] = parseLong(token);
+		return out;
+	}
+
+	/**
+	 * Attempts to parse an array of doubles from a string.
+	 * If the string is null or the empty string, this returns <code>def</code>.
+	 * @param s the input string.
+	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @throws NullPointerException if separatorRegex is null.
+	 * @since 2.17.0
+	 * @see Common#parseDouble(String)
+	 */
+	public static double[] parseDoubleArray(String s, String separatorRegex, double[] def)
+	{
+		if (isEmpty(s))
+			return def;
+		String[] tokens = s.split(separatorRegex);
+		double[] out = new double[tokens.length];
+		int i = 0;
+		for (String token : tokens)
+			out[i++] = parseDouble(token);
+		return out;
+	}
+
 	/**
 	 * Attempts to close a {@link Closeable} object.
 	 * If the object is null, this does nothing.
