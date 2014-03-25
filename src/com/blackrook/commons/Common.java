@@ -2049,6 +2049,139 @@ public final class Common
 	}
 	
 	/**
+	 * Prints the contents of a buffer to an output print stream.
+	 * @param buffer the buffer to print.
+	 * @param out the {@link PrintStream} to output the dump to.
+	 * @since 2.17.0
+	 */
+	public static void printBuffer(ByteBuffer buffer, PrintStream out)
+	{
+		int len = buffer.capacity();
+		out.print("[");
+		for (int i = 0; i < len; i++)
+		{
+			out.print(buffer.get(i));
+			if (i + 1 < len)
+				out.print(", ");
+		}
+		out.println("]");
+	}
+	
+	/**
+	 * Prints the contents of a buffer to an output print stream.
+	 * @param buffer the buffer to print.
+	 * @param out the {@link PrintStream} to output the dump to.
+	 * @since 2.17.0
+	 */
+	public static void printBuffer(CharBuffer buffer, PrintStream out)
+	{
+		int len = buffer.capacity();
+		out.print("[");
+		for (int i = 0; i < len; i++)
+		{
+			out.print(buffer.get(i));
+			if (i + 1 < len)
+				out.print(", ");
+		}
+		out.println("]");
+	}
+	
+	/**
+	 * Prints the contents of a buffer to an output print stream.
+	 * @param buffer the buffer to print.
+	 * @param out the {@link PrintStream} to output the dump to.
+	 * @since 2.17.0
+	 */
+	public static void printBuffer(ShortBuffer buffer, PrintStream out)
+	{
+		int len = buffer.capacity();
+		out.print("[");
+		for (int i = 0; i < len; i++)
+		{
+			out.print(buffer.get(i));
+			if (i + 1 < len)
+				out.print(", ");
+		}
+		out.println("]");
+	}
+	
+	/**
+	 * Prints the contents of a buffer to an output print stream.
+	 * @param buffer the buffer to print.
+	 * @param out the {@link PrintStream} to output the dump to.
+	 * @since 2.17.0
+	 */
+	public static void printBuffer(IntBuffer buffer, PrintStream out)
+	{
+		int len = buffer.capacity();
+		out.print("[");
+		for (int i = 0; i < len; i++)
+		{
+			out.print(buffer.get(i));
+			if (i + 1 < len)
+				out.print(", ");
+		}
+		out.println("]");
+	}
+	
+	/**
+	 * Prints the contents of a buffer to an output print stream.
+	 * @param buffer the buffer to print.
+	 * @param out the {@link PrintStream} to output the dump to.
+	 * @since 2.17.0
+	 */
+	public static void printBuffer(FloatBuffer buffer, PrintStream out)
+	{
+		int len = buffer.capacity();
+		out.print("[");
+		for (int i = 0; i < len; i++)
+		{
+			out.print(buffer.get(i));
+			if (i + 1 < len)
+				out.print(", ");
+		}
+		out.println("]");
+	}
+	
+	/**
+	 * Prints the contents of a buffer to an output print stream.
+	 * @param buffer the buffer to print.
+	 * @param out the {@link PrintStream} to output the dump to.
+	 * @since 2.17.0
+	 */
+	public static void printBuffer(LongBuffer buffer, PrintStream out)
+	{
+		int len = buffer.capacity();
+		out.print("[");
+		for (int i = 0; i < len; i++)
+		{
+			out.print(buffer.get(i));
+			if (i + 1 < len)
+				out.print(", ");
+		}
+		out.println("]");
+	}
+	
+	/**
+	 * Prints the contents of a buffer to an output print stream.
+	 * @param buffer the buffer to print.
+	 * @param out the {@link PrintStream} to output the dump to.
+	 * @since 2.17.0
+	 */
+	public static void printBuffer(DoubleBuffer buffer, PrintStream out)
+	{
+		int len = buffer.capacity();
+		out.print("[");
+		for (int i = 0; i < len; i++)
+		{
+			out.print(buffer.get(i));
+			if (i + 1 < len)
+				out.print(", ");
+		}
+		out.println("]");
+	}
+	
+	/**
 	 * Converts an ARGB 32-bit color value to a color.
 	 */
 	public static Color argbToColor(int argb)
