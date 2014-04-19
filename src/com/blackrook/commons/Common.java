@@ -2793,6 +2793,35 @@ public final class Common
 	}
 
 	/**
+	 * Concatenates a set of arrays together, such that the contents of each
+	 * array are joined into one array. Null arrays are skipped.
+	 * @param arrays the list of arrays.
+	 * @return a new array with all objects in each provided array added 
+	 * to the resultant one in the order in which they appear.
+	 * @since 2.17.0
+	 */
+	public static <T> T[] joinArrays(T[]...  arrays)
+	{
+		int totalLen = 0;
+		for (T[] a : arrays)
+			if (a != null)
+				totalLen += a.length;
+		
+		Class<?> type = Reflect.getArrayType(arrays);
+		@SuppressWarnings("unchecked")
+		T[] out = (T[])Array.newInstance(type, totalLen);
+		
+		int offs = 0;
+		for (T[] a : arrays)
+		{
+			System.arraycopy(a, 0, out, offs, a.length);
+			offs += a.length;
+		}
+		
+		return out;
+	}
+	
+	/**
 	 * Attempts to close a {@link Closeable} object.
 	 * If the object is null, this does nothing.
 	 * @since 2.3.0
