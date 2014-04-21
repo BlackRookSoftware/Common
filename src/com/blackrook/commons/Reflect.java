@@ -52,7 +52,7 @@ public final class Reflect
 		Double.class,
 		Double.TYPE,
 		Number.class
-};
+	};
 
 	/** 
 	 * Hash of numerically-typed classes. 
@@ -73,7 +73,7 @@ public final class Reflect
 		put(Double.class);
 		put(Double.TYPE);
 		put(Number.class);
-}};
+	}};
 
 	/** Hash of primitive types to promoted/boxed classes. */
 	public static final HashMap<Class<?>, Class<?>> PRIMITIVE_TO_CLASS_MAP = new HashMap<Class<?>, Class<?>>(){{
@@ -86,7 +86,7 @@ public final class Reflect
 		put(Float.TYPE, Float.class);
 		put(Long.TYPE, Long.class);
 		put(Double.TYPE, Double.class);
-}};
+	}};
 
 	/** 
 	 * Hash of primitive types.
@@ -677,7 +677,7 @@ public final class Reflect
 	public static <T> T createForType(Object object, Class<T> targetType)
 	{
 		return createForType("Source", object, targetType);
-}
+	}
 	
 	/**
 	 * Creates a new instance of an object for placement in a POJO or elsewhere.
