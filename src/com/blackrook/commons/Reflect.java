@@ -710,7 +710,7 @@ public final class Reflect
 			else if (targetType == Double.TYPE)
 				return (T)new Double(0.0);
 			return null;
-	}
+		}
 		
 		if (Reflect.isArray(object.getClass()))
 			return convertArray(memberName, object, targetType);
