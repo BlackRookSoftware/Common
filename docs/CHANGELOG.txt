@@ -1,8 +1,9 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Slated for 2.17.0
+Changed in 2.17.0
 =================
 
+- Requires: Java 7 or higher.
 - Added: Common.parse*Array(...) methods for parsing arrays of primitives from
   strings.
 - Added: Common.printBuffer(...) debug methods for printing the contents of 
