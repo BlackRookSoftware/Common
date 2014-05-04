@@ -136,7 +136,7 @@ public class LoggingFactory
 	 */
 	private void addLog(LogLevel level, String source, String message, Throwable throwable)
 	{
-		if (level.ordinal() > loggingLevel.ordinal())
+		if (loggingLevel != null && level.ordinal() > loggingLevel.ordinal())
 			return;
 		
 		synchronized (outQueue)
