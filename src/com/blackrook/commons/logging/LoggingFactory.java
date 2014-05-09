@@ -11,6 +11,7 @@ import java.util.Date;
 
 import com.blackrook.commons.Common;
 import com.blackrook.commons.linkedlist.Queue;
+import com.blackrook.commons.logging.driver.ConsoleLogger;
 
 /**
  * Some kind of logger for logging messages.
@@ -31,34 +32,58 @@ public class LoggingFactory
 	
 	/** Out queue. */
 	private Queue<LogObject> outQueue;
+	
 	/** Stream to send logs out to. */
-	private LoggingDriver driver;
+	private Queue<LoggingDriver> drivers;
 	/** This logging factory's logging level. */
 	private LogLevel loggingLevel;
 	
 	/**
 	 * Creates a new logging factory.
 	 * The starting logging level is {@link LogLevel#DEBUG}.
-	 * @param driver the logging driver to use for directing output.
+	 * @param drivers the logging driver to use for directing output.
 	 */
-	public LoggingFactory(LoggingDriver driver)
+	public LoggingFactory(LoggingDriver... drivers)
 	{
-		this(driver, LogLevel.DEBUG);
+		this(LogLevel.DEBUG, drivers);
 	}
 	
 	/**
 	 * Creates a new logging factory.
-	 * @param driver the logging driver to use for directing output.
+	 * @param drivers the logging driver to use for directing output.
 	 * @param level the starting logging level.
 	 */
-	public LoggingFactory(LoggingDriver driver, LogLevel level)
+	public LoggingFactory(LogLevel level, LoggingDriver... drivers)
 	{
-		this.driver = driver;
+		this.drivers = new Queue<LoggingDriver>();
 		this.outQueue = new Queue<LogObject>(); 
 		this.loggingLevel = level;
+
+		addDriver(drivers);
+		
 		Thread t = new LoggerThread();
 		t.start();
 		while (!t.isAlive()) Common.sleep(0, 250000);
+	}
+	
+	/**
+	 * Adds a logging driver or drivers.
+	 * @param drivers the drivers to add.
+	 */
+	public void addDriver(LoggingDriver... drivers)
+	{
+		for (LoggingDriver d : drivers)
+			this.drivers.add(d);
+	}
+	
+	/**
+	 * Removes a logging driver or drivers.
+	 * @param drivers the drivers to remove.
+	 */
+	public void removeDriver(LoggingDriver... drivers)
+	{
+		for (LoggingDriver d : drivers)
+			this.drivers.remove(d);
 	}
 	
 	/**
@@ -67,7 +92,7 @@ public class LoggingFactory
 	 */
 	public static LoggingFactory createConsoleLogger()
 	{
-		return new LoggingFactory(new ConsoleLogger(), LogLevel.DEBUG);
+		return new LoggingFactory(LogLevel.DEBUG, new ConsoleLogger());
 	}
 	
 	/**
@@ -297,7 +322,7 @@ public class LoggingFactory
 	{
 		public LoggerThread()
 		{
-			setName("LoggerThread-"+driver.getClass().getSimpleName());
+			setName("LoggerThread-"+drivers.getClass().getSimpleName());
 			setDaemon(true);
 		}
 		
@@ -315,7 +340,9 @@ public class LoggingFactory
 							try {outQueue.wait();} catch (Exception e) {}
 						logobj = outQueue.dequeue();
 					}
-					driver.log(logobj.time, logobj.level, logobj.source, logobj.message, logobj.throwable);
+					
+					for (LoggingDriver d : drivers)
+						d.log(logobj.time, logobj.level, logobj.source, logobj.message, logobj.throwable);
 					
 				} catch (Throwable e) {
 					e.printStackTrace(System.err);

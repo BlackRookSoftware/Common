@@ -52,7 +52,8 @@ public interface Logger
 	/**
 	 * Outputs a SEVERE log message, formatted.
 	 * A newline is always appended to the end of the message.
-	 * @param message the object to convert to a string to dump.
+	 * @param formatString the formatting string to use to render the args.
+	 * @param args the additional parameters for the formatter.
 	 */
 	public void severef(String formatString, Object... args);	
 	
