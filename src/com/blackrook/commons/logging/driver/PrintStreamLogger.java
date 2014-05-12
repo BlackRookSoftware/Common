@@ -40,7 +40,7 @@ public class PrintStreamLogger implements LoggingDriver
 		if (out == null)
 			return;
 		
-		out.println(String.format("[%tF %tT.%tL] %-7s (%s): %s", time, time, time, level.name(), source, message));
+		out.println(String.format("[%tF %tT.%tL] (%s) %s: %s", time, time, time, source, level.name(), message));
 		if (throwable != null)
 		{
 			StringWriter sw = new StringWriter();
