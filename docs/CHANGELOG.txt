@@ -1,6 +1,6 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Slated for 2.18.0
+Changed in 2.18.0
 =================
 
 - Added: com.blackrook.commons.logger package for logging.
