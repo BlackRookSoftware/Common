@@ -712,7 +712,9 @@ public final class Reflect
 			return null;
 		}
 		
-		if (Reflect.isArray(object.getClass()))
+		if (object.getClass() == targetType)
+			return targetType.cast(object);
+		else if (Reflect.isArray(object.getClass()))
 			return convertArray(memberName, object, targetType);
 		else if (object instanceof Boolean)
 			return convertBoolean(memberName, (Boolean)object, targetType);

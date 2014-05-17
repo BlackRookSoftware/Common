@@ -1,5 +1,11 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Slated for 2.18.1
+=================
+
+- Changed: Reflect.createForType(...) will not convert same types to other 
+  types.
+
 Changed in 2.18.0
 =================
 
