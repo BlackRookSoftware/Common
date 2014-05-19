@@ -676,6 +676,7 @@ public final class Reflect
 	 * Returns the fully-qualified names of all classes beginning with
 	 * a certain string. This uses {@link Thread#getContextClassLoader()} on the current thread to find them.
 	 * None of the classes are "forName"-ed into PermGen space.
+	 * <p>This scan can be expensive, as this searches the contents of the entire classpath.
 	 * @param prefix the String to use for lookup. Can be null.
 	 * @return the list of class names.
 	 * @throws RuntimeException if a JAR file could not be read for some reason.
