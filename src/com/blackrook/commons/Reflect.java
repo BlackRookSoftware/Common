@@ -684,15 +684,29 @@ public final class Reflect
 	 */
 	public static String[] getClasses(String prefix)
 	{
+		return getClasses(prefix, Thread.currentThread().getContextClassLoader());
+	}
+	
+	/**
+	 * Returns the fully-qualified names of all classes beginning with
+	 * a certain string. None of the classes are "forName"-ed into PermGen space.
+	 * <p>This scan can be expensive, as this searches the contents of the entire {@link ClassLoader}.
+	 * @param prefix the String to use for lookup. Can be null.
+	 * @param classLoader the ClassLoader to look into.
+	 * @return the list of class names.
+	 * @throws RuntimeException if a JAR file could not be read for some reason.
+	 * @since 2.18.1
+	 */
+	public static String[] getClasses(String prefix, ClassLoader classLoader)
+	{
 		if (prefix == null)
 			prefix = "";
 		
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		List<String> outList = new List<String>(128);
 		
-		if (loader instanceof URLClassLoader)
+		if (classLoader instanceof URLClassLoader)
 		{
-			for (URL url : ((URLClassLoader)loader).getURLs())
+			for (URL url : ((URLClassLoader)classLoader).getURLs())
 			{
 				if (url.getProtocol().equals("file"))
 				{
