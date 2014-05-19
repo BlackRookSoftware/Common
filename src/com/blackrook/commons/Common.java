@@ -1164,6 +1164,66 @@ public final class Common
 	}
 	
 	/**
+	 * Decodes a URL-encoded string.
+	 * @since 2.18.1
+	 */
+	public static String urlUnescape(String inString)
+	{
+		StringBuffer sb = new StringBuffer();
+		char[] inChars = inString.toCharArray();
+		char[] chars = new char[2];
+		int x = 0;
+		
+		final int STATE_START = 0;
+		final int STATE_DECODE = 1;
+		int state = STATE_START;
+		
+		int i = 0;
+		while (i < inChars.length)
+		{
+			char c = inChars[i];
+			
+			switch (state)
+			{
+				case STATE_START:
+					if (c == '%')
+					{
+						x = 0;
+						state = STATE_DECODE;
+					}
+					else
+						sb.append(c);
+					break;
+				case STATE_DECODE:
+					chars[x++] = c;
+					if (x == 2)
+					{
+						int v = 0;
+						try {
+							v = Integer.parseInt(new String(chars), 16);
+							sb.append((char)(v & 0x0ff));
+					} catch (NumberFormatException e) {
+							sb.append('%').append(chars[0]).append(chars[1]);
+						}
+						state = STATE_START;
+					}
+					break;
+			}
+			
+			i++;
+		}
+		
+		if (state == STATE_DECODE)
+		{
+			sb.append('%');
+			for (int n = 0; n < x; n++)
+				sb.append(chars[n]);
+		}
+		
+		return sb.toString();
+	}
+
+	/**
 	 * Creates the necessary directories for a file path.
 	 * @param file	the abstract file path.
 	 * @return		true if the paths were made (or exists), false otherwise.
@@ -2910,5 +2970,7 @@ public final class Common
 	{
 		// Do nothing.
 	}
+	
+	
 	
 }

@@ -5,6 +5,8 @@ Slated for 2.18.1
 
 - Changed: Reflect.createForType(...) will not convert same types to other 
   types.
+- Added: Common.urlUnescape(String) for un-escaping a URL-encoded string.
+- Added: Reflect.getClasses(String) for package and classpath scanning.
 
 Changed in 2.18.0
 =================

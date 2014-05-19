@@ -8,6 +8,7 @@
 package com.blackrook.commons;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -17,12 +18,18 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import com.blackrook.commons.hash.Hash;
 import com.blackrook.commons.hash.HashMap;
@@ -663,6 +670,81 @@ public final class Reflect
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Returns the fully-qualified names of all classes beginning with
+	 * a certain string. This uses {@link Thread#getContextClassLoader()} on the current thread to find them.
+	 * None of the classes are "forName"-ed into PermGen space.
+	 * @param prefix the String to use for lookup. Can be null.
+	 * @return the list of class names.
+	 * @throws RuntimeException if a JAR file could not be read for some reason.
+	 * @since 2.18.1
+	 */
+	public static String[] getClasses(String prefix)
+	{
+		if (prefix == null)
+			prefix = "";
+		
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		List<String> outList = new List<String>(128);
+		
+		if (loader instanceof URLClassLoader)
+		{
+			for (URL url : ((URLClassLoader)loader).getURLs())
+			{
+				if (url.getProtocol().equals("file"))
+				{
+					String startingPath = Common.urlUnescape(url.getPath().substring(1));
+					File file = new File(startingPath);
+					if (file.isDirectory())
+					{
+						for (File f : Common.explodeFiles(file))
+						{
+							String path = f.getPath();
+							int classExtIndex = path.endsWith(".class") ? path.indexOf(".class") : -1;
+							if (classExtIndex >= 0 && !path.contains("$") && !path.contains("-"))
+							{
+								String className = path.substring(startingPath.length(), classExtIndex).replaceAll("[\\/\\\\]", ".");
+								if (className.startsWith(prefix))
+									outList.add(className);
+							}
+						}
+					}
+					else if (file.getName().endsWith(".jar"))
+					{
+						ZipFile jarFile = null;
+						try {
+							jarFile = new ZipFile(file);
+							Enumeration<? extends ZipEntry> zipEntries = jarFile.entries();
+							while (zipEntries.hasMoreElements())
+							{
+								ZipEntry ze = zipEntries.nextElement();
+								String path = ze.getName();
+								int classExtIndex = path.indexOf(".class");
+								if (classExtIndex >= 0 && !path.contains("$") && !path.contains("-"))
+								{
+									String className = path.substring(0, classExtIndex).replaceAll("[\\/\\\\]", ".");
+									if (className.startsWith(prefix))
+										outList.add(className);
+								}
+							}
+							
+						} catch (ZipException e) {
+							throw new RuntimeException(e);
+						} catch (IOException e) {
+							throw new RuntimeException(e);
+						} finally {
+							Common.close(jarFile);
+						}
+					}
+				}
+			}
+		}
+		
+		String[] out = new String[outList.size()];
+		outList.toArray(out);
+		return out;
 	}
 
 	/**
