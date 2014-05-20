@@ -718,7 +718,7 @@ public final class Reflect
 						{
 							String path = f.getPath();
 							int classExtIndex = path.endsWith(".class") ? path.indexOf(".class") : -1;
-							if (classExtIndex >= 0 && !path.contains("$") && !path.contains("-"))
+							if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class"))
 							{
 								String className = path.substring(startingPath.length(), classExtIndex).replaceAll("[\\/\\\\]", ".");
 								if (className.startsWith(prefix))
@@ -737,7 +737,7 @@ public final class Reflect
 								ZipEntry ze = zipEntries.nextElement();
 								String path = ze.getName();
 								int classExtIndex = path.indexOf(".class");
-								if (classExtIndex >= 0 && !path.contains("$") && !path.contains("-"))
+								if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class"))
 								{
 									String className = path.substring(0, classExtIndex).replaceAll("[\\/\\\\]", ".");
 									if (className.startsWith(prefix))
