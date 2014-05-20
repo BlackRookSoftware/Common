@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 import com.blackrook.commons.AbstractChainedHashMap;
+import com.blackrook.commons.AbstractMap;
 import com.blackrook.commons.AbstractVector;
 import com.blackrook.commons.hash.HashMap;
 
@@ -29,7 +30,7 @@ import com.blackrook.commons.hash.HashMap;
 public abstract class AbstractMappedVector<T extends Object, K extends Object> extends AbstractVector<T>
 {
 	/** The key map. */
-	protected AbstractChainedHashMap<K, Integer> indexMap;
+	protected AbstractMap<K, Integer> indexMap;
 	
 	/**
 	 * Makes a new mapped vector.

@@ -26,6 +26,14 @@ public interface AbstractMap<K extends Object, V extends Object> extends Abstrac
 	public boolean containsKey(K key);
 
 	/**
+	 * Gets the value attached to the provided key.
+	 * @param key the desired key.
+	 * @return the value associated with the key or 
+	 * null if no value associated with the provided key.
+	 */
+	public V get(K key);
+	
+	/**
 	 * Removes a value from this map, corresponding to a key.
 	 * @param key the key to use for checking presence.
 	 * @return the corresponding value if it was removed from the map, null otherwise.

@@ -117,13 +117,8 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 		else
 			super.put(new ObjectPair<K,V>(key, value));
 	}
-	
-	/**
-	 * Gets the value attached to the provided key.
-	 * @param key the desired key.
-	 * @return the value associated with the key or 
-	 * null if no value associated with the provided key.
-	 */
+
+	@Override
 	public V get(K key)
 	{
 		ObjectPair<K,V> pair = getPairUsingKey(key);
