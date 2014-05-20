@@ -10,7 +10,6 @@ package com.blackrook.commons.map;
 import java.util.Comparator;
 import java.util.Random;
 
-import com.blackrook.commons.AbstractChainedHashMap;
 import com.blackrook.commons.AbstractMap;
 import com.blackrook.commons.AbstractVector;
 import com.blackrook.commons.hash.HashMap;
