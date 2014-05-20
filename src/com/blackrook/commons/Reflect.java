@@ -680,7 +680,7 @@ public final class Reflect
 	 * @param prefix the String to use for lookup. Can be null.
 	 * @return the list of class names.
 	 * @throws RuntimeException if a JAR file could not be read for some reason.
-	 * @since 2.18.1
+	 * @since 2.19.0
 	 */
 	public static String[] getClasses(String prefix)
 	{
@@ -695,7 +695,7 @@ public final class Reflect
 	 * @param classLoader the ClassLoader to look into.
 	 * @return the list of class names.
 	 * @throws RuntimeException if a JAR file could not be read for some reason.
-	 * @since 2.18.1
+	 * @since 2.19.0
 	 */
 	public static String[] getClasses(String prefix, ClassLoader classLoader)
 	{

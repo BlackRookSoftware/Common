@@ -1,6 +1,6 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Slated for 2.18.1
+Slated for 2.19.0
 =================
 
 - Changed: Reflect.createForType(...) will not convert same types to other 
@@ -9,7 +9,13 @@ Slated for 2.18.1
 - Added: Reflect.getClasses(String) for package and classpath scanning.
 - Added: Reflect.getClasses(String, ClassLoader) for package and classpath 
   scanning.
-
+- Added: AbstractMap<?,?> and changed class hierarchy that fit its policies.
+  This change will not really be noticed by end-users. 
+- Added: AbstractSet<?,?> and changed class hierarchy that fit its policies.
+  This change will not really be noticed by end-users. 
+- Changed: A method or two has been made public in order to accommodate for
+  the previous changes.
+  
 Changed in 2.18.0
 =================
 

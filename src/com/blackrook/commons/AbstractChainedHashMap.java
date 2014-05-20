@@ -15,7 +15,7 @@ import com.blackrook.commons.list.List;
  * @author Matthew Tropiano
  */
 public abstract class AbstractChainedHashMap<K extends Object, V extends Object> 
-	extends AbstractChainedHash<ObjectPair<K,V>>
+	extends AbstractChainedHash<ObjectPair<K,V>> implements AbstractMap<K, V>
 {
 	/**
 	 * Creates a new chained hash map with capacity DEFAULT_CAPACITY, rehash ratio DEFAULT_REHASH.
@@ -47,15 +47,15 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 	}
 
 	@Override
-	protected int getHashcodeFor(ObjectPair<K,V> object)
+	public boolean equalityMethod(ObjectPair<K,V> object1, ObjectPair<K,V> object2)
 	{
-		return getHashcodeForKey(object.getKey());
+		return equalityMethodForKey(object1.getKey(), object2.getKey());
 	}
 
 	@Override
-	protected boolean equalityMethod(ObjectPair<K,V> object1, ObjectPair<K,V> object2)
+	protected int getHashcodeFor(ObjectPair<K,V> object)
 	{
-		return equalityMethodForKey(object1.getKey(), object2.getKey());
+		return getHashcodeForKey(object.getKey());
 	}
 
 	/**
@@ -72,7 +72,7 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 	 * @param key2 the second key.
 	 * @return true if the keys are considered equal, false otherwise.
 	 */
-	protected boolean equalityMethodForKey(K key1, K key2)
+	public boolean equalityMethodForKey(K key1, K key2)
 	{
 		return key1.equals(key2);
 	}

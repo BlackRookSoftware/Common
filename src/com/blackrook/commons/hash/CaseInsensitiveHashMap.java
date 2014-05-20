@@ -57,7 +57,7 @@ public class CaseInsensitiveHashMap<T extends Object> extends HashMap<String, T>
 	 * @param key2 the second key.
 	 * @return true if the keys are considered equal, false otherwise.
 	 */
-	protected boolean equalityMethodForKey(String key1, String key2)
+	public boolean equalityMethodForKey(String key1, String key2)
 	{
 		return key1.equalsIgnoreCase(key2);
 	}

@@ -1165,7 +1165,7 @@ public final class Common
 	
 	/**
 	 * Decodes a URL-encoded string.
-	 * @since 2.18.1
+	 * @since 2.19.0
 	 */
 	public static String urlUnescape(String inString)
 	{

@@ -17,8 +17,7 @@ import com.blackrook.commons.list.List;
  * @author Matthew Tropiano
  * FIXME: An extremely rare "get miss" may occur when one thread wants to "get" from the hash during a re-hash. Storage array will need to be replaced last and the "put" method modified slightly.
  */
-public abstract class AbstractChainedHash<P extends Object> 
-	extends AbstractArrayStorage<List<P>> implements ResettableIterable<P>, Sizable
+public abstract class AbstractChainedHash<P extends Object> extends AbstractArrayStorage<List<P>> implements AbstractSet<P>
 {
 	/** Default rehash ratio. */
 	public static final float DEFAULT_REHASH = 0.75f;
@@ -120,13 +119,8 @@ public abstract class AbstractChainedHash<P extends Object>
 		return object.hashCode();
 	}
 
-	/**
-	 * Checks if the objects are equal.
-	 * @param object1 the first key.
-	 * @param object2 the second key.
-	 * @return true if the keys are considered equal, false otherwise.
-	 */
-	protected boolean equalityMethod(P object1, P object2)
+	@Override
+	public boolean equalityMethod(P object1, P object2)
 	{
 		return ((P)object1).equals(object2);
 	}
@@ -140,11 +134,7 @@ public abstract class AbstractChainedHash<P extends Object>
 		return Math.abs(getHashcodeFor(object)) % storageArray.length;
 	}
 	
-	/**
-	 * Adds an object to this hash.
-	 * If it is already in the hash, this does nothing.
-	 * @param object the object to add.
-	 */
+	@Override
 	public void put(P object)
 	{
 		if (contains(object))
@@ -154,11 +144,7 @@ public abstract class AbstractChainedHash<P extends Object>
 		size++;
 	}
 	
-	/**
-	 * Checks if an object (by equality) is present in the hash.
-	 * @param object the object to use for checking presence.
-	 * @return true if it is in the hash, false otherwise.
-	 */
+	@Override
 	public boolean contains(P object)
 	{
 		List<P> vect = getByIndex(getTableIndexFor(object));
@@ -172,11 +158,7 @@ public abstract class AbstractChainedHash<P extends Object>
 		return false;
 	}
 	
-	/**
-	 * Removes an object from this hash.
-	 * @param object the object to use for checking presence.
-	 * @return true if it was removed from the hash, false otherwise.
-	 */
+	@Override
 	public boolean remove(P object)
 	{
 		List<P> vect = getByIndex(getTableIndexFor(object));

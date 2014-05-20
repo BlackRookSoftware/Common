@@ -50,7 +50,7 @@ public class CaseInsensitiveHash extends Hash<String>
 	}
 
 	@Override
-	protected boolean equalityMethod(String key1, String key2)
+	public boolean equalityMethod(String key1, String key2)
 	{
 		return key1.equalsIgnoreCase(key2);
 	}
