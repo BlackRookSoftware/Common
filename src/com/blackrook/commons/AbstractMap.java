@@ -13,7 +13,8 @@ public interface AbstractMap<K extends Object, V extends Object> extends Abstrac
 	 * Associates a key to a value in this map.
 	 * The policy of "put" is that if it an object already in the set, its value is replaced with the new value. 
 	 * Uses {@link #equalityMethodForKey(Object, Object)} to determine key equality.
-	 * @param object the object to add.
+	 * @param key the map key.
+	 * @param value the corresponding value.
 	 */
 	public void put(K key, V value);
 
