@@ -9,7 +9,6 @@ package com.blackrook.commons.logging;
 
 import java.util.Date;
 
-import com.blackrook.commons.Common;
 import com.blackrook.commons.linkedlist.Queue;
 import com.blackrook.commons.logging.driver.ConsoleLogger;
 
@@ -37,6 +36,8 @@ public class LoggingFactory
 	private Queue<LoggingDriver> drivers;
 	/** This logging factory's logging level. */
 	private LogLevel loggingLevel;
+	/** Logger thread. */
+	private LoggerThread loggerThread;
 	
 	/**
 	 * Creates a new logging factory.
@@ -60,10 +61,6 @@ public class LoggingFactory
 		this.loggingLevel = level;
 
 		addDriver(drivers);
-		
-		Thread t = new LoggerThread();
-		t.start();
-		while (!t.isAlive()) Common.sleep(0, 250000);
 	}
 	
 	/**
@@ -167,6 +164,8 @@ public class LoggingFactory
 		synchronized (outQueue)
 		{
 			outQueue.add(new LogObject(new Date(), level, source, message, throwable));
+			if (loggerThread == null || !loggerThread.isAlive())
+				(loggerThread = new LoggerThread()).start();
 			outQueue.notify();
 		}
 	}
@@ -323,7 +322,7 @@ public class LoggingFactory
 		public LoggerThread()
 		{
 			setName("LoggerThread-"+drivers.getClass().getSimpleName());
-			setDaemon(true);
+			setDaemon(false);
 		}
 		
 		@Override
@@ -336,8 +335,10 @@ public class LoggingFactory
 					LogObject logobj = null;
 					synchronized (outQueue)
 					{
-						while (outQueue.isEmpty())
-							try {outQueue.wait();} catch (Exception e) {}
+						if (outQueue.isEmpty())
+							outQueue.wait(100);
+						if (outQueue.isEmpty())
+							break;
 						logobj = outQueue.dequeue();
 					}
 					

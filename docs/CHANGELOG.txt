@@ -15,6 +15,9 @@ Slated for 2.19.0
   This change will not really be noticed by end-users. 
 - Changed: A method or two has been made public in order to accommodate for
   the previous changes.
+- Changed: LoggerThread behavior: not daemon anymore - log flushes all pending
+  log messages then waits 100ms before it dies. More log messages restart the
+  thread. This ensures that all messages get logged, always.
   
 Changed in 2.18.0
 =================
