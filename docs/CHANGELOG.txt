@@ -1,6 +1,6 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Slated for 2.19.0
+Changed in 2.19.0
 =================
 
 - Changed: Reflect.createForType(...) will not convert same types to other 
