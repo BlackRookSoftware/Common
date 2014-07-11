@@ -1,8 +1,10 @@
 package com.blackrook.commons;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import com.blackrook.commons.hash.HashMap;
+import com.blackrook.commons.list.List;
 
 /**
  * A trie is a data structure that maps an object to another object, using a path
@@ -13,7 +15,7 @@ import com.blackrook.commons.hash.HashMap;
 public abstract class AbstractTrie<K extends Object, S extends Object, V extends Object> implements Sizable
 {
 	/** Root Node. */
-	private Node<S, V> root;
+	private Node<K, S, V> root;
 	/** Current size. */
 	private int size;
 
@@ -22,7 +24,7 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 	 */
 	public AbstractTrie()
 	{
-		root = new Node<S, V>();
+		root = new Node<K, S, V>();
 		size = 0;
 	}
 
@@ -42,7 +44,7 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 	public V get(K key)
 	{
 		Result<S, V> out = getPartial(key);
-		return out.remainderIndex == out.segments.length - 1 ? getPartial(key).value : null;
+		return out.getRemainderIndex() != out.getSegments().length ? out.value : null;
 	}
 
 	/**
@@ -58,14 +60,14 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 		int segindex = 0;
 		int out = 0;
 		
-		Node<S, V> current = root;
-		V lastEligible = root.value;
+		Node<K, S, V> current = root;
+		Node<K, S, V> lastEligible = current.value != null ? current : null;
 		while (segindex < segments.length && current != null && current.hasEdges())
 		{
 			current = current.getEdge(segments[segindex]);
 			if (current != null && current.value != null)
 			{
-				lastEligible = current.value;
+				lastEligible = current;
 				out = segindex + 1;
 			}
 			segindex++;
@@ -73,9 +75,47 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 		
 		if (lastEligible == null)
 			return new Result<S, V>(null, segments, -1);
-		return new Result<S, V>(lastEligible, segments, out);
+		return new Result<S, V>(lastEligible.value, segments, out);
 	}
 
+	/**
+	 * Returns all possible keys that can be used based on an input key.
+	 */
+	@SuppressWarnings("unchecked")
+	public K[] getPossibleKeys(K startingKey)
+	{
+		S[] segments = getSegments(startingKey);
+		int segindex = 0;
+		
+		Node<K, S, V> current = root;
+		Node<K, S, V> lastEligible = current;
+		while (segindex < segments.length && current != null && current.hasEdges())
+		{
+			current = current.getEdge(segments[segindex]);
+			if (current != null && current.value != null)
+				lastEligible = current;
+			segindex++;
+		}
+		
+		List<K> accum = new List<K>();
+		getPossibleKeysRecurse(lastEligible, accum);
+		K[] out = (K[])Array.newInstance(startingKey.getClass(), accum.size());
+		accum.toArray(out);
+		return out;
+	}
+	
+	/**
+	 * Returns all possible keys that can be used based on an input key.
+	 */
+	private void getPossibleKeysRecurse(Node<K, S, V> start, List<K> accum)
+	{
+		if (start.getKey() != null)
+			accum.add(start.getKey());
+		
+		for (ObjectPair<S, Node<K,S,V>> pair : start.edgeMap)
+			getPossibleKeysRecurse(pair.getValue(), accum);
+	}
+	
 	/**
 	 * Adds a value to this trie with a particular key.
 	 * If the association exists, the value is replaced.
@@ -91,13 +131,13 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 		S[] segments = getSegments(key);
 		int segindex = 0;
 		
-		Node<S, V> current = root;
-		Node<S, V> next = null;
+		Node<K, S, V> current = root;
+		Node<K, S, V> next = null;
 		while (segindex < segments.length)
 		{
 			if ((next = current.getEdge(segments[segindex])) == null)
 			{
-				next = new Node<S, V>();
+				next = new Node<K, S, V>();
 				current.putEdge(segments[segindex], next);
 			}
 			current = next;
@@ -105,6 +145,7 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 		}
 		
 		V prevval = current.value;
+		current.key = key;
 		current.value = value;
 		if (prevval == null)
 			size++;
@@ -174,23 +215,26 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 	/**
 	 * A single node in the Trie.
 	 */
-	protected static class Node<S, V>
+	protected static class Node<K, S, V>
 	{
 		/** Edge map. */
-		private AbstractMap<S, Node<S, V>> edgeMap;
+		private AbstractMap<S, Node<K, S, V>> edgeMap;
+		/** Key used to store this value. */
+		private K key;
 		/** Value stored at this node. Can be null. */
 		private V value;
 		
 		protected Node()
 		{
-			edgeMap = new HashMap<S, Node<S, V>>(2, 1f);
+			edgeMap = new HashMap<S, Node<K, S, V>>(2, 1f);
+			key = null;
 			value = null;
 		}
 		
 		/**
 		 * Returns an edge for a segment, or null for no matching segment.
 		 */
-		public Node<S, V> getEdge(S segment)
+		public Node<K, S, V> getEdge(S segment)
 		{
 			return edgeMap.get(segment);
 		}
@@ -198,9 +242,17 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 		/**
 		 * Returns an edge for a segment, or null for no matching segment.
 		 */
-		public void putEdge(S segment, Node<S, V> node)
+		public void putEdge(S segment, Node<K, S, V> node)
 		{
 			edgeMap.put(segment, node);
+		}
+		
+		/**
+		 * Returns the key used to first store this value.
+		 */
+		public K getKey()
+		{
+			return key;
 		}
 		
 		/**
