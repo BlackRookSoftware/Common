@@ -2882,6 +2882,45 @@ public final class Common
 	}
 	
 	/**
+	 * Joins an array of strings into one string, with a separator between them.
+	 * @param separator the separator to insert between strings. Can be empty or null.
+	 * @param strings the strings to join.
+	 * @return a string of all joined strings and separators.
+	 * @since 2.20.0
+	 */
+	public static String joinStrings(String separator, String... strings)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < strings.length; i++)
+		{
+			sb.append(strings[i]);
+			if (i < strings.length - 1)
+				sb.append(separator);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * Joins an array of strings into one string, with a separator between them.
+	 * @param startIndex the starting index in the string array.
+	 * @param separator the separator to insert between strings. Can be empty or null.
+	 * @param strings the strings to join.
+	 * @return a string of all joined strings and separators.
+	 * @since 2.20.0
+	 */
+	public static String joinStrings(int startIndex, String separator, String... strings)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (int i = startIndex; i < strings.length; i++)
+		{
+			sb.append(strings[i]);
+			if (!Common.isEmpty(separator) && i < strings.length - 1)
+				sb.append(separator);
+		}
+		return sb.toString();
+	}
+	
+	/**
 	 * Attempts to close a {@link Closeable} object.
 	 * If the object is null, this does nothing.
 	 * @since 2.3.0

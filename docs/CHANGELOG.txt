@@ -1,5 +1,12 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Slated for 2.19.0
+=================
+
+- Added: AbstractTrie<?,?,?> for implementing a Trie data structure and 
+  lookup map.
+
+
 Changed in 2.19.0
 =================
 
