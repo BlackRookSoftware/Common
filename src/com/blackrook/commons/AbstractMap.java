@@ -43,7 +43,7 @@ public interface AbstractMap<K extends Object, V extends Object> extends Abstrac
 	
 	/**
 	 * Determines if two keys are equal. This can be implemented differently
-	 * in case a map has a different concept of what keys are is considered equal.
+	 * in case a map has a different concept of what keys are considered equal.
 	 * @param key1 the first key.
 	 * @param key2 the second key.
 	 * @return true if the keys are considered equal, false otherwise.

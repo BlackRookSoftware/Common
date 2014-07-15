@@ -52,6 +52,12 @@ public class CaseInsensitiveHash extends Hash<String>
 	@Override
 	public boolean equalityMethod(String key1, String key2)
 	{
+		if (key1 == null && key2 != null)
+			return false;
+		else if (key1 != null && key2 == null)
+			return false;
+		else if (key1 == null && key2 == null)
+			return true;
 		return key1.equalsIgnoreCase(key2);
 	}
 

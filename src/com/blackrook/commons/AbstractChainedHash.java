@@ -122,6 +122,12 @@ public abstract class AbstractChainedHash<P extends Object> extends AbstractArra
 	@Override
 	public boolean equalityMethod(P object1, P object2)
 	{
+		if (object1 == null && object2 != null)
+			return false;
+		else if (object1 != null && object2 == null)
+			return false;
+		else if (object1 == null && object2 == null)
+			return true;
 		return ((P)object1).equals(object2);
 	}
 	

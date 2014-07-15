@@ -74,6 +74,12 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 	 */
 	public boolean equalityMethodForKey(K key1, K key2)
 	{
+		if (key1 == null && key2 != null)
+			return false;
+		else if (key1 != null && key2 == null)
+			return false;
+		else if (key1 == null && key2 == null)
+			return true;
 		return key1.equals(key2);
 	}
 	

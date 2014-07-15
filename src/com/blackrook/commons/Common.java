@@ -355,7 +355,7 @@ public final class Common
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Calls Thread.sleep() but in an encapsulated try
 	 * to avoid catching InterruptedException. Convenience

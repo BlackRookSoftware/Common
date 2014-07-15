@@ -4,18 +4,21 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import com.blackrook.commons.hash.HashMap;
+import com.blackrook.commons.linkedlist.Queue;
 import com.blackrook.commons.list.List;
 
 /**
- * A trie is a data structure that maps an object to another object, using a path
- * of objects derived from the key. This is best used 
+ * A trie is a data structure that contains objects, using a path
+ * of objects derived from the stored value. This structure is not thread-safe - wrap calls
+ * with synchronized blocks if necessary.
  * @author Matthew Tropiano
- * @param <V> the value type corresponding to keys.
+ * @param <V> the value type that this holds.
+ * @param <S> the type of the split segments used for searching.
  */
-public abstract class AbstractTrie<K extends Object, S extends Object, V extends Object> implements Sizable
+public abstract class AbstractTrie<V extends Object, S extends Object> implements AbstractSet<V>, Sizable
 {
 	/** Root Node. */
-	private Node<K, S, V> root;
+	private Node<V, S> root;
 	/** Current size. */
 	private int size;
 
@@ -24,131 +27,95 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 	 */
 	public AbstractTrie()
 	{
-		root = new Node<K, S, V>();
+		root = new Node<V, S>();
 		size = 0;
 	}
 
 	/**
-	 * Creates the segments necessary to find/store keys and values.
-	 * This should always create the same segments for the same key.
-	 * @param key the key to generate significant segments for.
-	 * @return the list of segments for the key.
+	 * Creates the segments necessary to find/store values.
+	 * This should always create the same segments for the same value.
+	 * @param value the value to generate significant segments for.
+	 * @return the list of segments for the value.
 	 */
-	protected abstract S[] getSegments(K key);
+	protected abstract S[] getSegments(V value);
 
 	/**
-	 * Returns a value for the key provided.
-	 * @param key the key.
-	 * @return the corresponding value, or null if there is no value associated with that key.
+	 * Returns all values in the order that they are found on the way through the Trie searching for a
+	 * particular value. Result may include the value searched for.
+	 * @param value the value to search for.
+	 * @return an array of all found values.
 	 */
-	public V get(K key)
+	public V[] getPrevious(V value)
 	{
-		Result<S, V> out = getPartial(key);
-		return out.getRemainderIndex() != out.getSegments().length ? out.value : null;
-	}
-
-	/**
-	 * Returns a value for the key provided, but returns the last eligible object in the path.
-	 * Remainders equaling the length of the key means that the search reached the end of the key.
-	 * @param key the key.
-	 * @return a trie {@link Result}. The value on the result can be null 
-	 * if the end was reached without finding anything along the way.
-	 */
-	public Result<S, V> getPartial(K key)
-	{
-		S[] segments = getSegments(key);
-		int segindex = 0;
-		int out = 0;
-		
-		Node<K, S, V> current = root;
-		Node<K, S, V> lastEligible = current.value != null ? current : null;
-		while (segindex < segments.length && current != null && current.hasEdges())
-		{
-			current = current.getEdge(segments[segindex]);
-			if (current != null && current.value != null)
-			{
-				lastEligible = current;
-				out = segindex + 1;
-			}
-			segindex++;
-		}
-		
-		if (lastEligible == null)
-			return new Result<S, V>(null, segments, -1);
-		return new Result<S, V>(lastEligible.value, segments, out);
-	}
-
-	/**
-	 * Returns all possible keys that can be used based on an input key.
-	 */
-	@SuppressWarnings("unchecked")
-	public K[] getPossibleKeys(K startingKey)
-	{
-		S[] segments = getSegments(startingKey);
-		int segindex = 0;
-		
-		Node<K, S, V> current = root;
-		Node<K, S, V> lastEligible = current;
-		while (segindex < segments.length && current != null && current.hasEdges())
-		{
-			current = current.getEdge(segments[segindex]);
-			if (current != null && current.value != null)
-				lastEligible = current;
-			segindex++;
-		}
-		
-		List<K> accum = new List<K>();
-		getPossibleKeysRecurse(lastEligible, accum);
-		K[] out = (K[])Array.newInstance(startingKey.getClass(), accum.size());
-		accum.toArray(out);
-		return out;
+		Result<V, S> result = search(value, true, false);
+		return result.encounteredValues;
 	}
 	
 	/**
-	 * Returns all possible keys that can be used based on an input key.
+	 * Returns all values descending from the end of a sea searching for a
+	 * particular value. Result may include the value searched for. 
+	 * <p>The values returned may not be returned in any consistent or stable order.
 	 */
-	private void getPossibleKeysRecurse(Node<K, S, V> start, List<K> accum)
+	public V[] getRemainder(V value)
 	{
-		if (start.getKey() != null)
-			accum.add(start.getKey());
-		
-		for (ObjectPair<S, Node<K,S,V>> pair : start.edgeMap)
-			getPossibleKeysRecurse(pair.getValue(), accum);
+		Result<V, S> result = search(value, false, true);
+		return result.remainderValues;
 	}
-	
-	/**
-	 * Adds a value to this trie with a particular key.
-	 * If the association exists, the value is replaced.
-	 * @param key the key to use.
-	 * @param value the corresponding value.
-	 * @throws IllegalArgumentException if value is null.
-	 */
-	public void put(K key, V value)
+
+	@Override
+	public void put(V value)
 	{
 		if (value == null)
 			throw new IllegalArgumentException("Value cannot be null.");
 		
-		S[] segments = getSegments(key);
+		S[] segments = getSegments(value);
 		int segindex = 0;
 		
-		Node<K, S, V> current = root;
-		Node<K, S, V> next = null;
+		Node<V, S> current = root;
+		Node<V, S> next = null;
 		while (segindex < segments.length)
 		{
-			if ((next = current.getEdge(segments[segindex])) == null)
-			{
-				next = new Node<K, S, V>();
-				current.putEdge(segments[segindex], next);
-			}
+			if ((next = current.edgeMap.get(segments[segindex])) == null)
+				current.edgeMap.put(segments[segindex], next = new Node<V, S>());
+			
 			current = next;
 			segindex++;
 		}
 		
 		V prevval = current.value;
-		current.key = key;
 		current.value = value;
 		if (prevval == null)
 			size++;
+	}
+
+	@Override
+	public boolean contains(V object)
+	{
+		return equalityMethod(object, search(object, false, false).foundValue);
+	}
+
+	@Override
+	public boolean remove(V object)
+	{
+		S[] segments = getSegments(object);
+		if (removeRecurse(object, root, segments, 0))
+		{
+			size--;
+			return true;
+		}
+		return false; 
+	}
+	
+	@Override
+	public boolean equalityMethod(V object1, V object2)
+	{
+		if (object1 == null && object2 != null)
+			return false;
+		else if (object1 != null && object2 == null)
+			return false;
+		else if (object1 == null && object2 == null)
+			return true;
+		return object1.equals(object2);
 	}
 
 	@Override
@@ -163,32 +130,222 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 		return size() == 0;
 	}
 	
+	@Override
+	public ResettableIterator<V> iterator()
+	{
+		return new TrieIterator(this);
+	}
+
+	/**
+	 * Dumps a representation of this trie as a string representing an object hierarchy.
+	 */
+	public String toHierarchyString()
+	{
+		return null;
+	}
+	
+	/**
+	 * Returns a search result generated from walking the edges of the trie looking for
+	 * a particular value.
+	 * @param value the value to search for.
+	 * @param includeEncountered if true, includes encountered (on the way) during the search.
+	 * @param includeDescendants if true, includes descendants (remainder) after the search.
+	 * @return a trie {@link Result}. The result contents describe matches, encounters, and remainder, plus hops.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Result<V, S> search(V value, boolean includeEncountered, boolean includeDescendants)
+	{
+		Class<?> vClass = value.getClass();
+		
+		S[] segments = getSegments(value);
+		List<V> encountered = includeEncountered ? new List<V>() : null;
+		List<V> descending = includeDescendants ? new List<V>() : null;
+		V[] encOut = null; 
+		V[] decOut = null; 
+		int segindex = 0;
+		
+		Node<V, S> current = root;
+		while (segindex < segments.length && current.hasEdges())
+		{
+			if (encountered != null && current.value != null)
+				encountered.add(current.value);
+				
+			if (current.edgeMap.containsKey(segments[segindex]))
+			{
+				current = current.edgeMap.get(segments[segindex]);
+				segindex++;
+			}
+			else
+				break;
+		}
+		
+		if (encountered != null)
+		{
+			encOut = (V[])Array.newInstance(vClass, encountered.size());
+			encountered.toArray(encOut);
+		}
+	
+		if (descending != null)
+		{
+			getDescendantsRecurse(current, descending);
+			decOut = (V[])Array.newInstance(vClass, descending.size());
+			descending.toArray(decOut);
+		}
+		
+		return new Result<V, S>(
+			equalityMethod(value, current.value) ? value : null,
+			encOut,
+			decOut,
+			segments,
+			segindex
+		);
+	}
+
+	/**
+	 * Returns all possible values that can be used based on an input key.
+	 */
+	private void getDescendantsRecurse(Node<V, S> start, List<V> accum)
+	{
+		V value = start.getValue();
+		if (value != null)
+			accum.add(value);
+		
+		for (ObjectPair<S, Node<V, S>> pair : start.edgeMap)
+			getDescendantsRecurse(pair.getValue(), accum);
+	}
+
+	/**
+	 * Recurses through the trie for an object and removes it, cleaning up empty
+	 * nodes in the way back. 
+	 * @param object the object to look for.
+	 * @param node the starting node.
+	 * @return true if any removal occurred down the tree, false if not.
+	 */
+	private boolean removeRecurse(V object, Node<V, S> node, S[] segments, int sidx)
+	{
+		if (equalityMethod(node.value, object))
+		{
+			node.value = null;
+			return true;
+		}
+		
+		Node<V, S> next = node.edgeMap.get(segments[sidx]);
+		if (next == null)
+			return false;
+		
+		if (removeRecurse(object, next, segments, sidx + 1))
+		{
+			if (next != root && next.isExpired())
+				node.edgeMap.removeUsingKey(segments[sidx]);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	/**
+	 * Iterator for this Trie.
+	 */
+	protected class TrieIterator implements ResettableIterator<V>
+	{
+		private AbstractTrie<V, S> self;
+		private Queue<Node<V, S>> edgeQueue;
+		private V next;
+		
+		TrieIterator(AbstractTrie<V, S> trie)
+		{
+			self = trie;
+			reset();
+		}
+	
+		@Override
+		public boolean hasNext()
+		{
+			return !edgeQueue.isEmpty();
+		}
+	
+		@Override
+		public V next()
+		{
+			while (!edgeQueue.isEmpty())
+			{
+				Node<V, S> node = seekForQueue();
+				if (node.value != null)
+					return next = node.value;
+			}
+			return null;
+		}
+	
+		@Override
+		public void remove()
+		{
+			self.remove(next);
+		}
+	
+		@Override
+		public void reset()
+		{
+			this.edgeQueue = new Queue<Node<V, S>>();
+			this.edgeQueue.enqueue(root);
+			seekForQueue();
+		}
+		
+		private Node<V, S> seekForQueue()
+		{
+			Node<V, S> deq = edgeQueue.dequeue();
+			for (ObjectPair<S, Node<V, S>> pair : deq.edgeMap)
+				edgeQueue.enqueue(pair.getValue());
+			return deq;
+		}
+		
+	}
+
 	/**
 	 * A result of a passive search on a trie.
 	 */
-	public static class Result<S, V>
+	protected static class Result<V, S>
 	{
-		private V value;
+		private V foundValue;
+		private V[] encounteredValues;
+		private V[] remainderValues;
 		private S[] segments;
-		private int remainderIndex;
+		private int moves;
 		
-		Result(V value, S[] segments, int hops)
+		Result(V found, V[] encountered, V[] remainder, S[] segments, int moves)
 		{
-			this.value = value;
+			this.foundValue = found;
+			this.encounteredValues = encountered;
+			this.remainderValues = remainder;
 			this.segments = segments;
-			this.remainderIndex = hops;
+			this.moves = moves;
 		}
 		
 		/**
-		 * Returns the value on the result.
+		 * Returns the value on the result, if.
 		 */
-		public V getValue() 
+		public V getFoundValue() 
 		{
-			return value;
+			return foundValue;
 		}
 		
 		/**
-		 * Returns the segments generated by the key.
+		 * Returns the list of values found along the way of a search.
+		 */
+		public V[] getEncounteredValues()
+		{
+			return encounteredValues;
+		}
+		
+		/**
+		 * Returns the list of values descending from the endpoint of a search.
+		 */
+		public V[] getRemainderValues()
+		{
+			return remainderValues;
+		}
+		
+		/**
+		 * Returns the segments generated by the input value.
 		 */
 		public S[] getSegments()
 		{
@@ -197,17 +354,21 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 		
 		/**
 		 * Returns how many edge hops that this performed in order to reach the result.
-		 * This index is the "remainder" of the unused segments.
 		 */
-		public int getRemainderIndex() 
+		public int getMoveCount() 
 		{
-			return remainderIndex;
+			return moves;
 		}
 		
 		@Override
 		public String toString()
 		{
-			return value + ": " + Arrays.toString(segments) + " " + remainderIndex;
+			StringBuilder sb = new StringBuilder();
+			sb.append("Found: ").append(foundValue).append('\n');
+			sb.append("Encountered: ").append(Arrays.toString(encounteredValues)).append('\n');
+			sb.append("Remainder: ").append(Arrays.toString(remainderValues)).append('\n');
+			sb.append("Moves: ").append(moves);
+			return sb.toString();
 		}
 		
 	}
@@ -215,60 +376,25 @@ public abstract class AbstractTrie<K extends Object, S extends Object, V extends
 	/**
 	 * A single node in the Trie.
 	 */
-	protected static class Node<K, S, V>
+	private static class Node<V, S>
 	{
 		/** Edge map. */
-		private AbstractMap<S, Node<K, S, V>> edgeMap;
-		/** Key used to store this value. */
-		private K key;
+		private AbstractMap<S, Node<V, S>> edgeMap;
 		/** Value stored at this node. Can be null. */
 		private V value;
 		
 		protected Node()
 		{
-			edgeMap = new HashMap<S, Node<K, S, V>>(2, 1f);
-			key = null;
+			edgeMap = new HashMap<S, Node<V, S>>(2, 1f);
 			value = null;
 		}
 		
 		/**
-		 * Returns an edge for a segment, or null for no matching segment.
-		 */
-		public Node<K, S, V> getEdge(S segment)
-		{
-			return edgeMap.get(segment);
-		}
-		
-		/**
-		 * Returns an edge for a segment, or null for no matching segment.
-		 */
-		public void putEdge(S segment, Node<K, S, V> node)
-		{
-			edgeMap.put(segment, node);
-		}
-		
-		/**
-		 * Returns the key used to first store this value.
-		 */
-		public K getKey()
-		{
-			return key;
-		}
-		
-		/**
-		 * Gets the value on this node. Can be null.
+		 * Returns this node's value.
 		 */
 		public V getValue()
 		{
 			return value;
-		}
-		
-		/**
-		 * Sets the value on this node.
-		 */
-		public void setValue(V value)
-		{
-			this.value = value;
 		}
 		
 		/**
