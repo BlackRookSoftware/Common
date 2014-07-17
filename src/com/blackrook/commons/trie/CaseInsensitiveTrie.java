@@ -1,12 +1,10 @@
 package com.blackrook.commons.trie;
 
-import com.blackrook.commons.AbstractTrie;
-
 /**
  * An implementation of a Trie that stores strings, case-insensitively.
  * @author Matthew Tropiano
  */
-public class CaseInsensitiveTrie extends AbstractTrie<String, Character>
+public class CaseInsensitiveTrie extends StringTrie
 {
 	public CaseInsensitiveTrie()
 	{
@@ -22,4 +20,16 @@ public class CaseInsensitiveTrie extends AbstractTrie<String, Character>
 		return out;
 	}
 
+	@Override
+	public boolean equalityMethod(String object1, String object2)
+	{
+		if (object1 == null && object2 != null)
+			return false;
+		else if (object1 != null && object2 == null)
+			return false;
+		else if (object1 == null && object2 == null)
+			return true;
+		return object1.equalsIgnoreCase(object2);
+	}
+	
 }
