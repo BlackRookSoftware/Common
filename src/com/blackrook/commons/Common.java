@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.zip.ZipFile;
 
@@ -2915,6 +2916,26 @@ public final class Common
 		{
 			sb.append(strings[i]);
 			if (!Common.isEmpty(separator) && i < strings.length - 1)
+				sb.append(separator);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * Joins elements in an <code>Iterable&lt;String&gt;</code> into one string, with a separator between them.
+	 * @param separator the separator to insert between strings. Can be empty or null.
+	 * @param strings the strings to join.
+	 * @return a string of all joined strings and separators.
+	 * @since 2.20.0
+	 */
+	public static String joinStrings(String separator, Iterable<String> strings)
+	{
+		StringBuilder sb = new StringBuilder();
+		Iterator<String> it = strings.iterator();
+		while(it.hasNext())
+		{
+			sb.append(it.next());
+			if (it.hasNext())
 				sb.append(separator);
 		}
 		return sb.toString();

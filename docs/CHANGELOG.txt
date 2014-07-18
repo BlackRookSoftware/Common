@@ -7,6 +7,7 @@ Slated for 2.20.0
   lookup map.
 - Added: Package com.blackrook.commons.trie.
 - Added: Common.joinStrings(String, String... )
+- Added: Common.joinStrings(String, Iterable<String>)
 - Added: Common.joinStrings(int, String, String... )
 - Changed: Made equality methods in sets and hashes more thorough to test for
   null combinations.
