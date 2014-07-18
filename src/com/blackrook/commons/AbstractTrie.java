@@ -123,7 +123,7 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 	 * @param value the value to search for.
 	 * @param out the output list.
 	 * @param startOffset the starting offset into the list to set values.
-	 * @return the last-encountered value.
+	 * @return the last-encountered value, or null if none encountered.
 	 */
 	public V getWithRemainder(V value, List<S> out, int startOffset)
 	{
@@ -138,7 +138,10 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 			for (int i = result.movesToLastEncounter; i < result.segments.length; i++)
 				out.replace(startOffset + (i - result.movesToLastEncounter), result.segments[i]);
 			
-			return result.encounteredValues.getByIndex(result.encounteredValues.size() - 1);
+			if (!result.encounteredValues.isEmpty())
+				return result.encounteredValues.getByIndex(result.encounteredValues.size() - 1);
+			else
+				return null;
 		}
 	}
 
@@ -232,18 +235,19 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 		S[] segments = getSegments(value);
 		List<V> encountered = includeEncountered ? new List<V>() : null;
 		List<V> descending = includeDescendants ? new List<V>() : null;
-		int encIndex = -1;
+		int encIndex = 0;
 		int segIndex = 0;
 		
 		Node<V, S> current = root;
+		
+		if (encountered != null && current.value != null)
+		{
+			encountered.add(current.value);
+			encIndex = segIndex;
+		}
+
 		while (segIndex < segments.length && current.hasEdges())
 		{
-			if (encountered != null && current.value != null)
-			{
-				encountered.add(current.value);
-				encIndex = segIndex;
-			}
-				
 			if (current.edgeMap.containsKey(segments[segIndex]))
 			{
 				current = current.edgeMap.get(segments[segIndex]);
@@ -251,6 +255,13 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 			}
 			else
 				break;
+
+			if (encountered != null && current.value != null)
+			{
+				encountered.add(current.value);
+				encIndex = segIndex;
+			}
+				
 		}
 		
 		if (descending != null)

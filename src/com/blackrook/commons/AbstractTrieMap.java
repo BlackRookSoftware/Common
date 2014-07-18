@@ -147,7 +147,7 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 	 * @param key the key to search for.
 	 * @param out the output list.
 	 * @param startOffset the starting offset into the list to set values.
-	 * @return the last-encountered value.
+	 * @return the last-encountered value, or null if none encountered.
 	 */
 	public V getWithRemainderByKey(K key, List<S> out, int startOffset)
 	{
@@ -162,7 +162,10 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 			for (int i = result.getMovesToLastEncounter(); i < result.getSegments().length; i++)
 				out.replace(startOffset + (i - result.getMovesToLastEncounter()), result.getSegments()[i]);
 			
-			return result.getEncounteredValues().getByIndex(result.getEncounteredValues().size() - 1).getValue();
+			if (!result.getEncounteredValues().isEmpty())
+				return result.getEncounteredValues().getByIndex(result.getEncounteredValues().size() - 1).getValue();
+			else
+				return null;
 		}
 	}
 
