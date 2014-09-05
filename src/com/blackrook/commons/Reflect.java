@@ -217,6 +217,7 @@ public final class Reflect
 			case 'J': return Long.TYPE; 
 			case 'F': return Float.TYPE; 
 			case 'D': return Double.TYPE; 
+			case 'C': return Character.TYPE; 
 		}
 		
 		return null;
@@ -773,7 +774,7 @@ public final class Reflect
 	 */
 	public static <T> T createForType(Object object, Class<T> targetType)
 	{
-		return createForType("Source", object, targetType);
+		return createForType("source", object, targetType);
 	}
 	
 	/**
@@ -806,6 +807,8 @@ public final class Reflect
 				return (T)new Long(0L);
 			else if (targetType == Double.TYPE)
 				return (T)new Double(0.0);
+			else if (targetType == Character.TYPE)
+				return (T)new Character('\0');
 			return null;
 		}
 		
@@ -817,6 +820,8 @@ public final class Reflect
 			return convertBoolean(memberName, (Boolean)object, targetType);
 		else if (object instanceof Number)
 			return convertNumber(memberName, (Number)object, targetType);
+		else if (object instanceof Character)
+			return convertCharacter(memberName, (Character)object, targetType);
 		else if (object instanceof Timestamp)
 			return convertTimestamp(memberName, (Timestamp)object, targetType);
 		else if (object instanceof Date)
@@ -865,6 +870,10 @@ public final class Reflect
 			return (T)new Double(b ? 1.0 : 0.0);
 		else if (targetType == Double.class)
 			return targetType.cast(b ? 1.0 : 0.0);
+		else if (targetType == Character.TYPE)
+			return (T)new Character(b ? (char)1 : '\0');
+		else if (targetType == Character.class)
+			return targetType.cast(b ? (char)1 : '\0');
 		else if (targetType == String.class)
 			return targetType.cast(String.valueOf(b));
 		
@@ -909,8 +918,58 @@ public final class Reflect
 			return (T)new Double(n.doubleValue());
 		else if (targetType == Double.class)
 			return targetType.cast(n.doubleValue());
+		else if (targetType == Character.TYPE)
+			return (T)new Character((char)(n.shortValue()));
+		else if (targetType == Character.class)
+			return targetType.cast((char)(n.shortValue()));
 		else if (targetType == String.class)
 			return targetType.cast(String.valueOf(n));
+		
+		throw new ClassCastException("Object could not be converted: "+memberName+" is numeric, target is "+targetType);
+	}
+
+	/**
+	 * Converts a numeric value to a target type.
+	 */
+	@SuppressWarnings("unchecked")
+	private static <T> T convertCharacter(String memberName, Character c, Class<T> targetType)
+	{
+		char cv = c.charValue();
+		
+		if (targetType == Character.TYPE)
+			return (T)new Character(cv);
+		else if (targetType == Character.class)
+			return targetType.cast(cv);
+		else if (targetType == Boolean.TYPE)
+			return (T)new Boolean(c != 0);
+		else if (targetType == Boolean.class)
+			return targetType.cast(c != 0);
+		else if (targetType == Byte.TYPE)
+			return (T)new Byte((byte)cv);
+		else if (targetType == Byte.class)
+			return targetType.cast((byte)cv);
+		else if (targetType == Short.TYPE)
+			return (T)new Short((short)cv);
+		else if (targetType == Short.class)
+			return targetType.cast((short)cv);
+		else if (targetType == Integer.TYPE)
+			return (T)new Integer((int)cv);
+		else if (targetType == Integer.class)
+			return targetType.cast((int)cv);
+		else if (targetType == Float.TYPE)
+			return (T)new Float((float)cv);
+		else if (targetType == Float.class)
+			return targetType.cast((float)cv);
+		else if (targetType == Long.TYPE)
+			return (T)new Long((long)cv);
+		else if (targetType == Long.class)
+			return targetType.cast((long)cv);
+		else if (targetType == Double.TYPE)
+			return (T)new Double((double)cv);
+		else if (targetType == Double.class)
+			return targetType.cast((double)cv);
+		else if (targetType == String.class)
+			return targetType.cast(String.valueOf(c));
 		
 		throw new ClassCastException("Object could not be converted: "+memberName+" is numeric, target is "+targetType);
 	}
@@ -1071,41 +1130,82 @@ public final class Reflect
 	 */
 	private static <T> T convertArray(String memberName, Object array, Class<T> targetType)
 	{
-		if (Reflect.getArrayType(array) == Character.TYPE)
-		{
-			char[] c = (char[])array;
-			
-			if (Reflect.isArray(targetType))
-			{
-				if (Reflect.getArrayType(targetType) == Character.TYPE)
-					return targetType.cast(c);
-				else if (Reflect.getArrayType(targetType) == Byte.TYPE)
-					return targetType.cast((new String(c)).getBytes());
-				else
-					throw new ClassCastException("Object could not be converted: "+memberName+" is char array, target is array of "+targetType);
-			}
-			else if (targetType == String.class)
-				return targetType.cast(new String(c));
-			else
-				return convertString(memberName, new String(c), targetType);
-		}
-		else if (Reflect.getArrayType(array) == Byte.TYPE)
-		{
-			byte[] b = (byte[])array;
-			
-			if (Reflect.isArray(targetType))
-			{
-				if (Reflect.getArrayType(targetType) == Character.TYPE)
-					return targetType.cast((new String(b)).toCharArray());
-				else if (Reflect.getArrayType(targetType) == Byte.TYPE)
-					return targetType.cast(Arrays.copyOf(b, Array.getLength(array)));
-				else
-					throw new ClassCastException("Object could not be converted: "+memberName+" is byte array, target is "+targetType);
-			}
-			else if (targetType == String.class)
-				return targetType.cast(new String(b));
-		}
+		Class<?> arrayType = Reflect.getArrayType(array);
+		int arrayDimensions = Reflect.getArrayDimensions(array);
 		
+		if (arrayType == Character.TYPE && arrayDimensions == 1)
+		{
+			return convertCharArray(memberName, (char[])array, targetType);
+		}
+		else if (arrayType == Character.class && arrayDimensions == 1)
+		{
+			Character[] chars = (Character[])array;
+			char[] charArray = new char[chars.length];
+			for (int i = 0; i < charArray.length; i++)
+				charArray[i] = chars[i];
+			return convertCharArray(memberName, charArray, targetType);
+		}
+		else if (arrayType == Byte.TYPE && arrayDimensions == 1)
+		{
+			return convertByteArray(memberName, (byte[])array, targetType);
+		}
+		else if (arrayType == Byte.class && arrayDimensions == 1)
+		{
+			Byte[] bytes = (Byte[])array;
+			byte[] byteArray = new byte[bytes.length];
+			for (int i = 0; i < byteArray.length; i++)
+				byteArray[i] = bytes[i];
+			return convertByteArray(memberName, byteArray, targetType);
+		}
+		else
+			return convertOtherArray(memberName, array, targetType);
+	}
+
+	/**
+	 * Converts a char array value to a target type.
+	 */
+	private static <T> T convertCharArray(String memberName, char[] charArray, Class<T> targetType)
+	{
+		if (Reflect.isArray(targetType))
+		{
+			if (Reflect.getArrayType(targetType) == Character.TYPE)
+				return targetType.cast(charArray);
+			else if (Reflect.getArrayType(targetType) == Byte.TYPE)
+				return targetType.cast((new String(charArray)).getBytes());
+			else
+				return convertOtherArray(memberName, charArray, targetType);
+		}
+		else if (targetType == String.class)
+			return targetType.cast(new String(charArray));
+		else
+			return convertString(memberName, new String(charArray), targetType);
+	}
+	
+	/**
+	 * Converts a byte array value to a target type.
+	 */
+	private static <T> T convertByteArray(String memberName, byte[] byteArray, Class<T> targetType)
+	{
+		if (Reflect.isArray(targetType))
+		{
+			if (Reflect.getArrayType(targetType) == Character.TYPE)
+				return targetType.cast((new String(byteArray)).toCharArray());
+			else if (Reflect.getArrayType(targetType) == Byte.TYPE)
+				return targetType.cast(Arrays.copyOf(byteArray, byteArray.length));
+			else
+				return convertOtherArray(memberName, byteArray, targetType);
+		}
+		else if (targetType == String.class)
+			return targetType.cast(new String(byteArray));
+		else
+			return convertOtherArray(memberName, byteArray, targetType);
+	}
+
+	/**
+	 * Converts a totally different array type.
+	 */
+	private static <T> T convertOtherArray(String memberName, Object array, Class<T> targetType)
+	{
 		Class<?> atype = Reflect.getArrayType(targetType);
 		if (atype == null)
 			throw new ClassCastException("Array cannot be converted; "+memberName+" is array and target is not array typed.");
