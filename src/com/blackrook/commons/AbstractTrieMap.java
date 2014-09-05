@@ -66,7 +66,6 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 	 * the end of the list replaces, not adds!
 	 * @param key the key to search for.
 	 * @param out the output list.
-	 * @param startOffset the starting offset into the list to set values.
 	 * @return the amount of items returned into the list.
 	 */
 	public int getBeforeKey(K key, List<V> out)
@@ -176,7 +175,6 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 	 * the end of the list replaces, not adds!
 	 * @param key the key to search for.
 	 * @param out the output list.
-	 * @param startOffset the starting offset into the list to set values.
 	 * @return the amount of items returned into the list.
 	 */
 	public int getKeysBeforeKey(K key, List<K> out)
@@ -276,7 +274,6 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 
 	/**
 	 * Search using a key.
-	 * @see #search(Object, boolean, boolean);
 	 */
 	protected Result<ObjectPair<K, V>, S> searchByKey(K key, boolean includeEncountered, boolean includeDescendants)
 	{
