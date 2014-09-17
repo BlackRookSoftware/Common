@@ -763,6 +763,16 @@ public final class Reflect
 		return out;
 	}
 
+	
+	/**
+	 * Takes the contents of an AbstractMap and applies it to a POJO 
+	 * (Plain Old Java Object) via its public fields and/or getters and setters.
+	 */
+	public static <T> void mapToObject(AbstractMap<String, Object> map, T object)
+	{
+		// TODO: Finish.
+	}
+	
 	/**
 	 * Creates a new instance of an object for placement in a POJO or elsewhere.
 	 * <p>
