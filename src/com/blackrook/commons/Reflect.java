@@ -27,10 +27,12 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import com.blackrook.commons.TypeProfile.MethodSignature;
 import com.blackrook.commons.hash.Hash;
 import com.blackrook.commons.hash.HashMap;
 import com.blackrook.commons.list.List;
@@ -765,12 +767,61 @@ public final class Reflect
 
 	
 	/**
+	 * Takes the contents of an AbstractMap and applies it to a newly-created POJO 
+	 * (Plain Old Java Object) via its public fields and/or getters and setters.
+	 * The values in the map applied to the object may be converted.
+	 * @param map the source map.
+	 * @param clazz the class to instantiate (must have a default public constructor).
+	 * @since 2.20.0
+	 */
+	public static <T> T mapToNewObject(AbstractMap<String, ?> map, Class<T> clazz)
+	{
+		T out = create(clazz);
+		mapToObject(map, out);
+		return out;
+	}
+	
+	/**
+	 * Takes the contents of a Map and applies it to a newly-created POJO 
+	 * (Plain Old Java Object) via its public fields and/or getters and setters.
+	 * The values in the map applied to the object may be converted.
+	 * @param map the source map.
+	 * @param clazz the class to instantiate (must have a default public constructor).
+	 * @since 2.20.0
+	 */
+	public static <T> T mapToNewObject(Map<String, ?> map, Class<T> clazz)
+	{
+		T out = create(clazz);
+		mapToObject(map, out);
+		return out;
+	}
+	
+	/**
 	 * Takes the contents of an AbstractMap and applies it to a POJO 
 	 * (Plain Old Java Object) via its public fields and/or getters and setters.
+	 * The values in the map applied to the object may be converted.
+	 * @param map the source map.
+	 * @param object the object to apply the field map to.
+	 * @since 2.20.0
 	 */
-	public static <T> void mapToObject(AbstractMap<String, Object> map, T object)
+	public static <T> void mapToObject(AbstractMap<String, ?> map, T object)
 	{
-		// TODO: Finish.
+		for (ObjectPair<String, ?> pair : map)
+			applyMemberToObject(pair.getKey(), pair.getValue(), object);
+	}
+	
+	/**
+	 * Takes the contents of a Map and applies it to a POJO 
+	 * (Plain Old Java Object) via its public fields and/or getters and setters.
+	 * The values in the map applied to the object may be converted.
+	 * @param map the source map.
+	 * @param object the object to apply the field map to.
+	 * @since 2.20.0
+	 */
+	public static <T> void mapToObject(Map<String, ?> map, T object)
+	{
+		for (Map.Entry<String, ?> pair : map.entrySet())
+			applyMemberToObject(pair.getKey(), pair.getValue(), object);
 	}
 	
 	/**
@@ -790,7 +841,6 @@ public final class Reflect
 	/**
 	 * Creates a new instance of an object for placement in a POJO or elsewhere.
 	 * <p>
-	 * 
 	 * @param memberName the name of the member that is being converted (for reporting). 
 	 * @param object the object to convert to another object
 	 * @param targetType the target class type to convert to, if the types differ.
@@ -824,8 +874,24 @@ public final class Reflect
 		
 		if (object.getClass() == targetType)
 			return targetType.cast(object);
-		else if (Reflect.isArray(object.getClass()))
+		else if (isArray(object.getClass()))
 			return convertArray(memberName, object, targetType);
+		else if (object instanceof AbstractMap)
+		{
+			T out = create(targetType);
+			for (ObjectPair<?, ?> pair : ((AbstractMap<?,?>)object))
+				applyMemberToObject(String.valueOf(pair.getKey()), pair.getValue(), out);
+			return out;
+		}
+		else if (object instanceof Map)
+		{
+			T out = create(targetType);
+			for (Map.Entry<?, ?> pair : ((Map<?,?>)object).entrySet())
+				applyMemberToObject(String.valueOf(pair.getKey()), pair.getValue(), out);
+			return out;
+		}
+		else if (object instanceof Iterable)
+			return convertIterable(memberName, (Iterable<?>)object, targetType);
 		else if (object instanceof Boolean)
 			return convertBoolean(memberName, (Boolean)object, targetType);
 		else if (object instanceof Number)
@@ -844,6 +910,39 @@ public final class Reflect
 			return convertClob(memberName, (Clob)object, targetType);
 		else
 			throw new ClassCastException("Object could not be converted: "+memberName+" is "+object.getClass()+", target is "+targetType);
+	}
+
+	// applies a value, converting, to an object.
+	private static <T> void applyMemberToObject(String fieldName, Object value, T targetObject)
+	{
+		@SuppressWarnings("unchecked")
+		TypeProfile<T> profile = TypeProfile.getTypeProfile((Class<T>)targetObject.getClass());
+	
+		Field field = null; 
+		MethodSignature setter = null;
+		if ((field = profile.getPublicFields().get(fieldName)) != null)
+		{
+			Class<?> type = field.getType();
+			setField(targetObject, fieldName, createForType(fieldName, value, type));
+		}
+		else if ((setter = profile.getSetterMethods().get(fieldName)) != null)
+		{
+			Class<?> type = setter.getType();
+			Method method = setter.getMethod();
+			invokeBlind(method, targetObject, createForType(fieldName, value, type));
+		}			
+	}
+
+	/**
+	 * Returns the enum instance of a class given class and name, or null if not a valid name.
+	 */
+	private static <T extends Enum<T>> T getEnumInstance(String value, Class<T> enumClass)
+	{
+		try {
+			return Enum.valueOf(enumClass, value);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -886,6 +985,13 @@ public final class Reflect
 			return targetType.cast(b ? (char)1 : '\0');
 		else if (targetType == String.class)
 			return targetType.cast(String.valueOf(b));
+		else if (isArray(targetType))
+		{
+			Class<?> atype = getArrayType(targetType);
+			Object out = Array.newInstance(atype, 1);
+			Array.set(out, 0, createForType(b, atype));
+			return targetType.cast(out);
+		}
 		
 		throw new ClassCastException("Object could not be converted: "+memberName+" is Boolean, target is "+targetType);
 	}
@@ -934,7 +1040,14 @@ public final class Reflect
 			return targetType.cast((char)(n.shortValue()));
 		else if (targetType == String.class)
 			return targetType.cast(String.valueOf(n));
-		
+		else if (isArray(targetType))
+		{
+			Class<?> atype = getArrayType(targetType);
+			Object out = Array.newInstance(atype, 1);
+			Array.set(out, 0, createForType(n, atype));
+			return targetType.cast(out);
+		}
+
 		throw new ClassCastException("Object could not be converted: "+memberName+" is numeric, target is "+targetType);
 	}
 
@@ -980,7 +1093,14 @@ public final class Reflect
 			return targetType.cast((double)cv);
 		else if (targetType == String.class)
 			return targetType.cast(String.valueOf(c));
-		
+		else if (isArray(targetType))
+		{
+			Class<?> atype = getArrayType(targetType);
+			Object out = Array.newInstance(atype, 1);
+			Array.set(out, 0, createForType(c, atype));
+			return targetType.cast(out);
+		}
+
 		throw new ClassCastException("Object could not be converted: "+memberName+" is numeric, target is "+targetType);
 	}
 
@@ -998,7 +1118,14 @@ public final class Reflect
 			return targetType.cast(String.valueOf(d));
 		else if (targetType == Date.class)
 			return targetType.cast(new Date(d.getTime()));
-		
+		else if (isArray(targetType))
+		{
+			Class<?> atype = getArrayType(targetType);
+			Object out = Array.newInstance(atype, 1);
+			Array.set(out, 0, createForType(d, atype));
+			return targetType.cast(out);
+		}
+
 		throw new ClassCastException("Object could not be converted: "+memberName+" is Date, target is "+targetType);
 	}
 
@@ -1018,7 +1145,14 @@ public final class Reflect
 			return targetType.cast(new Date(t.getTime()));
 		else if (targetType == Timestamp.class)
 			return targetType.cast(t);
-		
+		else if (isArray(targetType))
+		{
+			Class<?> atype = getArrayType(targetType);
+			Object out = Array.newInstance(atype, 1);
+			Array.set(out, 0, createForType(t, atype));
+			return targetType.cast(out);
+		}
+
 		throw new ClassCastException("Object could not be converted: "+memberName+" is Timestamp, target is "+targetType);
 	}
 
@@ -1060,27 +1194,22 @@ public final class Reflect
 			return targetType.cast(s);
 		else if (targetType.isEnum())
 			return targetType.cast(getEnumInstance(s, (Class<Enum>)targetType));
-		else if (Reflect.isArray(targetType))
+		else if (isArray(targetType))
 		{
 			if (Reflect.getArrayType(targetType) == Character.TYPE)
 				return targetType.cast(s.toCharArray());
 			else if (Reflect.getArrayType(targetType) == Byte.TYPE)
 				return targetType.cast(s.getBytes());
+			else if (isArray(targetType))
+			{
+				Class<?> atype = getArrayType(targetType);
+				Object out = Array.newInstance(atype, 1);
+				Array.set(out, 0, createForType(s, atype));
+				return targetType.cast(out);
+			}
 		}
 		
 		throw new ClassCastException("Object could not be converted: "+memberName+" is String, target is "+targetType);
-	}
-
-	/**
-	 * Returns the enum instance of a class given class and name, or null if not a valid name.
-	 */
-	private static <T extends Enum<T>> T getEnumInstance(String value, Class<T> enumClass)
-	{
-		try {
-			return Enum.valueOf(enumClass, value);
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
 	}
 
 	/**
@@ -1101,7 +1230,7 @@ public final class Reflect
 			return null;
 		} catch (IOException e) {
 			return null;
-			} finally {
+		} finally {
 			Common.close(reader);
 		}
 	
@@ -1128,7 +1257,7 @@ public final class Reflect
 			return null;
 		} catch (IOException e) {
 			return null;
-			} finally {
+		} finally {
 			Common.close(in);
 		}
 		
@@ -1143,29 +1272,34 @@ public final class Reflect
 		Class<?> arrayType = Reflect.getArrayType(array);
 		int arrayDimensions = Reflect.getArrayDimensions(array);
 		
-		if (arrayType == Character.TYPE && arrayDimensions == 1)
+		if (arrayDimensions == 1)
 		{
-			return convertCharArray(memberName, (char[])array, targetType);
-		}
-		else if (arrayType == Character.class && arrayDimensions == 1)
-		{
-			Character[] chars = (Character[])array;
-			char[] charArray = new char[chars.length];
-			for (int i = 0; i < charArray.length; i++)
-				charArray[i] = chars[i];
-			return convertCharArray(memberName, charArray, targetType);
-		}
-		else if (arrayType == Byte.TYPE && arrayDimensions == 1)
-		{
-			return convertByteArray(memberName, (byte[])array, targetType);
-		}
-		else if (arrayType == Byte.class && arrayDimensions == 1)
-		{
-			Byte[] bytes = (Byte[])array;
-			byte[] byteArray = new byte[bytes.length];
-			for (int i = 0; i < byteArray.length; i++)
-				byteArray[i] = bytes[i];
-			return convertByteArray(memberName, byteArray, targetType);
+			if (arrayType == Character.TYPE)
+			{
+				return convertCharArray(memberName, (char[])array, targetType);
+			}
+			else if (arrayType == Character.class)
+			{
+				Character[] chars = (Character[])array;
+				char[] charArray = new char[chars.length];
+				for (int i = 0; i < charArray.length; i++)
+					charArray[i] = chars[i];
+				return convertCharArray(memberName, charArray, targetType);
+			}
+			else if (arrayType == Byte.TYPE)
+			{
+				return convertByteArray(memberName, (byte[])array, targetType);
+			}
+			else if (arrayType == Byte.class)
+			{
+				Byte[] bytes = (Byte[])array;
+				byte[] byteArray = new byte[bytes.length];
+				for (int i = 0; i < byteArray.length; i++)
+					byteArray[i] = bytes[i];
+				return convertByteArray(memberName, byteArray, targetType);
+			}
+			else
+				return convertOtherArray(memberName, array, targetType);
 		}
 		else
 			return convertOtherArray(memberName, array, targetType);
@@ -1176,7 +1310,7 @@ public final class Reflect
 	 */
 	private static <T> T convertCharArray(String memberName, char[] charArray, Class<T> targetType)
 	{
-		if (Reflect.isArray(targetType))
+		if (isArray(targetType))
 		{
 			if (Reflect.getArrayType(targetType) == Character.TYPE)
 				return targetType.cast(charArray);
@@ -1196,7 +1330,7 @@ public final class Reflect
 	 */
 	private static <T> T convertByteArray(String memberName, byte[] byteArray, Class<T> targetType)
 	{
-		if (Reflect.isArray(targetType))
+		if (isArray(targetType))
 		{
 			if (Reflect.getArrayType(targetType) == Character.TYPE)
 				return targetType.cast((new String(byteArray)).toCharArray());
@@ -1226,6 +1360,29 @@ public final class Reflect
 			Array.set(newarray, i, createForType(String.format("%s[%d]", memberName, i), Array.get(array, i), atype));
 			
 		return targetType.cast(newarray);
+	}
+	
+	/**
+	 * Converts an iterable to another type (like an array).
+	 */
+	private static <T> T convertIterable(String memberName, Iterable<?> iter, Class<T> targetType)
+	{
+		if (isArray(targetType) && getArrayDimensions(targetType) == 1)
+		{
+			List<Object> templist = new List<Object>(64);
+			for (Object obj : iter)
+				templist.add(obj);
+			
+			Class<?> atype = getArrayType(targetType);
+			int alen = templist.size();
+			Object newarray = Array.newInstance(atype, alen);
+			for (int i = 0; i < alen; i++)
+				Array.set(newarray, i, createForType(String.format("%s, index %d", memberName, i), templist.getByIndex(i), atype));
+			
+			return targetType.cast(newarray);
+		}
+		else
+			throw new ClassCastException("Object could not be converted: "+memberName+" is Iterable, target is "+targetType);
 	}
 	
 }

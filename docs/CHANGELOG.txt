@@ -12,6 +12,8 @@ Slated for 2.20.0
 - Changed: Made equality methods in sets and hashes more thorough to test for
   null combinations.
 - Added/Fixed: Javadoc package names for building logger package javadocs.
+- Added: Reflect.mapToNewObject(AbstractMap/Map<String, ?>, Class) and
+  Reflect.mapToObject(AbstractMap/Map<String, ?>, T).
 
 Changed in 2.19.0
 =================
