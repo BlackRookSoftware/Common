@@ -14,6 +14,7 @@ Slated for 2.20.0
 - Added/Fixed: Javadoc package names for building logger package javadocs.
 - Added: Reflect.mapToNewObject(AbstractMap/Map<String, ?>, Class) and
   Reflect.mapToObject(AbstractMap/Map<String, ?>, T).
+- Added: TypeProfile.getGetterMethods().
 
 Changed in 2.19.0
 =================

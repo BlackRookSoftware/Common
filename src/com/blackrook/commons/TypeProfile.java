@@ -28,6 +28,8 @@ public class TypeProfile<T extends Object>
 
 	/** Map of Public fields. */
 	private HashMap<String, Field> publicFields;
+	/** Map of getters. */
+	private HashMap<String, MethodSignature> getterMethods;
 	/** Map of setters. */
 	private HashMap<String, MethodSignature> setterMethods;
 	
@@ -69,14 +71,19 @@ public class TypeProfile<T extends Object>
 	private TypeProfile(Class<? extends T> inputClass)
 	{
 		publicFields = new HashMap<String, Field>();
+		getterMethods = new HashMap<String, MethodSignature>();
 		setterMethods = new HashMap<String, MethodSignature>();
 		
 		for (Field f : inputClass.getFields())
 			publicFields.put(f.getName(), f);
 		
 		for (Method m : inputClass.getMethods())
-			if (Reflect.isSetter(m))
+		{
+			if (Reflect.isGetter(m))
+				getterMethods.put(Reflect.getFieldName(m.getName()), new MethodSignature(m.getReturnType(), m));
+			else if (Reflect.isSetter(m))
 				setterMethods.put(Reflect.getFieldName(m.getName()), new MethodSignature(m.getParameterTypes()[0], m));
+		}
 	}
 	
 	/** 
@@ -89,7 +96,18 @@ public class TypeProfile<T extends Object>
 	}
 
 	/** 
-	 * Returns a reference to the map that contains this profile's public fields.
+	 * Returns a reference to the map that contains this profile's getter methods.
+	 * Maps "field name" to {@link MethodSignature} object, which contains the {@link Class} type
+	 * and the {@link Method} itself.
+	 * @since 2.20.0 
+	 */
+	public HashMap<String, MethodSignature> getGetterMethods()
+	{
+		return getterMethods;
+	}
+
+	/** 
+	 * Returns a reference to the map that contains this profile's setter methods.
 	 * Maps "field name" to {@link MethodSignature} object, which contains the {@link Class} type
 	 * and the {@link Method} itself. 
 	 */
@@ -115,7 +133,7 @@ public class TypeProfile<T extends Object>
 		}
 
 		/**
-		 * Returns the type that this setter takes as an argument.
+		 * Returns the type that this setter takes as an argument, or this getter returns.
 		 */
 		public Class<?> getType()
 		{
