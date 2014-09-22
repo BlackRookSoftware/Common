@@ -79,7 +79,7 @@ public class TypeProfile<T extends Object>
 		
 		for (Method m : inputClass.getMethods())
 		{
-			if (Reflect.isGetter(m))
+			if (Reflect.isGetter(m) && !m.getName().equals("getClass"))
 				getterMethods.put(Reflect.getFieldName(m.getName()), new MethodSignature(m.getReturnType(), m));
 			else if (Reflect.isSetter(m))
 				setterMethods.put(Reflect.getFieldName(m.getName()), new MethodSignature(m.getParameterTypes()[0], m));
