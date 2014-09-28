@@ -7,8 +7,6 @@
  ******************************************************************************/
 package com.blackrook.commons;
 
-import java.util.Arrays;
-
 import com.blackrook.commons.list.List;
 
 /**
@@ -202,7 +200,19 @@ public abstract class AbstractChainedHash<P extends Object> extends AbstractArra
 	@Override
 	public String toString()
 	{
-		return Arrays.toString(storageArray);
+		StringBuilder sb = new StringBuilder();
+		boolean once = false;
+		sb.append("[");
+		for (Object obj : this)
+		{
+			if (once)
+				sb.append(", ");
+			sb.append(obj);
+			once = true;
+		}
+		sb.append("]");
+		
+		return sb.toString();
 	}
 
 	@Override

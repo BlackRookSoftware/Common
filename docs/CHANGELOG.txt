@@ -16,6 +16,7 @@ Slated for 2.20.0
   Reflect.mapToObject(AbstractMap/Map<String, ?>, T).
 - Added: TypeProfile.getGetterMethods(), getAnnotatedPublicFields(),
   getAnnotatedGetters(), getAnnotatedSetters().
+- Changed: toString() methods on some data structures.
 
 Changed in 2.19.0
 =================
