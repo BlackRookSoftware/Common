@@ -600,6 +600,31 @@ public final class Common
 	}
 	
 	/**
+	 * Opens an {@link InputStream} to a resource using the current thread's {@link ClassLoader}.
+	 * @param pathString the resource pathname.
+	 * @return an open {@link InputStream} for reading the resource or null if not found.
+	 * @see ClassLoader#getResourceAsStream(String)
+	 * @since 2.20.0
+	 */
+	public static InputStream openResource(String pathString)
+	{
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream(pathString);
+	}
+	
+	/**
+	 * Opens an {@link InputStream} to a resource using a provided ClassLoader.
+	 * @param classLoader the provided {@link ClassLoader} to use.
+	 * @param pathString the resource pathname.
+	 * @return an open {@link InputStream} for reading the resource or null if not found.
+	 * @see ClassLoader#getResourceAsStream(String)
+	 * @since 2.20.0
+	 */
+	public static InputStream openResource(ClassLoader classLoader, String pathString)
+	{
+		return classLoader.getResourceAsStream(pathString);
+	}
+	
+	/**
 	 * Retrieves the ASCII contents of a file.
 	 * @param f		the file to use.
 	 * @return		a contiguous string (including newline characters) of the file's contents.
