@@ -1192,6 +1192,10 @@ public final class Reflect
 			return (T)new Double(Common.parseDouble(s));
 		else if (targetType == Double.class)
 			return targetType.cast(Common.parseDouble(s));
+		else if (targetType == Character.TYPE && s.length() == 1)
+			return (T)new Character(s.charAt(0));
+		else if (targetType == Character.class && s.length() == 1)
+			return targetType.cast(s.charAt(0));
 		else if (targetType == String.class)
 			return targetType.cast(s);
 		else if (targetType.isEnum())
