@@ -872,7 +872,9 @@ public final class Reflect
 			return null;
 		}
 		
-		if (object.getClass() == targetType)
+		if (targetType.isAssignableFrom(object.getClass()))
+			return targetType.cast(object);
+		else if (Object.class == targetType)
 			return targetType.cast(object);
 		else if (isArray(object.getClass()))
 			return convertArray(memberName, object, targetType);

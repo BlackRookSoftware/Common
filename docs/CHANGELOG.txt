@@ -18,6 +18,8 @@ Slated for 2.20.0
   getAnnotatedGetters(), getAnnotatedSetters().
 - Changed: toString() methods on some data structures.
 - Added: Common.openResource().
+- Added/Fixed: Reflect.createForType() now recognizes superclasses of input
+  objects and will not convert them (it will cast them).
 
 Changed in 2.19.0
 =================
