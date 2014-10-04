@@ -22,6 +22,8 @@ Slated for 2.20.0
   objects and will not convert them (it will cast them).
 - Changed: Reflect.createForType() can convert single-character-strings to 
   characters.
+- Added: Hash.union(?,?), Hash.intersection(?,?), Hash.difference(?,?), and
+  Hash.xor(?,?) for set manipulation for all Hashes. 
 
 Changed in 2.19.0
 =================

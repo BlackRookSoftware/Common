@@ -44,4 +44,87 @@ public class Hash<T extends Object> extends AbstractChainedHash<T>
 	{
 		super(capacity, rehashRatio);
 	}
+
+	/**
+	 * Returns a new Hash that is the union of the objects in two hashes,
+	 * i.e. a set with all objects from both sets.
+	 * @param set1 the first hash.
+	 * @param set2 the second hash.
+	 * @since 2.20.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, H extends Hash<T>> H union(H set1, H set2)
+	{
+		Hash<T> out = new Hash<T>();
+		for (T val : set1)
+			out.put(val);
+		for (T val : set2)
+			out.put(val);
+		return (H)out;
+	}
+
+	/**
+	 * Returns a new Hash that is the intersection of the objects in two hashes,
+	 * i.e. the objects that are present in both sets.
+	 * @param set1 the first hash.
+	 * @param set2 the second hash.
+	 * @since 2.20.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, H extends Hash<T>> H intersection(H set1, H set2)
+	{
+		Hash<T> out = new Hash<T>();
+		
+		H bigset = set1.size() > set2.size() ? set1 : set2;
+		H smallset = bigset == set1 ? set2 : set1;
+		
+		for (T val : smallset)
+		{
+			if (bigset.contains(val))
+				out.put(val);
+		}
+		return (H)out;
+	}
+
+	/**
+	 * Returns a new Hash that is the difference of the objects in two hashes,
+	 * i.e. the objects in the first set minus the objects in the second.
+	 * @param set1 the first hash.
+	 * @param set2 the second hash.
+	 * @since 2.20.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, H extends Hash<T>> H difference(H set1, H set2)
+	{
+		Hash<T> out = new Hash<T>();
+		for (T val : set1)
+		{
+			if (!set2.contains(val))
+				out.put(val);
+		}
+		return (H)out;
+	}
+
+	/**
+	 * Returns a new Hash that is the union minus the intersection of the objects in two hashes.
+	 * @param set1 the first hash.
+	 * @param set2 the second hash.
+	 * @since 2.20.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, H extends Hash<T>> H xor(H set1, H set2)
+	{
+		Hash<T> out = new Hash<T>();
+		for (T val : set1)
+		{
+			if (!set2.contains(val))
+				out.put(val);
+		}
+		for (T val : set2)
+		{
+			if (!set1.contains(val))
+				out.put(val);
+		}
+		return (H)out;
+	}
 }
