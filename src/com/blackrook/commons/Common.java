@@ -150,8 +150,8 @@ public final class Common
 			IS_WINDOWS_2003 = osName.contains("2003");
 			IS_WINDOWS_2008 = osName.contains("2008");
 			IS_WINDOWS_VISTA = osName.contains("Vista");
-			IS_WINDOWS_7 = osName.contains("7");
-			IS_WINDOWS_8 = osName.contains("8");
+			IS_WINDOWS_7 = osName.contains(" 7");
+			IS_WINDOWS_8 = osName.contains(" 8");
 			IS_WIN32 = IS_X86;
 			IS_WIN64 = IS_X64;
 		}

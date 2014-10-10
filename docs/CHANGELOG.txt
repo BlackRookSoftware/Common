@@ -26,6 +26,8 @@ Slated for 2.20.0
   Hash.xor(?,?) for set manipulation for all Hashes. 
 - Created: An instantiatable version of Singleton called SingletonManager.
 - Deprecated: Singleton, since SingletonManager exists.
+- Fixed: Common.isWindows8() would have erroneously detected Windows 98 as
+  Windows 8. Duh!
 
 Changed in 2.19.0
 =================
