@@ -24,6 +24,8 @@ Slated for 2.20.0
   characters.
 - Added: Hash.union(?,?), Hash.intersection(?,?), Hash.difference(?,?), and
   Hash.xor(?,?) for set manipulation for all Hashes. 
+- Created: An instantiatable version of Singleton called SingletonManager.
+- Deprecated: Singleton, since SingletonManager exists.
 
 Changed in 2.19.0
 =================

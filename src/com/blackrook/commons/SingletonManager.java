@@ -1,21 +1,24 @@
 package com.blackrook.commons;
 
+import com.blackrook.commons.hash.HashMap;
+
 /**
  * A utility class for instantiating classes that need to exist in one spot in memory.
  * Only instantiates "bean" classes and classes with default constructors.
- * This class maintains one discrete set of singletons - this is essentially a static
- * version of an instance of {@link SingletonManager}.
+ * Each {@link SingletonManager} manages one discrete set of instances.
  * @author Matthew Tropiano
- * @since 2.17.0
- * @deprecated 2.20.0 You should be using/instantiating {@link SingletonManager}s.
+ * @since 2.20.0
  */
-public final class Singleton
+public class SingletonManager
 {
-	/** Singleton context for beans not attached to the application context. */
-	private static final SingletonManager MANAGER = new SingletonManager();
+	/** Singleton instance map. */
+	private HashMap<String, Object> instanceMap;
 
 	// Can't instantiate.
-	private Singleton() {}
+	public SingletonManager() 
+	{
+		instanceMap = new HashMap<String, Object>();
+	}
 
 	/**
 	 * Gets and auto-casts an object instance.
@@ -26,9 +29,9 @@ public final class Singleton
 	 * @throws RuntimeException if instantiation cannot happen, either due to
 	 * a non-existent constructor or a non-visible constructor.
 	 */
-	public static <T> T get(Class<T> clazz)
+	public <T> T get(Class<T> clazz)
 	{
-		return MANAGER.get(clazz, "$$"+clazz.getName(), true);
+		return get(clazz, "$$"+clazz.getName(), true);
 	}
 
 	/**
@@ -40,9 +43,9 @@ public final class Singleton
 	 * @throws RuntimeException if instantiation cannot happen, either due to
 	 * a non-existent constructor or a non-visible constructor.
 	 */
-	public static <T> T get(Class<T> clazz, String name)
+	public <T> T get(Class<T> clazz, String name)
 	{
-		return MANAGER.get(clazz, name, true);
+		return get(clazz, name, true);
 	}
 
 	/**
@@ -54,9 +57,26 @@ public final class Singleton
 	 * @throws RuntimeException if instantiation cannot happen, either due to
 	 * a non-existent constructor or a non-visible constructor.
 	 */
-	public static <T> T get(Class<T> clazz, String name, boolean create)
+	public <T> T get(Class<T> clazz, String name, boolean create)
 	{
-		return MANAGER.get(clazz, name, create);
+		Object obj = instanceMap.get(name);
+		if (obj == null && create)
+		{
+			synchronized (instanceMap) 
+			{
+				obj = instanceMap.get(name);
+				if (obj == null)
+				{
+					obj = Reflect.create(clazz);
+					instanceMap.put(name, obj);
+				}
+			}
+		}
+	
+		if (obj == null)
+			return null;
+		else
+			return clazz.cast(obj);
 	}
 
 	
