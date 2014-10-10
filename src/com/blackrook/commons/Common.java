@@ -780,27 +780,17 @@ public final class Common
 			throw new IOException("Response was code "+code+": "+codeString);
 		}
 		
-		StringBuffer sb = new StringBuffer();
-		BufferedReader br = null;
-		InputStreamReader isr = null;
+		InputStream in = null;
 		try {
-			if (encoding != null)
-				isr = new InputStreamReader(conn.getInputStream(), encoding);
-			else
-				isr = new InputStreamReader(conn.getInputStream());
-			br = new BufferedReader(isr);
-			String line = null;
-			while ((line = br.readLine()) != null)
-				sb.append(line).append("\n");
+			in = conn.getInputStream();
+			return getTextualContents(in, encoding);
 		} catch (IOException e) {
 			throw e;
-			} finally {
-			Common.close(br);
+		} finally {
+			Common.close(in);
+			conn.disconnect();
 		}
 		
-		conn.disconnect();
-		
-		return sb.toString();
 	}
 
 	/**
@@ -843,20 +833,16 @@ public final class Common
 			throw new IOException("Response was code "+code+": "+codeString);
 		}
 
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(conn.getInputStream());
-			Common.relay(in, bos);
+			return getBinaryContents(in);
 		} catch (IOException e) {
 			throw e;
-			} finally {
+		} finally {
 			Common.close(in);
+			conn.disconnect();
 		}
-		
-		conn.disconnect();
-		
-		return bos.toByteArray();
 	}
 
 	/**
@@ -887,18 +873,15 @@ public final class Common
 		URLConnection conn = url.openConnection();
 		conn.setReadTimeout(socketTimeoutMillis);
 
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(conn.getInputStream());
-			Common.relay(in, bos);
+			return getBinaryContents(in);
 		} catch (IOException e) {
 			throw e;
-			} finally {
+		} finally {
 			Common.close(in);
 		}
-		
-		return bos.toByteArray();
 	}
 
 	/**
