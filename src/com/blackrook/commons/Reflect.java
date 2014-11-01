@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -440,6 +441,36 @@ public final class Reflect
 	}
 	
 	/**
+	 * Creates a new instance of a class from a class type.
+	 * This essentially calls {@link Class#newInstance()}, but wraps the call
+	 * in a try/catch block that only throws an exception if something goes wrong.
+	 * @param constructor the constructor to call.
+	 * @param params the constructor parameters.
+	 * @return a new instance of an object created via the provided constructor.
+	 * @throws RuntimeException if instantiation cannot happen, either due to
+	 * a non-existent constructor or a non-visible constructor.
+	 * @since 2.20.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T construct(Constructor<T> constructor, Object ... params)
+	{
+		Object out = null;
+		try {
+			out = (T)constructor.newInstance(params);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return (T)out;
+	}
+	
+	/**
 	 * Sets a field on a "bean" object using a field name.
 	 * The field corresponds to a "setter" method on the object,
 	 * without the "set" part. Corresponding methods that are not found will be skipped.
@@ -487,6 +518,33 @@ public final class Reflect
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Sets the value of a field on an object.
+	 * @param instance the object instance to set the field on.
+	 * @param field the field to set.
+	 * @param value the value to set.
+	 * @throws NullPointerException if the field or object provided is null.
+	 * @throws ClassCastException if the value could not be cast to the proper type.
+	 * @throws RuntimeException if anything goes wrong (bad field name, 
+	 * bad target, bad argument, or can't access the field).
+	 * @see Field#set(Object, Object)
+	 * @since 2.20.0
+	 */
+	public static void setField(Object instance, Field field, Object value)
+	{
+		try {
+			field.set(instance, value);
+		} catch (ClassCastException ex) {
+			throw ex;
+		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException(e);
