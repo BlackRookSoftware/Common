@@ -20,18 +20,18 @@ public interface IntervalHashable extends AbstractSpatialHashable
 	/**
 	 * Gets the object's absolute X coordinate in the spatial hash (center).
 	 */
-	public float getObjectCenterX();
+	public double getObjectCenterX();
 
 	/**
 	 * Gets the object's half-width in the spatial hash.
 	 */
-	public float getObjectHalfWidth();
+	public double getObjectHalfWidth();
 
 	/**
 	 * Gets the object's sweep along the X-axis (from its center) in the spatial hash.
 	 * This is useful for detecting objects that are in the middle of, 
 	 * or anticipated to change between hash queries.
 	 */
-	public float getObjectSweepX();
+	public double getObjectSweepX();
 
 }

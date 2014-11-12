@@ -20,36 +20,36 @@ public interface SpatialHashable extends IntervalHashable
 	/**
 	 * Gets the object's absolute Y coordinate in the spatial hash (center).
 	 */
-	public float getObjectCenterY();
+	public double getObjectCenterY();
 
 	/**
 	 * Gets the object's absolute Z coordinate in the spatial hash (center).
 	 */
-	public float getObjectCenterZ();
+	public double getObjectCenterZ();
 
 	/**
 	 * Gets the object's half-height in the spatial hash.
 	 */
-	public float getObjectHalfHeight();
+	public double getObjectHalfHeight();
 
 	/**
 	 * Gets the object's half-depth in the spatial hash.
 	 */
-	public float getObjectHalfDepth();
+	public double getObjectHalfDepth();
 
 	/**
 	 * Gets the object's sweep along the Y-axis (from its center) in the spatial hash.
 	 * This is useful for detecting objects that are in the middle of, 
 	 * or anticipated to change between hash queries.
 	 */
-	public float getObjectSweepY();
+	public double getObjectSweepY();
 
 	/**
 	 * Gets the object's sweep along the Z-axis (from its center) in the spatial hash.
 	 * This is useful for detecting objects that are in the middle of, 
 	 * or anticipated to change between hash queries.
 	 */
-	public float getObjectSweepZ();
+	public double getObjectSweepZ();
 
 	/**
 	 * Gets the object's radius in the spatial hash.
@@ -58,7 +58,7 @@ public interface SpatialHashable extends IntervalHashable
 	 * is not always used - it is used if the object's {@link #useObjectRadius()} 
 	 * function returns true, which leaves it in the hands of the implementor.
 	 */
-	public float getObjectRadius();
+	public double getObjectRadius();
 
 	/**
 	 * Should the object's radius value in the spatial hash be used for collision, rather

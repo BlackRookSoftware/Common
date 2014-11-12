@@ -29,6 +29,7 @@ Slated for 2.20.0
 - Deprecated: Singleton, since SingletonManager exists.
 - Fixed: Common.isWindows8() would have erroneously detected Windows 98 as
   Windows 8. Duh!
+- Changed: Promoted IntervalHashable/SpatialHashable return values to doubles.
 
 Changed in 2.19.0
 =================
