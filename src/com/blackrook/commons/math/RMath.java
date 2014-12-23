@@ -297,6 +297,7 @@ public final class RMath
 	 * @return a random entry from the array.
 	 * @since 2.2.0
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T randElement(Random rand, T ... objects)
 	{
 		return objects[rand(rand, objects.length)];

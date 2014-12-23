@@ -123,7 +123,8 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
      * Adds a series of objects to the list in the order that they are listed.
      * Does not add null objects.
      */
-    public void addAll(T ... object)
+    @SuppressWarnings("unchecked")
+	public void addAll(T ... object)
     {
     	for (int i = 0; i < object.length; i++)
     		add(object[i]);

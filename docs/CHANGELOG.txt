@@ -1,5 +1,10 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Changed for 2.20.1
+==================
+
+- Changed: Method annotations and javadoc tweaks. 
+
 Changed for 2.20.0
 ==================
 

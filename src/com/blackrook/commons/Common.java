@@ -328,6 +328,7 @@ public final class Common
 	 * @return the first object that isn't null in the list, 
 	 * or null if all of the objects are null.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T coalesce(T ... objects)
 	{
 		for (int i = 0; i < objects.length; i++)
@@ -2869,6 +2870,7 @@ public final class Common
 	 * to the resultant one in the order in which they appear.
 	 * @since 2.17.0
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T[] joinArrays(T[]...  arrays)
 	{
 		int totalLen = 0;
@@ -2877,7 +2879,6 @@ public final class Common
 				totalLen += a.length;
 		
 		Class<?> type = Reflect.getArrayType(arrays);
-		@SuppressWarnings("unchecked")
 		T[] out = (T[])Array.newInstance(type, totalLen);
 		
 		int offs = 0;
