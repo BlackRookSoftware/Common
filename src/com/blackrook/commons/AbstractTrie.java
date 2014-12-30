@@ -246,7 +246,7 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 			encIndex = segIndex;
 		}
 
-		while (segIndex < segments.length && current.hasEdges())
+		while (segIndex < segments.length && current != null && current.hasEdges())
 		{
 			if (current.edgeMap.containsKey(segments[segIndex]))
 			{
@@ -254,7 +254,10 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 				segIndex++;
 			}
 			else
+			{
+				current = null;
 				break;
+			}
 
 			if (encountered != null && current.value != null)
 			{
@@ -264,17 +267,46 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 				
 		}
 		
-		if (descending != null)
-			getDescendantsRecurse(current, descending);
+		if (current == null)
+		{
+			// don't get descendants. there won't be any.
+			return new Result<V, S>(
+				null,
+				encountered,
+				descending,
+				segments,
+				encIndex,
+				segIndex
+			);
+		}
+		// terminated due to end of segments?
+		else if (segIndex == segments.length)
+		{
+			// get descendants if necessary.
+			if (descending != null)
+				getDescendantsRecurse(current, descending);
+			
+			return new Result<V, S>(
+				equalityMethod(value, current.value) ? current.value : null,
+				encountered,
+				descending,
+				segments,
+				encIndex,
+				segIndex
+			);
+		}
+		else
+		{
+			return new Result<V, S>(
+				null,
+				encountered,
+				descending,
+				segments,
+				encIndex,
+				segIndex
+			);
+		}
 		
-		return new Result<V, S>(
-			equalityMethod(value, current.value) ? current.value : null,
-			encountered,
-			descending,
-			segments,
-			encIndex,
-			segIndex
-		);
 	}
 
 	/**

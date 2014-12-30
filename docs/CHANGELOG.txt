@@ -1,5 +1,11 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Changed for 2.20.2
+==================
+
+- Fixed: AbstractTrie returned incorrect information on getAfter() when it
+  had no path in the Trie to take.
+
 Changed for 2.20.1
 ==================
 
