@@ -75,4 +75,19 @@ public class Vect2F extends Tuple2F implements VectF
 		y = dest.y - source.y;
 	}
 
+	/**
+	 * Sets this vector's value using the components of two points
+	 * (a vector from one point to the other).
+	 * @param sourceX	source x-coordinate. 
+	 * @param sourceY	source y-coordinate. 
+	 * @param destX		destination x-coordinate. 
+	 * @param destY		destination y-coordinate.
+	 * @since 2.20.3 
+	 */
+	public void set(float sourceX, float sourceY, float destX, float destY)
+	{
+		x = destX - sourceX;
+		y = destY - sourceY;
+	}
+
 }

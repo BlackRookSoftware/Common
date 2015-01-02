@@ -64,6 +64,63 @@ public class LoggingFactory
 	}
 	
 	/**
+	 * A convenience method for creating a Console-appending logger factory.
+	 * <p>Equivalent to: <code>new LoggingFactory(new ConsoleLogger(), LogLevel.DEBUG)</code></p>
+	 * @deprecated In 2.20.3 due to unclear method wording. Please switch to {@link LoggingFactory#createConsoleLoggingFactory()}.
+	 */
+	@Deprecated
+	public static LoggingFactory createConsoleLogger()
+	{
+		return createConsoleLoggingFactory();
+	}
+
+	/**
+	 * A convenience method for creating a Console-appending logger factory.
+	 * <p>Equivalent to: <code>new LoggingFactory(new ConsoleLogger(), LogLevel.DEBUG)</code></p>
+	 * @since 2.20.3
+	 */
+	public static LoggingFactory createConsoleLoggingFactory()
+	{
+		return new LoggingFactory(LogLevel.DEBUG, new ConsoleLogger());
+	}
+
+	/**
+	 * A convenience method for creating a Console-appending logger for a particular source by name.
+	 * <p>Equivalent to: <code>createConsoleLoggingFactory().getLogger(name)</code></p>
+	 * <p>It may be better, thread-resource-wise to create a single factory if you are logging multiple sources/classes through it.</p>
+	 * @see #getLogger(String)
+	 * @since 2.20.3
+	 */
+	public static Logger createConsoleLoggerFor(String name)
+	{
+		return createConsoleLoggingFactory().getLogger(name);
+	}
+	
+	/**
+	 * A convenience method for creating a Console-appending logger for a particular source by class name.
+	 * <p>Equivalent to: <code>createConsoleLoggingFactory().getLogger(clazz)</code></p>
+	 * <p>It may be better, thread-resource-wise to create a single factory if you are logging multiple sources/classes through it.</p>
+	 * @see #getLogger(Class)
+	 * @since 2.20.3
+	 */
+	public static Logger createConsoleLoggerFor(Class<?> clazz)
+	{
+		return createConsoleLoggingFactory().getLogger(clazz);
+	}
+	
+	/**
+	 * A convenience method for creating a Console-appending logger for a particular source by class name.
+	 * <p>Equivalent to: <code>createConsoleLoggingFactory().getLogger(clazz, fullyQualified)</code></p>
+	 * <p>It may be better, thread-resource-wise to create a single factory if you are logging multiple sources/classes through it.</p>
+	 * @see #getLogger(Class, boolean)
+	 * @since 2.20.3
+	 */
+	public static Logger createConsoleLoggerFor(Class<?> clazz, boolean fullyQualified)
+	{
+		return createConsoleLoggingFactory().getLogger(clazz, fullyQualified);
+	}
+	
+	/**
 	 * Adds a logging driver or drivers.
 	 * @param drivers the drivers to add.
 	 */
@@ -81,15 +138,6 @@ public class LoggingFactory
 	{
 		for (LoggingDriver d : drivers)
 			this.drivers.remove(d);
-	}
-	
-	/**
-	 * A convenience method for creating a Console-appending logger.
-	 * <p>Equivalent to: <code>new LoggingFactory(new ConsoleLogger(), LogLevel.DEBUG)</code></p>
-	 */
-	public static LoggingFactory createConsoleLogger()
-	{
-		return new LoggingFactory(LogLevel.DEBUG, new ConsoleLogger());
 	}
 	
 	/**

@@ -1,18 +1,24 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Changed for 2.20.2
-==================
+Slated for 2.20.3
+=================
+
+- Added: Addt'l methods to Vect2D, Vect2F for setting vector components.
+- Added: Addt'l convenience methods to LoggingFactory.
+
+Changed in 2.20.2
+=================
 
 - Fixed: AbstractTrie returned incorrect information on getAfter() when it
   had no path in the Trie to take.
 
-Changed for 2.20.1
-==================
+Changed in 2.20.1
+=================
 
 - Changed: Method annotations and javadoc tweaks. 
 
-Changed for 2.20.0
-==================
+Changed in 2.20.0
+=================
 
 - Added: AbstractTrie<?,?,?> for implementing a Trie data structure and 
   lookup map.

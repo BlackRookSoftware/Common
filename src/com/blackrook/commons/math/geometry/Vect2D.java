@@ -21,7 +21,7 @@ public class Vect2D extends Tuple2D implements VectD
 	 */
 	public Vect2D()
 	{
-		this(0,0);
+		this(0, 0);
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class Vect2D extends Tuple2D implements VectD
 	 */
 	public Vect2D(Vect2D v)
 	{
-		this(v.x,v.y);
+		this(v.x, v.y);
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class Vect2D extends Tuple2D implements VectD
 	 */
 	public Vect2D(Vect1D v)
 	{
-		this(v.x,0);
+		this(v.x, 0);
 	}
 
 	/**
@@ -56,23 +56,52 @@ public class Vect2D extends Tuple2D implements VectD
 	 * Creates a new two-dimensional vector from two points
 	 * (a vector from one point to the other).
 	 * @param source	source point. 
-	 * @param dest		dest point. 
+	 * @param dest		destination point. 
 	 */
 	public Vect2D(Point2D source, Point2D dest)
 	{
-		set(source,dest);
+		set(source, dest);
+	}
+	
+	/**
+	 * Creates a new two-dimensional vector from the components of two points
+	 * (a vector from one point to the other).
+	 * @param sourceX	source x-coordinate. 
+	 * @param sourceY	source y-coordinate. 
+	 * @param destX		destination x-coordinate. 
+	 * @param destY		destination y-coordinate.
+	 * @since 2.20.3 
+	 */
+	public Vect2D(double sourceX, double sourceY, double destX, double destY)
+	{
+		set(sourceX, sourceY, destX, destY);
 	}
 	
 	/**
 	 * Sets this vector's value using two points
 	 * (a vector from one point to the other).
 	 * @param source	source point. 
-	 * @param dest		dest point. 
+	 * @param dest		destination point. 
 	 */
 	public void set(Point2D source, Point2D dest)
 	{
 		x = dest.x - source.x;
 		y = dest.y - source.y;
+	}
+
+	/**
+	 * Sets this vector's value using the components of two points
+	 * (a vector from one point to the other).
+	 * @param sourceX	source x-coordinate. 
+	 * @param sourceY	source y-coordinate. 
+	 * @param destX		destination x-coordinate. 
+	 * @param destY		destination y-coordinate.
+	 * @since 2.20.3 
+	 */
+	public void set(double sourceX, double sourceY, double destX, double destY)
+	{
+		x = destX - sourceX;
+		y = destY - sourceY;
 	}
 
 }
