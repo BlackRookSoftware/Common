@@ -5,6 +5,8 @@ Slated for 2.20.3
 
 - Added: Addt'l methods to Vect2D, Vect2F for setting vector components.
 - Added: Addt'l convenience methods to LoggingFactory.
+- Added: a series of vector/line calculations. The Tuple* classes point to 
+  these methods now for relevant calculations.
 
 Changed in 2.20.2
 =================

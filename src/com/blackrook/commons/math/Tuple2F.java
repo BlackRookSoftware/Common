@@ -77,7 +77,7 @@ public abstract class Tuple2F extends Tuple1F
 	 */
 	public float length()
 	{
-		return (float)Math.sqrt(squareLength());
+		return (float)RMath.getVectorLength(x, y);
 	}
 
 	/**
@@ -86,16 +86,16 @@ public abstract class Tuple2F extends Tuple1F
 	 */
 	public float squareLength()
 	{
-		return x*x + y*y;
+		return (float)RMath.getVectorLengthSquared(x, y);
 	}
 
 	/**
 	 * Yields the dot product of a Tuple2D with this one.
-	 * @param t		the tuple to use with this one.
+	 * @param v		the tuple to use with this one.
 	 */
-	public float dot(Tuple2F t)
+	public float dot(Tuple2D v)
 	{
-		return x*t.x + y*t.y;
+		return (float)RMath.getVectorDotProduct(x, y, v.x, v.y);
 	}
 
 	/**

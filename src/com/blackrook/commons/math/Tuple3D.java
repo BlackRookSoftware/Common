@@ -93,7 +93,7 @@ public abstract class Tuple3D extends Tuple2D
 	 */
 	public double length()
 	{
-		return Math.sqrt(squareLength());
+		return RMath.getVectorLength(x, y, z);
 	}
 
 	/**
@@ -102,7 +102,7 @@ public abstract class Tuple3D extends Tuple2D
 	 */
 	public double squareLength()
 	{
-		return x*x + y*y + z*z;
+		return RMath.getVectorLengthSquared(x, y, z);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public abstract class Tuple3D extends Tuple2D
 	 */
 	public double dot(Tuple3D v)
 	{
-		return x*v.x + y*v.y + z*v.z;
+		return RMath.getVectorDotProduct(x, y, z, v.x, v.y, v.z);
 	}
 
 	/**

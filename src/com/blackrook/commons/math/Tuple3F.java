@@ -91,7 +91,7 @@ public abstract class Tuple3F extends Tuple2F
 	 */
 	public float length()
 	{
-		return (float)Math.sqrt(squareLength());
+		return (float)RMath.getVectorLength(x, y, z);
 	}
 
 	/**
@@ -100,16 +100,16 @@ public abstract class Tuple3F extends Tuple2F
 	 */
 	public float squareLength()
 	{
-		return x*x + y*y + z*z;
+		return (float)RMath.getVectorLengthSquared(x, y, z);
 	}
 
 	/**
 	 * Yields the dot product of a Tuple3D with this one.
 	 * @param v		the tuple to use with this one.
 	 */
-	public float dot(Tuple3F v)
+	public float dot(Tuple3D v)
 	{
-		return x*v.x + y*v.y + z*v.z;
+		return (float)RMath.getVectorDotProduct(x, y, z, v.x, v.y, v.z);
 	}
 
 	/**

@@ -795,6 +795,196 @@ public final class RMath
 	}
 	
 	/**
+	 * Returns the length of a vector by its components.
+	 * @param x the x-component.
+	 * @param y the y-component.
+	 * @return the length of the vector.
+	 * @since 2.20.3
+	 */
+	public static double getVectorLength(double x, double y)
+	{
+		return Math.sqrt(getVectorLengthSquared(x, y));
+	}
+
+	/**
+	 * Returns the squared length of a vector by its components.
+	 * @param x the x-component.
+	 * @param y the y-component.
+	 * @return the length of the vector.
+	 * @since 2.20.3
+	 */
+	public static double getVectorLengthSquared(double x, double y)
+	{
+		return x*x + y*y;
+	}
+
+	/**
+	 * Returns the length of a vector by its components.
+	 * @param x the x-component.
+	 * @param y the y-component.
+	 * @param z the z-component.
+	 * @return the length of the vector.
+	 * @since 2.20.3
+	 */
+	public static double getVectorLength(double x, double y, double z)
+	{
+		return Math.sqrt(getVectorLengthSquared(x, y, z));
+	}
+
+	/**
+	 * Returns the squared length of a vector by its components.
+	 * @param x the x-component.
+	 * @param y the y-component.
+	 * @param z the z-component.
+	 * @return the length of the vector.
+	 * @since 2.20.3
+	 */
+	public static double getVectorLengthSquared(double x, double y, double z)
+	{
+		return x*x + y*y + z*z;
+	}
+
+	/**
+	 * Returns the dot product of two vectors.
+	 * @param v1x the first vector's x-component.
+	 * @param v1y the first vector's y-component.
+	 * @param v2x the second point's x-component.
+	 * @param v2y the second point's y-component.
+	 * @return the dot product of both vectors.
+	 * @since 2.20.3
+	 */
+	public static double getVectorDotProduct(double v1x, double v1y, double v2x, double v2y)
+	{
+		return v1x * v2x + v1y * v2y;
+	}
+
+	/**
+	 * Returns the dot product of two vectors.
+	 * @param v1x the first vector's x-component.
+	 * @param v1y the first vector's y-component.
+	 * @param v1z the first vector's z-component.
+	 * @param v2x the second point's x-component.
+	 * @param v2y the second point's y-component.
+	 * @param v2z the second point's z-component.
+	 * @return the dot product of both vectors.
+	 * @since 2.20.3
+	 */
+	public static double getVectorDotProduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z)
+	{
+		return v1x * v2x + v1y * v2y + v1z * v2z;
+	}
+
+	/**
+	 * Returns the dot product of two vectors, converted to unit vectors first.
+	 * NOTE: Zero vectors will cause a <b>divide by zero</b>!
+	 * @param v1x the first vector's x-component.
+	 * @param v1y the first vector's y-component.
+	 * @param v2x the second point's x-component.
+	 * @param v2y the second point's y-component.
+	 * @return the dot product of both vectors.
+	 * @since 2.20.3
+	 */
+	public static double getVectorUnitDotProduct(double v1x, double v1y, double v2x, double v2y)
+	{
+		double v1d = getVectorLength(v1x, v1y); 
+		double v2d = getVectorLength(v2x, v2y);
+		v1x = v1x / v1d;
+		v1y = v1y / v1d;
+		v2x = v2x / v2d;
+		v2y = v2y / v2d;
+		return getVectorDotProduct(v1x, v1y, v2x, v2y);
+	}
+
+	/**
+	 * Returns the dot product of two vectors, converted to unit vectors first.
+	 * NOTE: Zero vectors will cause a <b>divide by zero</b>!
+	 * @param v1x the first vector's x-component.
+	 * @param v1y the first vector's y-component.
+	 * @param v1z the first vector's z-component.
+	 * @param v2x the second point's x-component.
+	 * @param v2y the second point's y-component.
+	 * @param v2z the second point's z-component.
+	 * @return the dot product of both vectors.
+	 * @since 2.20.3
+	 */
+	public static double getVectorUnitDotProduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z)
+	{
+		double v1d = getVectorLength(v1x, v1y, v1z); 
+		double v2d = getVectorLength(v2x, v2y, v2z);
+		v1x = v1x / v1d;
+		v1y = v1y / v1d;
+		v1z = v1z / v1d;
+		v2x = v2x / v2d;
+		v2y = v2y / v2d;
+		v2z = v2z / v2d;
+		return getVectorDotProduct(v1x, v1y, v1z, v2x, v2y, v2z);
+	}
+
+	/**
+	 * Returns the length of a line by 
+	 * the coordinates of the two points that comprise it.
+	 * @param x0 the first point's x-component.
+	 * @param y0 the first point's y-component.
+	 * @param x1 the second point's x-component.
+	 * @param y1 the second point's y-component.
+	 * @return the length of the line.
+	 * @since 2.20.3
+	 */
+	public static double getLineLength(double x0, double y0, double x1, double y1)
+	{
+		return Math.sqrt(getLineLengthSquared(x0, y0, x1, y1));
+	}
+
+	/**
+	 * Returns the squared length of a line by 
+	 * the coordinates of the two points that comprise it.
+	 * @param x0 the first point's x-component.
+	 * @param y0 the first point's y-component.
+	 * @param x1 the second point's x-component.
+	 * @param y1 the second point's y-component.
+	 * @return the length of the line.
+	 * @since 2.20.3
+	 */
+	public static double getLineLengthSquared(double x0, double y0, double x1, double y1)
+	{
+		return getVectorLengthSquared(x1 - x0, y1 - y0);
+	}
+
+	/**
+	 * Returns the length of a line by 
+	 * the coordinates of the two points that comprise it.
+	 * @param x0 the first point's x-component.
+	 * @param y0 the first point's y-component.
+	 * @param z0 the first point's z-component.
+	 * @param x1 the second point's x-component.
+	 * @param y1 the second point's y-component.
+	 * @param z1 the second point's z-component.
+	 * @return the length of the line.
+	 * @since 2.20.3
+	 */
+	public static double getLineLength(double x0, double y0, double z0, double x1, double y1, double z1)
+	{
+		return Math.sqrt(getLineLengthSquared(x0, y0, z0, x1, y1, z1));
+	}
+
+	/**
+	 * Returns the squared length of a line by 
+	 * the coordinates of the two points that comprise it.
+	 * @param x0 the first point's x-component.
+	 * @param y0 the first point's y-component.
+	 * @param z0 the first point's z-component.
+	 * @param x1 the second point's x-component.
+	 * @param y1 the second point's y-component.
+	 * @param z1 the second point's z-component.
+	 * @return the length of the line.
+	 * @since 2.20.3
+	 */
+	public static double getLineLengthSquared(double x0, double y0, double z0, double x1, double y1, double z1)
+	{
+		return getVectorLengthSquared(x1 - x0, y1 - y0, z1 - z0);
+	}
+
+	/**
 	 * Returns the difference in degrees between two angles.
 	 * @param angle1 the first angle in DEGREES.
 	 * @param angle2 the second angle in DEGREES.
