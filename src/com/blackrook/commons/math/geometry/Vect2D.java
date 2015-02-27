@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014 Black Rook Software
+ * Copyright (c) 2009-2015 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@ public class Vect2D extends Tuple2D implements VectD
 	 * @param sourceY	source y-coordinate. 
 	 * @param destX		destination x-coordinate. 
 	 * @param destY		destination y-coordinate.
-	 * @since 2.20.3 
+	 * @since 2.21.0 
 	 */
 	public Vect2D(double sourceX, double sourceY, double destX, double destY)
 	{
@@ -96,7 +96,7 @@ public class Vect2D extends Tuple2D implements VectD
 	 * @param sourceY	source y-coordinate. 
 	 * @param destX		destination x-coordinate. 
 	 * @param destY		destination y-coordinate.
-	 * @since 2.20.3 
+	 * @since 2.21.0 
 	 */
 	public void set(double sourceX, double sourceY, double destX, double destY)
 	{

@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  ******************************************************************************/
-package com.blackrook.commons.spatialhash;
+package com.blackrook.commons.index;
 
 import com.blackrook.commons.AbstractVector;
 import com.blackrook.commons.ResettableIterable;
@@ -13,14 +13,11 @@ import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.hash.Hash;
 
 /**
- * The basis for all Spatial Hashes of all dimensions.
+ * The basis for all Spatial Indexes of all dimensions.
  * @author Matthew Tropiano
- * @param <T> an object of type {@link SpatialHashable}.
- * @since 2.10.0
- * @deprecated Since 2.21.0. Use the spatial indexing packages instead.
+ * @since 2.21.0
  */
-@Deprecated
-abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements ResettableIterable<T>
+abstract class AbstractSpatialIndex<T extends Object> implements ResettableIterable<T>
 {
 	/** List of all objects. */
 	private Hash<T> allObjects;
@@ -30,12 +27,12 @@ abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements
 	/**
 	 * SpatialHash with resolution 1.
 	 */
-	protected AbstractSpatialHash()
+	protected AbstractSpatialIndex()
 	{
 		this(1);
 	}
 
-	protected AbstractSpatialHash(int resolution)
+	protected AbstractSpatialIndex(int resolution)
 	{
 		if (resolution <= 0)
 			throw new IllegalArgumentException("Grid resolution cannot be 0 or less.");
@@ -48,6 +45,14 @@ abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements
 	public ResettableIterator<T> iterator()
 	{
 		return allObjects.iterator();
+	}
+
+	/**
+	 * Returns the spatial resolution of this grid. 
+	 */
+	public int getResolution()
+	{
+		return resolution;
 	}
 
 	/**
@@ -112,58 +117,15 @@ abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements
 	}
 
 	/**
-	 * Gets objects that intersect with an object and puts them into an array,
-	 * starting from the specified offset.
-	 * This is not a comprehensive check - just a check of bounding volumes.
-	 * This will stop putting objects into the array if it reaches the end.
-	 * @param object the object to test with.
-	 * @param out the output array.
-	 * @param offset the starting offset into the array.
-	 * @return the amount of objects put in the array.
-	 */
-	public abstract int getIntersections(T object, T[] out, int offset);
-
-	/**
 	 * Gets objects that intersect with an object and adds them to a vector.
-	 * This is not a comprehensive check - just a check of bounding volumes.
+	 * This is a check of bounding volumes, according to the provided model.
 	 * @param object the object to test with.
-	 * @param vector the output vector.
-	 * @param replace if true, this replaces contents starting from the beginning of the vector.
+	 * @param output the output vector.
+	 * @param offset the starting index to replace objects in the vector. 
+	 * 		If it is greater or equal to the vector's length, the found objects are appended to it.
 	 * @return the amount of objects added to the vector.
 	 */
-	public abstract int getIntersections(T object, AbstractVector<T> vector, boolean replace);
-
-	/**
-	 * Returns the spatial resolution of this grid. 
-	 */
-	public int getResolution()
-	{
-		return resolution;
-	}
-	
-	/**
-	 * Gets the start grid coordinate for the center, sweep, and width of an object's dimensions.
-	 * @param center the center of the object on an axis. 
-	 * @param halfbreadth the breadth of the object on an axis.
-	 * @param sweep the sweep of the object across an axis.
-	 * @return the grid coordinate to use based on the dimensions.
-	 */
-	public int getStartGrid(double center, double halfbreadth, double sweep)
-	{
-		return getStartGrid(center, halfbreadth, sweep, resolution);
-	}
-
-	/**
-	 * Gets the end grid coordinate for the center, sweep, and width of an object's dimensions.
-	 * @param center the center of the object on an axis. 
-	 * @param halfbreadth the breadth of the object on an axis.
-	 * @param sweep the sweep of the object across an axis.
-	 * @return the grid coordinate to use based on the dimensions.
-	 */
-	public int getEndGrid(double center, double halfbreadth, double sweep)
-	{
-		return getEndGrid(center, halfbreadth, sweep, resolution);
-	}
+	public abstract int getIntersections(T object, AbstractVector<? super T> output, int offset);
 
 	/**
 	 * Gets the start grid coordinate for the center, sweep, and width of an object's dimensions.
@@ -173,7 +135,7 @@ abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements
 	 * @param resolution the resolution of the grid.
 	 * @return the grid coordinate to use based on the dimensions.
 	 */
-	public static int getStartGrid(double center, double halfbreadth, double sweep, int resolution)
+	public static int getStart(double center, double halfbreadth, double sweep, int resolution)
 	{
 		halfbreadth = Math.abs(halfbreadth);
 
@@ -193,7 +155,7 @@ abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements
 	 * @param resolution the resolution of the grid.
 	 * @return the grid coordinate to use based on the dimensions.
 	 */
-	public static int getEndGrid(double center, double halfbreadth, double sweep, int resolution)
+	public static int getEnd(double center, double halfbreadth, double sweep, int resolution)
 	{
 		halfbreadth = Math.abs(halfbreadth);
 		

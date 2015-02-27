@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014 Black Rook Software
+ * Copyright (c) 2009-2015 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -77,7 +77,7 @@ public class LoggingFactory
 	/**
 	 * A convenience method for creating a Console-appending logger factory.
 	 * <p>Equivalent to: <code>new LoggingFactory(new ConsoleLogger(), LogLevel.DEBUG)</code></p>
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static LoggingFactory createConsoleLoggingFactory()
 	{
@@ -89,7 +89,7 @@ public class LoggingFactory
 	 * <p>Equivalent to: <code>createConsoleLoggingFactory().getLogger(name)</code></p>
 	 * <p>It may be better, thread-resource-wise to create a single factory if you are logging multiple sources/classes through it.</p>
 	 * @see #getLogger(String)
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static Logger createConsoleLoggerFor(String name)
 	{
@@ -101,7 +101,7 @@ public class LoggingFactory
 	 * <p>Equivalent to: <code>createConsoleLoggingFactory().getLogger(clazz)</code></p>
 	 * <p>It may be better, thread-resource-wise to create a single factory if you are logging multiple sources/classes through it.</p>
 	 * @see #getLogger(Class)
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static Logger createConsoleLoggerFor(Class<?> clazz)
 	{
@@ -113,7 +113,7 @@ public class LoggingFactory
 	 * <p>Equivalent to: <code>createConsoleLoggingFactory().getLogger(clazz, fullyQualified)</code></p>
 	 * <p>It may be better, thread-resource-wise to create a single factory if you are logging multiple sources/classes through it.</p>
 	 * @see #getLogger(Class, boolean)
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static Logger createConsoleLoggerFor(Class<?> clazz, boolean fullyQualified)
 	{

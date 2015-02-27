@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014 Black Rook Software
+ * Copyright (c) 2009-2015 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -799,7 +799,7 @@ public final class RMath
 	 * @param x the x-component.
 	 * @param y the y-component.
 	 * @return the length of the vector.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getVectorLength(double x, double y)
 	{
@@ -811,7 +811,7 @@ public final class RMath
 	 * @param x the x-component.
 	 * @param y the y-component.
 	 * @return the length of the vector.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getVectorLengthSquared(double x, double y)
 	{
@@ -824,7 +824,7 @@ public final class RMath
 	 * @param y the y-component.
 	 * @param z the z-component.
 	 * @return the length of the vector.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getVectorLength(double x, double y, double z)
 	{
@@ -837,7 +837,7 @@ public final class RMath
 	 * @param y the y-component.
 	 * @param z the z-component.
 	 * @return the length of the vector.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getVectorLengthSquared(double x, double y, double z)
 	{
@@ -851,7 +851,7 @@ public final class RMath
 	 * @param v2x the second point's x-component.
 	 * @param v2y the second point's y-component.
 	 * @return the dot product of both vectors.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getVectorDotProduct(double v1x, double v1y, double v2x, double v2y)
 	{
@@ -867,7 +867,7 @@ public final class RMath
 	 * @param v2y the second point's y-component.
 	 * @param v2z the second point's z-component.
 	 * @return the dot product of both vectors.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getVectorDotProduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z)
 	{
@@ -882,7 +882,7 @@ public final class RMath
 	 * @param v2x the second point's x-component.
 	 * @param v2y the second point's y-component.
 	 * @return the dot product of both vectors.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getVectorUnitDotProduct(double v1x, double v1y, double v2x, double v2y)
 	{
@@ -905,7 +905,7 @@ public final class RMath
 	 * @param v2y the second point's y-component.
 	 * @param v2z the second point's z-component.
 	 * @return the dot product of both vectors.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getVectorUnitDotProduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z)
 	{
@@ -928,7 +928,7 @@ public final class RMath
 	 * @param x1 the second point's x-component.
 	 * @param y1 the second point's y-component.
 	 * @return the length of the line.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getLineLength(double x0, double y0, double x1, double y1)
 	{
@@ -943,7 +943,7 @@ public final class RMath
 	 * @param x1 the second point's x-component.
 	 * @param y1 the second point's y-component.
 	 * @return the length of the line.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getLineLengthSquared(double x0, double y0, double x1, double y1)
 	{
@@ -960,7 +960,7 @@ public final class RMath
 	 * @param y1 the second point's y-component.
 	 * @param z1 the second point's z-component.
 	 * @return the length of the line.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getLineLength(double x0, double y0, double z0, double x1, double y1, double z1)
 	{
@@ -977,7 +977,7 @@ public final class RMath
 	 * @param y1 the second point's y-component.
 	 * @param z1 the second point's z-component.
 	 * @return the length of the line.
-	 * @since 2.20.3
+	 * @since 2.21.0
 	 */
 	public static double getLineLengthSquared(double x0, double y0, double z0, double x1, double y1, double z1)
 	{

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014 Black Rook Software
+ * Copyright (c) 2009-2015 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -25,7 +25,9 @@ import com.blackrook.commons.hash.HashedHashMap;
  * </p>
  * @author Matthew Tropiano
  * @since 2.10.0
+ * @deprecated Since 2.21.0. Use the spatial indexing packages instead.
  */
+@Deprecated
 public class IntervalHash<T extends IntervalHashable> extends AbstractSpatialHash<T> implements ResettableIterable<T>
 {
 	private static final String LOCAL_CACHE_NAME = Common.getPackagePathForClass(IntervalHash.class) + "/Cache";
