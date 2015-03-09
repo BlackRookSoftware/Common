@@ -17,7 +17,7 @@ import com.blackrook.commons.hash.Hash;
  * @author Matthew Tropiano
  * @since 2.21.0
  */
-abstract class AbstractSpatialIndex<T extends Object> implements ResettableIterable<T>
+abstract class AbstractSpatialGrid<T extends Object> implements ResettableIterable<T>
 {
 	/** List of all objects. */
 	private Hash<T> allObjects;
@@ -27,12 +27,12 @@ abstract class AbstractSpatialIndex<T extends Object> implements ResettableItera
 	/**
 	 * SpatialHash with resolution 1.
 	 */
-	protected AbstractSpatialIndex()
+	protected AbstractSpatialGrid()
 	{
 		this(1);
 	}
 
-	protected AbstractSpatialIndex(int resolution)
+	protected AbstractSpatialGrid(int resolution)
 	{
 		if (resolution <= 0)
 			throw new IllegalArgumentException("Grid resolution cannot be 0 or less.");
@@ -131,19 +131,12 @@ abstract class AbstractSpatialIndex<T extends Object> implements ResettableItera
 	 * Gets the start grid coordinate for the center, sweep, and width of an object's dimensions.
 	 * @param center the center of the object on an axis. 
 	 * @param halfbreadth the breadth of the object on an axis.
-	 * @param sweep the sweep of the object across an axis.
 	 * @param resolution the resolution of the grid.
 	 * @return the grid coordinate to use based on the dimensions.
 	 */
-	public static int getStart(double center, double halfbreadth, double sweep, int resolution)
+	public static int getStart(double center, double halfbreadth, int resolution)
 	{
 		halfbreadth = Math.abs(halfbreadth);
-
-		double halfsweep = sweep / 2f;
-		
-		center += halfsweep;
-		halfbreadth += halfsweep;
-		
 		return (int)Math.floor((center - halfbreadth) / (double)resolution);
 	}
 
@@ -151,19 +144,12 @@ abstract class AbstractSpatialIndex<T extends Object> implements ResettableItera
 	 * Gets the end grid coordinate for the center, sweep, and width of an object's dimensions.
 	 * @param center the center of the object on an axis. 
 	 * @param halfbreadth the breadth of the object on an axis.
-	 * @param sweep the sweep of the object across an axis.
 	 * @param resolution the resolution of the grid.
 	 * @return the grid coordinate to use based on the dimensions.
 	 */
-	public static int getEnd(double center, double halfbreadth, double sweep, int resolution)
+	public static int getEnd(double center, double halfbreadth, int resolution)
 	{
 		halfbreadth = Math.abs(halfbreadth);
-		
-		double halfsweep = sweep / 2f;
-		
-		center += halfsweep;
-		halfbreadth += halfsweep;
-		
 		return (int)Math.ceil((center + halfbreadth) / (double)resolution);
 	}
 

@@ -5,12 +5,14 @@ Slated for 2.21.0
 
 - Updated: Copyright clauses for 2015.
 - Added: com.blackrook.commons.index package for indexing.
+- Added: com.blackrook.commons.tree package for trees.
 - Deprecated: The entire com.blackrook.commons.spatialhash package in favor of
   a Model-View approach, in com.blackrook.commons.index.
 - Added: Addt'l methods to Vect2D, Vect2F for setting vector components.
 - Added: Addt'l convenience methods to LoggingFactory.
 - Added: a series of vector/line calculations. The Tuple* classes point to 
   these methods now for relevant calculations.
+- Added: Reflect.getPublicFields(Object, boolean) for excluding static members.
 
 Changed in 2.20.2
 =================

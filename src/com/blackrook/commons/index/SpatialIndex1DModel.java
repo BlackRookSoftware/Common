@@ -31,5 +31,4 @@ public interface SpatialIndex1DModel<T extends Object>
 	 */
 	public void getHalfWidths(T object, Tuple1D halfwidths);
 
-
 }
