@@ -1010,4 +1010,50 @@ public final class RMath
 		return diff > Math.PI ? TWO_PI - diff : diff; 
 	}
 	
+	/**
+	 * Returns the signed area of a triangular area made up of 3 points.
+	 * @param ax the first point, x-coordinate.
+	 * @param ay the first point, y-coordinate.
+	 * @param bx the second point, x-coordinate.
+	 * @param by the second point, y-coordinate.
+	 * @param cx the third point, x-coordinate.
+	 * @param cy the third point, y-coordinate.
+	 * @since 2.21.0
+	 */
+	public static double getTriangleArea(double ax, double ay, double bx, double by, double cx, double cy)
+	{
+		return Math.abs(getSignedTriangleArea(ax, ay, bx, by, cx, cy));
+	}
+
+	/**
+	 * Returns the signed area of a triangular area made up of 3 points.
+	 * @param ax the first point, x-coordinate.
+	 * @param ay the first point, y-coordinate.
+	 * @param bx the second point, x-coordinate.
+	 * @param by the second point, y-coordinate.
+	 * @param cx the third point, x-coordinate.
+	 * @param cy the third point, y-coordinate.
+	 * @since 2.21.0
+	 */
+	public static double getSignedTriangleArea(double ax, double ay, double bx, double by, double cx, double cy)
+	{
+		return getDoubleSignedTriangleArea(ax, ay, bx, by, cx, cy) / 2.0;
+	}
+
+	/**
+	 * Returns the doubled signed area of a triangular area made up of 3 points.  
+	 * @param ax the first point, x-coordinate.
+	 * @param ay the first point, y-coordinate.
+	 * @param bx the second point, x-coordinate.
+	 * @param by the second point, y-coordinate.
+	 * @param cx the third point, x-coordinate.
+	 * @param cy the third point, y-coordinate.
+	 * @since 2.21.0
+	 */
+	public static double getDoubleSignedTriangleArea(double ax, double ay, double bx, double by, double cx, double cy)
+	{
+		return (ax - cx) * (by - cy) - (ay - cy) * (bx - cx);
+	}
+
+	
 }

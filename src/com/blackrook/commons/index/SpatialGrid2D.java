@@ -12,6 +12,7 @@ import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.grid.SparseQueueGridMap;
 import com.blackrook.commons.hash.Hash;
 import com.blackrook.commons.linkedlist.Queue;
+import com.blackrook.commons.math.RMath;
 import com.blackrook.commons.math.geometry.Point2D;
 
 /**
@@ -170,13 +171,13 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 	protected boolean pointIntersects(double x, double y, T object)
 	{
 		model.getCenter(object, tempPoint);
-		double centerX = tempPoint.x;
-		double centerY = tempPoint.y;
+		double cx = tempPoint.x;
+		double cy = tempPoint.y;
 		model.getHalfWidths(object, tempPoint);
-		double halfWidth = tempPoint.x;
-		double halfHeight = tempPoint.y;
+		double hw = tempPoint.x;
+		double hh = tempPoint.y;
 
-		return x <= centerX + halfWidth && x >= centerX - halfWidth && y <= centerY + halfHeight && y >= centerY - halfHeight;
+		return x <= cx + hw && x >= cx - hw && y <= cy + hh && y >= cy - hh;
 	}
 
 	/**
@@ -187,7 +188,51 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 	 */
 	protected boolean lineIntersects(double x0, double y0, double x1, double y1, T object)
 	{
-		//TODO: Write me.
+		model.getCenter(object, tempPoint);
+		double cx = tempPoint.x;
+		double cy = tempPoint.y;
+		model.getHalfWidths(object, tempPoint);
+		double hw = tempPoint.x;
+		double hh = tempPoint.y;
+
+		for (int i = 0; i < 4; i++)
+		{
+			double sx, sy, tx, ty;
+			
+			switch (i)
+			{
+				default:
+					throw new RuntimeException("YOU SHOULDN'T SEE THIS!");
+				case 0:
+					sx = cx - hw;
+					sy = cy - hh;
+					tx = cx + hw;
+					ty = cy - hh;
+					break;
+				case 1:
+					sx = cx - hw;
+					sy = cy - hh;
+					tx = cx - hw;
+					ty = cy + hh;
+					break;
+				case 2:
+					sx = cx - hw;
+					sy = cy + hh;
+					tx = cx + hw;
+					ty = cy + hh;
+					break;
+				case 3:
+					sx = cx + hw;
+					sy = cy - hh;
+					tx = cx + hw;
+					ty = cy + hh;
+					break;
+			}
+			
+			if (testLineSegments(x0, y0, x1, y1, sx, sy, tx, ty))
+				return true;
+		}
+		
 		return false; 
 	}
 
@@ -202,17 +247,80 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 	protected boolean objectIntersects(T object, T object2)
 	{
 		model.getCenter(object, tempPoint);
-		double centerX = tempPoint.x;
+		double spx = tempPoint.x;
+		double spy = tempPoint.y;
 		model.getHalfWidths(object, tempPoint);
-		double halfWidth = tempPoint.x;
+		double shw = tempPoint.x;
+		double shh = tempPoint.y;
 
 		model.getCenter(object2, tempPoint);
-		double centerX2 = tempPoint.x;
+		double tpx = tempPoint.x;
+		double tpy = tempPoint.y;
 		model.getHalfWidths(object2, tempPoint);
-		double halfWidth2 = tempPoint.x;
+		double thw = tempPoint.x;
+		double thh = tempPoint.y;
 
-		return centerX - halfWidth < centerX2 + halfWidth2 && centerX + halfWidth > centerX2 - halfWidth2; 
+		if (spx < tpx) // box to the left.
+		{
+			if (spx + shw < tpx - thw)
+				return false;
+			
+			if (spy < tpy) // box to the bottom.
+			{
+				if (spy + shh < tpy - thh)
+					return false;
+				else
+					return true;
+			}
+			else // box to the top.
+			{
+				if (spy - shh > tpy + thh)
+					return false;
+				else
+					return true;
+			}
+		}
+		else // box to the right
+		{
+			if (spx - shw > tpx + thw)
+				return false;
+	
+			if (spy < tpy) // box to the bottom.
+			{
+				if (spy + shh < tpy - thh)
+					return false;
+				else
+					return true;
+			}
+			else // box to the top.
+			{
+				if (spy - shh > tpy + thh)
+					return false;
+				else
+					return true;
+			}
+		}
 	}
+
+	/** Test if two line segments intersect. */
+	private static boolean testLineSegments(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
+	{
+		double a1 = RMath.getDoubleSignedTriangleArea(ax, ay, bx, by, dx, dy);
+		double a2 = RMath.getDoubleSignedTriangleArea(ax, ay, bx, by, cx, cy);
+		
+		// If the triangle areas have opposite signs. 
+		if (a1 != 0.0 && a2 != 0.0 && a1 * a2 < 0.0)
+		{
+			double a3 = RMath.getDoubleSignedTriangleArea(cx, cy, dx, dy, ax, ay);
+			double a4 = a3 + a2 - a1;
+			
+			if (a3 * a4 < 0.0)
+				return true;
+		}
+		
+		return false;
+	}
+
 
 	/**
 	 * Throws all object intersections into the accumulation hash.
@@ -260,12 +368,71 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 		}
 		
 		intersectionAccum.clear();
+		int startX = AbstractSpatialGrid.getStart(x0, 0, getResolution());
+		int startY = AbstractSpatialGrid.getStart(y0, 0, getResolution());
+		int endX = AbstractSpatialGrid.getEnd(x1, 0, getResolution());
+		int endY = AbstractSpatialGrid.getEnd(y1, 0, getResolution());
+
+		int x = startX;
+		int y = startY;
+		int dy = endY - startY;
+		int dx = endX - startX;
+		int stepx, stepy;
 		
-		// TODO: Finish. Draw Bresenham line with corners across the grid, accum all intersections.
+		if (dy < 0) { dy = -dy;  stepy = -1; } else { stepy = 1; }
+		if (dx < 0) { dx = -dx;  stepx = -1; } else { stepx = 1; }
+		dy <<= 1;
+		dx <<= 1;
 		
+		accumLineIntersectionGrid(x, y, x0, y0, x1, y1);
+		if (dx > dy)
+		{
+			int fraction = dy - (dx >> 1);
+			while (x != endX)
+			{
+				if (fraction >= 0)
+				{
+					y += stepy;
+					fraction -= dx;
+					accumLineIntersectionGrid(x, y, x0, y0, x1, y1);
+				}
+				x += stepx;
+				fraction += dy;
+				accumLineIntersectionGrid(x, y, x0, y0, x1, y1);
+			}
+		} 
+		else 
+		{
+			int fraction = dx - (dy >> 1);
+			while (y != endY) 
+			{
+				if (fraction >= 0)
+				{
+					x += stepx;
+					fraction -= dy;
+					accumLineIntersectionGrid(x, y, x0, y0, x1, y1);
+				}
+				y += stepy;
+				fraction += dx;
+				accumLineIntersectionGrid(x, y, x0, y0, x1, y1);
+			}
+		}
 	}
 
 
+	private void accumLineIntersectionGrid(int x, int y, double x0, double y0, double x1, double y1)
+	{
+		Queue<T> queue = objectMap.get(x, y);
+		if (queue != null) for (T obj : queue)
+		{
+			if (intersectionAccum.contains(obj))
+				continue;
+			
+			if (lineIntersects(x0,	y0, x1, y1, obj))
+				intersectionAccum.put(obj);
+		}
+	}
+	
 	/**
 	 * Throws all point intersections into the accumulation hash.
 	 */
