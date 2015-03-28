@@ -119,7 +119,11 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 	
 		for (int x = startX; x <= endX; x++)
 			for (int y = startY; y <= endY; y++)
-				objectMap.enqueue(x, y, object);
+			{
+				Queue<T> queue = objectMap.get(x, y);
+				if (queue != null)
+					queue.remove(object);
+			}
 		
 		return super.removeObject(object);
 	}
@@ -305,13 +309,13 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 	/** Test if two line segments intersect. */
 	private static boolean testLineSegments(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
 	{
-		double a1 = RMath.getDoubleSignedTriangleArea(ax, ay, bx, by, dx, dy);
-		double a2 = RMath.getDoubleSignedTriangleArea(ax, ay, bx, by, cx, cy);
+		double a1 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, dx, dy);
+		double a2 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy);
 		
 		// If the triangle areas have opposite signs. 
 		if (a1 != 0.0 && a2 != 0.0 && a1 * a2 < 0.0)
 		{
-			double a3 = RMath.getDoubleSignedTriangleArea(cx, cy, dx, dy, ax, ay);
+			double a3 = RMath.getTriangleAreaDoubleSigned(cx, cy, dx, dy, ax, ay);
 			double a4 = a3 + a2 - a1;
 			
 			if (a3 * a4 < 0.0)

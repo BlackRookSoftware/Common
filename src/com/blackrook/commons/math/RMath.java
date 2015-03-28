@@ -1022,7 +1022,7 @@ public final class RMath
 	 */
 	public static double getTriangleArea(double ax, double ay, double bx, double by, double cx, double cy)
 	{
-		return Math.abs(getSignedTriangleArea(ax, ay, bx, by, cx, cy));
+		return Math.abs(getTriangleAreaSigned(ax, ay, bx, by, cx, cy));
 	}
 
 	/**
@@ -1035,9 +1035,9 @@ public final class RMath
 	 * @param cy the third point, y-coordinate.
 	 * @since 2.21.0
 	 */
-	public static double getSignedTriangleArea(double ax, double ay, double bx, double by, double cx, double cy)
+	public static double getTriangleAreaSigned(double ax, double ay, double bx, double by, double cx, double cy)
 	{
-		return getDoubleSignedTriangleArea(ax, ay, bx, by, cx, cy) / 2.0;
+		return getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy) / 2.0;
 	}
 
 	/**
@@ -1050,10 +1050,65 @@ public final class RMath
 	 * @param cy the third point, y-coordinate.
 	 * @since 2.21.0
 	 */
-	public static double getDoubleSignedTriangleArea(double ax, double ay, double bx, double by, double cx, double cy)
+	public static double getTriangleAreaDoubleSigned(double ax, double ay, double bx, double by, double cx, double cy)
 	{
 		return (ax - cx) * (by - cy) - (ay - cy) * (bx - cx);
 	}
 
+	/**
+	 * Returns the doubled signed area of a triangular area made up of 3 points.  
+	 * @param spx the first box center, x-coordinate.
+	 * @param spy the first box center, y-coordinate.
+	 * @param shw the first box half width.
+	 * @param shh the first box half height.
+	 * @param tpx the second box center, x-coordinate.
+	 * @param tpy the second box center, y-coordinate.
+	 * @param thw the second box half width.
+	 * @param thh the second box half height.
+	 * @since 2.21.0
+	 */
+	public static boolean getBoxIntersection(double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
+	{
+		if (spx < tpx) // box to the left.
+		{
+			if (spx + shw < tpx - thw)
+				return false;
+			
+			if (spy < tpy) // box to the bottom.
+			{
+				if (spy + shh < tpy - thh)
+					return false;
+				
+				return true;
+			}
+			else // box to the top.
+			{
+				if (spy - shh > tpy + thh)
+					return false;
+				
+				return true;
+			}
+		}
+		else // box to the right
+		{
+			if (spx - shw > tpx + thw)
+				return false;
+	
+			if (spy < tpy) // box to the bottom.
+			{
+				if (spy + shh < tpy - thh)
+					return false;
+				
+				return true;
+			}
+			else // box to the top.
+			{
+				if (spy - shh > tpy + thh)
+					return false;
+				
+				return true;
+			}
+		}
+	}
 	
 }
