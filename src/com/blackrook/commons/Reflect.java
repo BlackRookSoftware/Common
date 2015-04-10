@@ -972,6 +972,23 @@ public final class Reflect
 			throw new ClassCastException("Object could not be converted: "+memberName+" is "+object.getClass()+", target is "+targetType);
 	}
 
+	/**
+	 * Returns the enum instance of a class given class and name, or null if not a valid name.
+	 * If value is null, this returns null.
+	 * @since 2.21.0
+	 */
+	public static <T extends Enum<T>> T getEnumInstance(String value, Class<T> enumClass)
+	{
+		if (value == null)
+			return null;
+		
+		try {
+			return Enum.valueOf(enumClass, value);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
+
 	// applies a value, converting, to an object.
 	private static <T> void applyMemberToObject(String fieldName, Object value, T targetObject)
 	{
@@ -991,18 +1008,6 @@ public final class Reflect
 			Method method = setter.getMethod();
 			invokeBlind(method, targetObject, createForType(fieldName, value, type));
 		}			
-	}
-
-	/**
-	 * Returns the enum instance of a class given class and name, or null if not a valid name.
-	 */
-	private static <T extends Enum<T>> T getEnumInstance(String value, Class<T> enumClass)
-	{
-		try {
-			return Enum.valueOf(enumClass, value);
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
 	}
 
 	/**
