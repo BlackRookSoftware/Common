@@ -952,6 +952,8 @@ public final class Reflect
 		}
 		else if (object instanceof Iterable)
 			return convertIterable(memberName, (Iterable<?>)object, targetType);
+		else if (object instanceof Enum<?>)
+			return convertEnum(memberName, (Enum<?>)object, targetType);
 		else if (object instanceof Boolean)
 			return convertBoolean(memberName, (Boolean)object, targetType);
 		else if (object instanceof Number)
@@ -1221,6 +1223,44 @@ public final class Reflect
 		throw new ClassCastException("Object could not be converted: "+memberName+" is Timestamp, target is "+targetType);
 	}
 
+	/**
+	 * Converts an enum value to a target type.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static <T> T convertEnum(String memberName, Enum<?> e, Class<T> targetType)
+	{
+		if (targetType == Byte.TYPE)
+			return (T)new Byte((byte)e.ordinal());
+		else if (targetType == Byte.class)
+			return targetType.cast((byte)e.ordinal());
+		else if (targetType == Short.TYPE)
+			return (T)new Short((short)e.ordinal());
+		else if (targetType == Short.class)
+			return targetType.cast((short)e.ordinal());
+		else if (targetType == Integer.TYPE)
+			return (T)new Integer(e.ordinal());
+		else if (targetType == Integer.class)
+			return targetType.cast(e.ordinal());
+		else if (targetType == Float.TYPE)
+			return (T)new Float(e.ordinal());
+		else if (targetType == Float.class)
+			return targetType.cast(e.ordinal());
+		else if (targetType == Long.TYPE)
+			return (T)new Long(e.ordinal());
+		else if (targetType == Long.class)
+			return targetType.cast(e.ordinal());
+		else if (targetType == Double.TYPE)
+			return (T)new Double(e.ordinal());
+		else if (targetType == Double.class)
+			return targetType.cast(e.ordinal());
+		else if (targetType == String.class)
+			return targetType.cast(e.name());
+		else if (targetType.isEnum())
+			return targetType.cast(getEnumInstance(e.name(), (Class<Enum>)targetType));
+		
+		throw new ClassCastException("Object could not be converted: "+memberName+" is Enum, target is "+targetType);
+	}
+	
 	/**
 	 * Converts a string value to a target type.
 	 */

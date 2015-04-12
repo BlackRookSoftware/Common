@@ -14,6 +14,8 @@ Slated for 2.21.0
   these methods now for relevant calculations.
 - Added: Reflect.getPublicFields(Object, boolean) for excluding static members.
 - Changed: Reflect.getEnumInstance() is now public.
+- Changed: Reflect.createForType(...) can now handing converting Enums to other 
+  types.
 
 Changed in 2.20.2
 =================
