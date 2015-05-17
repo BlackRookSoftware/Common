@@ -8,6 +8,7 @@
 package com.blackrook.commons.index;
 
 import com.blackrook.commons.AbstractVector;
+import com.blackrook.commons.Common;
 import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.hash.Hash;
 import com.blackrook.commons.hash.HashedHashMap;
@@ -32,13 +33,6 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 	/** Object model. */
 	private SpatialIndex1DModel<T> model;
 
-	/** Search accumulator iterator. */
-	private ResettableIterator<T> intersectionAccumIterator;
-	/** Search accumulator hash. */
-	private Hash<T> intersectionAccum;
-	/** Temporary point. */
-	private Point1D tempPoint;
-
 	/**
 	 * Creates a new IntervalHash.
 	 * @param resolution however many units is one grid space.
@@ -48,10 +42,6 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		super(resolution);
 		this.model = model;
 		this.objectMap = new HashedHashMap<Integer, T>();
-		
-		this.intersectionAccum = new Hash<T>();
-		this.intersectionAccumIterator = intersectionAccum.iterator();
-		this.tempPoint = new Point1D();
 	}
 
 	
@@ -74,10 +64,11 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		if (containsObject(object))
 			return;
 		
-		model.getCenter(object, tempPoint);
-		double centerX = tempPoint.x;
-		model.getHalfWidths(object, tempPoint);
-		double halfWidth = tempPoint.x;
+		Cache cache = getCache();
+		model.getCenter(object, cache.tempPoint);
+		double centerX = cache.tempPoint.x;
+		model.getHalfWidths(object, cache.tempPoint);
+		double halfWidth = cache.tempPoint.x;
 		
 		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
 		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
@@ -98,10 +89,11 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		if (!containsObject(object))
 			return false;
 		
-		model.getCenter(object, tempPoint);
-		double centerX = tempPoint.x;
-		model.getHalfWidths(object, tempPoint);
-		double halfWidth = tempPoint.x;
+		Cache cache = getCache();
+		model.getCenter(object, cache.tempPoint);
+		double centerX = cache.tempPoint.x;
+		model.getHalfWidths(object, cache.tempPoint);
+		double halfWidth = cache.tempPoint.x;
 		
 		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
 		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
@@ -158,10 +150,11 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 	 */
 	protected boolean pointIntersects(double x, T object)
 	{
-		model.getCenter(object, tempPoint);
-		double centerX = tempPoint.x;
-		model.getHalfWidths(object, tempPoint);
-		double halfWidth = tempPoint.x;
+		Cache cache = getCache();
+		model.getCenter(object, cache.tempPoint);
+		double centerX = cache.tempPoint.x;
+		model.getHalfWidths(object, cache.tempPoint);
+		double halfWidth = cache.tempPoint.x;
 
 		return x <= centerX + halfWidth && x >= centerX - halfWidth;
 	}
@@ -177,10 +170,11 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		double min = x0 < x1 ? x0 : x1;
 		double max = x0 < x1 ? x1 : x0;
 
-		model.getCenter(object, tempPoint);
-		double centerX = tempPoint.x;
-		model.getHalfWidths(object, tempPoint);
-		double halfWidth = tempPoint.x;
+		Cache cache = getCache();
+		model.getCenter(object, cache.tempPoint);
+		double centerX = cache.tempPoint.x;
+		model.getHalfWidths(object, cache.tempPoint);
+		double halfWidth = cache.tempPoint.x;
 
 		return min < centerX + halfWidth && max > centerX - halfWidth; 
 	}
@@ -195,30 +189,45 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 	 */
 	protected boolean objectIntersects(T object, T object2)
 	{
-		model.getCenter(object, tempPoint);
-		double centerX = tempPoint.x;
-		model.getHalfWidths(object, tempPoint);
-		double halfWidth = tempPoint.x;
-
-		model.getCenter(object2, tempPoint);
-		double centerX2 = tempPoint.x;
-		model.getHalfWidths(object2, tempPoint);
-		double halfWidth2 = tempPoint.x;
+		Cache cache = getCache();
+		model.getCenter(object, cache.tempPoint);
+		double centerX = cache.tempPoint.x;
+		model.getHalfWidths(object, cache.tempPoint);
+		double halfWidth = cache.tempPoint.x;
+		
+		model.getCenter(object2, cache.tempPoint);
+		double centerX2 = cache.tempPoint.x;
+		model.getHalfWidths(object2, cache.tempPoint);
+		double halfWidth2 = cache.tempPoint.x;
 
 		return centerX - halfWidth < centerX2 + halfWidth2 && centerX + halfWidth > centerX2 - halfWidth2; 
 	}
 
+	// Returns threadlocal cache.
+	private Cache getCache()
+	{
+		String key = getClass().getCanonicalName()+".Cache";
+		Cache cache = (Cache)Common.getLocal(key);
+		if (cache != null)
+			return cache;
+		
+		cache = new Cache();
+		Common.setLocal(key, cache);
+		return cache;
+	}
+	
 	/**
 	 * Throws all object intersections into the accumulation hash.
 	 */
 	private void accumObjectIntersections(T object)
 	{
-		model.getCenter(object, tempPoint);
-		double centerX = tempPoint.x;
-		model.getHalfWidths(object, tempPoint);
-		double halfWidth = tempPoint.x;
+		Cache cache = getCache();
+		model.getCenter(object, cache.tempPoint);
+		double centerX = cache.tempPoint.x;
+		model.getHalfWidths(object, cache.tempPoint);
+		double halfWidth = cache.tempPoint.x;
 		
-		intersectionAccum.clear();
+		cache.intersectionAccum.clear();
 		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
 		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
 	
@@ -227,11 +236,11 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 			Hash<T> hash = objectMap.get(i);
 			if (hash != null) for (T obj : hash)
 			{
-				if (intersectionAccum.contains(obj))
+				if (cache.intersectionAccum.contains(obj))
 					continue;
 				
 				if (lineIntersects(centerX - halfWidth,	centerX + halfWidth, obj))
-					intersectionAccum.put(obj);
+					cache.intersectionAccum.put(obj);
 			}
 		}
 	}
@@ -251,7 +260,8 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		double halfWidth = (x0 + x1) / 2.0;
 		double centerX = x0 + halfWidth;
 		
-		intersectionAccum.clear();
+		Cache cache = getCache();
+		cache.intersectionAccum.clear();
 		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
 		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
 	
@@ -260,11 +270,11 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 			Hash<T> hash = objectMap.get(i);
 			if (hash != null) for (T object : hash)
 			{
-				if (intersectionAccum.contains(object))
+				if (cache.intersectionAccum.contains(object))
 					continue;
 				
 				if (lineIntersects(centerX - halfWidth,	centerX + halfWidth, object))
-					intersectionAccum.put(object);
+					cache.intersectionAccum.put(object);
 			}
 		}
 	}
@@ -275,35 +285,58 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 	 */
 	private void accumPointIntersections(double x)
 	{
-		intersectionAccum.clear();
+		Cache cache = getCache();
+		cache.intersectionAccum.clear();
 
 		int mapX = (int)(x / getResolution());
 		
 		Hash<T> hash = objectMap.get(mapX);
 		if (hash != null) for (T object : hash)
 		{
-			if (intersectionAccum.contains(object))
+			if (cache.intersectionAccum.contains(object))
 				continue;
 			
 			if (pointIntersects(x, object))
-				intersectionAccum.put(object);
+				cache.intersectionAccum.put(object);
 		}
 	}
 
 	/**
 	 * Dumps the contents of the accum hash to a vector.
 	 */
+	@SuppressWarnings("unchecked")
 	private int accumToVector(AbstractVector<? super T> vector)
 	{
-		intersectionAccumIterator.reset();
+		Cache cache = getCache();
+		cache.intersectionAccumIterator.reset();
 		int i = 0;
-		while (intersectionAccumIterator.hasNext())
+		while (cache.intersectionAccumIterator.hasNext())
 		{
-			vector.replace(i, intersectionAccumIterator.next());
-			intersectionAccumIterator.remove();
+			vector.replace(i, (T)cache.intersectionAccumIterator.next());
+			cache.intersectionAccumIterator.remove();
 			i++;
 		}
 		return i;
 	}
+	
+	/** Cache. */
+	private static final class Cache
+	{
+		/** Temporary point. */
+		private Point1D tempPoint;
+		/** Search accumulator hash. */
+		private Hash<Object> intersectionAccum;
+		/** Search accumulator iterator. */
+		private ResettableIterator<Object> intersectionAccumIterator;
+		
+		public Cache()
+		{
+			this.intersectionAccum = new Hash<Object>();
+			this.intersectionAccumIterator = intersectionAccum.iterator();
+			this.tempPoint = new Point1D();
+		}
+		
+	}
+	
 
 }
