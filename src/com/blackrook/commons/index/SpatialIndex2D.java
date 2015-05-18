@@ -28,7 +28,7 @@ import com.blackrook.commons.math.geometry.Point2D;
  * @author Matthew Tropiano
  * @since 2.21.0
  */
-public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
+public class SpatialIndex2D<T> extends AbstractSpatialIndex<T>
 {
 	/** Object map. */
 	private SparseQueueGridMap<T> objectMap;
@@ -39,7 +39,7 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 	 * Creates a new IntervalHash.
 	 * @param resolution however many units is one grid space.
 	 */
-	public SpatialGrid2D(SpatialIndex2DModel<T> model, int resolution)
+	public SpatialIndex2D(SpatialIndex2DModel<T> model, int resolution)
 	{
 		super(resolution);
 		this.model = model;
@@ -74,10 +74,10 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 		double halfWidth = cache.tempPoint.x;
 		double halfHeight = cache.tempPoint.y;
 		
-		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
-		int startY = AbstractSpatialGrid.getStart(centerY, halfHeight, getResolution());
-		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
-		int endY = AbstractSpatialGrid.getEnd(centerY, halfHeight, getResolution());
+		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
+		int startY = AbstractSpatialIndex.getStart(centerY, halfHeight, getResolution());
+		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
+		int endY = AbstractSpatialIndex.getEnd(centerY, halfHeight, getResolution());
 	
 		for (int x = startX; x <= endX; x++)
 			for (int y = startY; y <= endY; y++)
@@ -104,10 +104,10 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 		double halfWidth = cache.tempPoint.x;
 		double halfHeight = cache.tempPoint.y;
 
-		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
-		int startY = AbstractSpatialGrid.getStart(centerY, halfHeight, getResolution());
-		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
-		int endY = AbstractSpatialGrid.getEnd(centerY, halfHeight, getResolution());
+		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
+		int startY = AbstractSpatialIndex.getStart(centerY, halfHeight, getResolution());
+		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
+		int endY = AbstractSpatialIndex.getEnd(centerY, halfHeight, getResolution());
 	
 		for (int x = startX; x <= endX; x++)
 			for (int y = startY; y <= endY; y++)
@@ -198,7 +198,7 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 	}
 
 	/**
-	 * Checks if an object intersects another bounding area.
+	 * Checks if an object intersects a line.
 	 * This is NOT a comprehensive collision test, as two object's
 	 * BOUNDING volumes may intersect, but NOT their ACTUAL boundaries.
 	 * @return true if their bounding areas overlap, false otherwise.
@@ -247,11 +247,30 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 					break;
 			}
 			
-			if (testLineSegments(x0, y0, x1, y1, sx, sy, tx, ty))
+			if (!Double.isNaN(RMath.getLineSegmentIntersection(x0, y0, x1, y1, sx, sy, tx, ty)))
 				return true;
 		}
 		
 		return false; 
+	}
+	
+	/**
+	 * Checks if an object intersects another box area.
+	 * This is NOT a comprehensive collision test, as two object's
+	 * BOUNDING volumes may intersect, but NOT their ACTUAL boundaries.
+	 * @return true if their bounding areas overlap, false otherwise.
+	 */
+	protected boolean boxIntersects(double centerX, double centerY, double halfWidth, double halfHeight, T object)
+	{
+		Cache cache = getCache();
+		model.getCenter(object, cache.tempPoint);
+		double cx = cache.tempPoint.x;
+		double cy = cache.tempPoint.y;
+		model.getHalfWidths(object, cache.tempPoint);
+		double hw = cache.tempPoint.x;
+		double hh = cache.tempPoint.y;
+
+		return RMath.getBoxIntersection(centerX, centerY, halfWidth, halfHeight, cx, cy, hw, hh);
 	}
 
 	/**
@@ -279,66 +298,8 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 		model.getHalfWidths(object2, cache.tempPoint);
 		double thw = cache.tempPoint.x;
 		double thh = cache.tempPoint.y;
-
-		if (spx < tpx) // box to the left.
-		{
-			if (spx + shw < tpx - thw)
-				return false;
-			
-			if (spy < tpy) // box to the bottom.
-			{
-				if (spy + shh < tpy - thh)
-					return false;
-				else
-					return true;
-			}
-			else // box to the top.
-			{
-				if (spy - shh > tpy + thh)
-					return false;
-				else
-					return true;
-			}
-		}
-		else // box to the right
-		{
-			if (spx - shw > tpx + thw)
-				return false;
-	
-			if (spy < tpy) // box to the bottom.
-			{
-				if (spy + shh < tpy - thh)
-					return false;
-				else
-					return true;
-			}
-			else // box to the top.
-			{
-				if (spy - shh > tpy + thh)
-					return false;
-				else
-					return true;
-			}
-		}
-	}
-
-	/** Test if two line segments intersect. */
-	private static boolean testLineSegments(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
-	{
-		double a1 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, dx, dy);
-		double a2 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy);
 		
-		// If the triangle areas have opposite signs. 
-		if (a1 != 0.0 && a2 != 0.0 && a1 * a2 < 0.0)
-		{
-			double a3 = RMath.getTriangleAreaDoubleSigned(cx, cy, dx, dy, ax, ay);
-			double a4 = a3 + a2 - a1;
-			
-			if (a3 * a4 < 0.0)
-				return true;
-		}
-		
-		return false;
+		return RMath.getBoxIntersection(spx, spy, shw, shh, tpx, tpy, thw, thh);
 	}
 
 	// Returns threadlocal cache.
@@ -376,10 +337,10 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 	{
 		Cache cache = getCache();
 		cache.intersectionAccum.clear();
-		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
-		int startY = AbstractSpatialGrid.getStart(centerY, halfHeight, getResolution());
-		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
-		int endY = AbstractSpatialGrid.getEnd(centerY, halfHeight, getResolution());
+		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
+		int startY = AbstractSpatialIndex.getStart(centerY, halfHeight, getResolution());
+		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
+		int endY = AbstractSpatialIndex.getEnd(centerY, halfHeight, getResolution());
 	
 		for (int x = startX; x <= endX; x++)
 			for (int y = startY; y <= endY; y++)
@@ -390,7 +351,7 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 					if (cache.intersectionAccum.contains(obj))
 						continue;
 					
-					if (lineIntersects(centerX - halfWidth,	centerY - halfHeight, centerX + halfWidth, centerY + halfHeight, obj))
+					if (boxIntersects(centerX, centerY, halfWidth, halfHeight, obj))
 						cache.intersectionAccum.put(obj);
 				}
 			}
@@ -410,10 +371,10 @@ public class SpatialGrid2D<T> extends AbstractSpatialGrid<T>
 		
 		Cache cache = getCache();
 		cache.intersectionAccum.clear();
-		int startX = AbstractSpatialGrid.getStart(x0, 0, getResolution());
-		int startY = AbstractSpatialGrid.getStart(y0, 0, getResolution());
-		int endX = AbstractSpatialGrid.getEnd(x1, 0, getResolution());
-		int endY = AbstractSpatialGrid.getEnd(y1, 0, getResolution());
+		int startX = AbstractSpatialIndex.getStart(x0, 0, getResolution());
+		int startY = AbstractSpatialIndex.getStart(y0, 0, getResolution());
+		int endX = AbstractSpatialIndex.getEnd(x1, 0, getResolution());
+		int endY = AbstractSpatialIndex.getEnd(y1, 0, getResolution());
 
 		int x = startX;
 		int y = startY;

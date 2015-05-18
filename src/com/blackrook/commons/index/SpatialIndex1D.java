@@ -26,7 +26,7 @@ import com.blackrook.commons.math.geometry.Point1D;
  * @author Matthew Tropiano
  * @since 2.21.0
  */
-public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
+public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 {
 	/** Object map. */
 	private HashedHashMap<Integer, T> objectMap;
@@ -37,7 +37,7 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 	 * Creates a new IntervalHash.
 	 * @param resolution however many units is one grid space.
 	 */
-	public SpatialGrid1D(SpatialIndex1DModel<T> model, int resolution)
+	public SpatialIndex1D(SpatialIndex1DModel<T> model, int resolution)
 	{
 		super(resolution);
 		this.model = model;
@@ -70,8 +70,8 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		model.getHalfWidths(object, cache.tempPoint);
 		double halfWidth = cache.tempPoint.x;
 		
-		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
-		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
+		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
+		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
 	
 		for (int i = startX; i <= endX; i++)
 			objectMap.add(i, object);
@@ -95,8 +95,8 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		model.getHalfWidths(object, cache.tempPoint);
 		double halfWidth = cache.tempPoint.x;
 		
-		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
-		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
+		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
+		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
 	
 		for (int i = startX; i <= endX; i++)
 			objectMap.removeValue(i, object);
@@ -228,8 +228,8 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		double halfWidth = cache.tempPoint.x;
 		
 		cache.intersectionAccum.clear();
-		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
-		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
+		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
+		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
 	
 		for (int i = startX; i <= endX; i++)
 		{
@@ -262,8 +262,8 @@ public class SpatialGrid1D<T> extends AbstractSpatialGrid<T>
 		
 		Cache cache = getCache();
 		cache.intersectionAccum.clear();
-		int startX = AbstractSpatialGrid.getStart(centerX, halfWidth, getResolution());
-		int endX = AbstractSpatialGrid.getEnd(centerX, halfWidth, getResolution());
+		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
+		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
 	
 		for (int i = startX; i <= endX; i++)
 		{

@@ -9,6 +9,8 @@ package com.blackrook.commons.math;
 
 import java.util.Random;
 
+import com.blackrook.commons.math.geometry.Point2D;
+
 /**
  * A class with static methods that perform "other" types of mathematics.
  * Also contains convenience methods for pseudorandomly generated numbers.
@@ -1109,6 +1111,54 @@ public final class RMath
 				return true;
 			}
 		}
+	}
+	
+	/**
+	 * Tests if an intersection occurs between two line segments.
+	 * @param ax the first line segment, first point, x-coordinate.
+	 * @param ay the first line segment, first point, y-coordinate.
+	 * @param bx the first line segment, second point, x-coordinate.
+	 * @param by the first line segment, second point, y-coordinate.
+	 * @param cx the second line segment, first point, x-coordinate.
+	 * @param cy the second line segment, first point, y-coordinate.
+	 * @param dx the second line segment, second point, x-coordinate.
+	 * @param dy the second line segment, second point, y-coordinate.
+	 * @return a scalar value representing how far along the first line segment the intersection occurred, or {@link Double#NaN} if no intersection.
+	 */
+	public static double getLineSegmentIntersection(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
+	{
+		double a1 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, dx, dy);
+		double a2 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy);
+		
+		// If the triangle areas have opposite signs. 
+		if (a1 != 0.0 && a2 != 0.0 && a1 * a2 < 0.0)
+		{
+			double a3 = RMath.getTriangleAreaDoubleSigned(cx, cy, dx, dy, ax, ay);
+			double a4 = a3 + a2 - a1;
+			
+			if (a3 * a4 < 0.0)
+			{
+				return a3 / (a3 - a4);
+			}
+		}
+		
+		return Double.NaN;
+	}
+	
+	/**
+	 * Calculates the intersection point as the result of a <code>getLineSegmentIntersection</code> call.
+	 * @param out the point to write the information to.
+	 * @param ax the first line segment, first point, x-coordinate.
+	 * @param ay the first line segment, first point, y-coordinate.
+	 * @param bx the first line segment, second point, x-coordinate.
+	 * @param by the first line segment, second point, y-coordinate.
+	 * @param intersectionPoint the scalar along the line.
+	 * @see #getLineSegmentIntersection(double, double, double, double, double, double, double, double)
+	 */
+	public static void getIntersectionPoint(Point2D out, double ax, double ay, double bx, double by, double intersectionPoint)
+	{
+		out.x = ax + intersectionPoint * (bx - ax);
+		out.y = ay + intersectionPoint * (by - ay);
 	}
 	
 }

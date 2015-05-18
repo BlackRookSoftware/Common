@@ -17,7 +17,7 @@ import com.blackrook.commons.hash.Hash;
  * @author Matthew Tropiano
  * @since 2.21.0
  */
-abstract class AbstractSpatialGrid<T extends Object> implements ResettableIterable<T>
+abstract class AbstractSpatialIndex<T extends Object> implements ResettableIterable<T>
 {
 	/** List of all objects. */
 	private Hash<T> allObjects;
@@ -27,12 +27,12 @@ abstract class AbstractSpatialGrid<T extends Object> implements ResettableIterab
 	/**
 	 * SpatialHash with resolution 1.
 	 */
-	protected AbstractSpatialGrid()
+	protected AbstractSpatialIndex()
 	{
 		this(1);
 	}
 
-	protected AbstractSpatialGrid(int resolution)
+	protected AbstractSpatialIndex(int resolution)
 	{
 		if (resolution <= 0)
 			throw new IllegalArgumentException("Grid resolution cannot be 0 or less.");
