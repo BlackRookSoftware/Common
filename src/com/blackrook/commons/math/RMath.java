@@ -1152,13 +1152,13 @@ public final class RMath
 	 * @param ay the first line segment, first point, y-coordinate.
 	 * @param bx the first line segment, second point, x-coordinate.
 	 * @param by the first line segment, second point, y-coordinate.
-	 * @param intersectionPoint the scalar along the line.
+	 * @param intersectionScalar the scalar along the line.
 	 * @see #getLineSegmentIntersection(double, double, double, double, double, double, double, double)
 	 */
-	public static void getIntersectionPoint(Point2D out, double ax, double ay, double bx, double by, double intersectionPoint)
+	public static void getIntersectionPoint(Point2D out, double ax, double ay, double bx, double by, double intersectionScalar)
 	{
-		out.x = ax + intersectionPoint * (bx - ax);
-		out.y = ay + intersectionPoint * (by - ay);
+		out.x = ax + intersectionScalar * (bx - ax);
+		out.y = ay + intersectionScalar * (by - ay);
 	}
 	
 }
