@@ -12,6 +12,7 @@ import com.blackrook.commons.AbstractTrie;
 /**
  * An implementation of a Trie that stores strings.
  * @author Matthew Tropiano
+ * @since 2.20.0
  */
 public class StringTrie extends AbstractTrie<String, Character>
 {

@@ -12,6 +12,7 @@ import com.blackrook.commons.AbstractTrie;
 /**
  * An implementation of a Trie that stores strings separated by a set of delimiters.
  * @author Matthew Tropiano
+ * @since 2.20.0
  */
 public class TokenTrie extends AbstractTrie<String, String>
 {

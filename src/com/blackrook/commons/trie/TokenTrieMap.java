@@ -12,6 +12,7 @@ import com.blackrook.commons.AbstractTrieMap;
 /**
  * An implementation of a Trie that stores strings separated by a set of delimiters.
  * @author Matthew Tropiano
+ * @since 2.20.0
  */
 public class TokenTrieMap<V extends Object> extends AbstractTrieMap<String, V, String>
 {

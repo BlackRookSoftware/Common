@@ -16,6 +16,7 @@ import com.blackrook.commons.list.List;
  * @author Matthew Tropiano
  * @param <V> the value type that this holds.
  * @param <S> the type of the split segments used for searching.
+ * @since 2.20.0
  */
 public abstract class AbstractTrieMap<K extends Object, V extends Object, S extends Object> 
 	extends AbstractTrie<ObjectPair<K, V>, S> implements AbstractMap<K, V>

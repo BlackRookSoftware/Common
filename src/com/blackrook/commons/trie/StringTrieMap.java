@@ -12,6 +12,7 @@ import com.blackrook.commons.AbstractTrieMap;
 /**
  * An implementation of a Trie that stores strings mapped to values.
  * @author Matthew Tropiano
+ * @since 2.20.0
  */
 public class StringTrieMap<V extends Object> extends AbstractTrieMap<String, V, Character>
 {

@@ -18,6 +18,7 @@ import com.blackrook.commons.list.List;
  * @author Matthew Tropiano
  * @param <V> the value type that this holds.
  * @param <S> the type of the split segments used for searching.
+ * @since 2.20.0
  */
 public abstract class AbstractTrie<V extends Object, S extends Object> implements AbstractSet<V>, Sizable
 {
@@ -213,6 +214,16 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 	public boolean isEmpty()
 	{
 		return size() == 0;
+	}
+	
+	/**
+	 * Removes all objects from the trie.
+	 * @since 2.21.0
+	 */
+	public void clear()
+	{
+		root = null;
+		size = 0;
 	}
 	
 	@Override
