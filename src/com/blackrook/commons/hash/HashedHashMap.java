@@ -123,5 +123,21 @@ public class HashedHashMap<K extends Object, V extends Object> extends HashMap<K
 		}
 		return out;
 	}
+
+	/**
+	 * Checks if a value exists for a corresponding key.
+	 * @param key the key.
+	 * @param value the value.
+	 * @return true if it exists, false otherwise.
+	 * @since 2.21.0
+	 */
+	public boolean containsValue(K key, V value)
+	{
+		Hash<V> hash = get(key);
+		boolean out = false;
+		if (hash != null)
+			return hash.contains(value);
+		return out;
+	}
 	
 }
