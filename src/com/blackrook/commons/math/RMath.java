@@ -1058,6 +1058,159 @@ public final class RMath
 	}
 
 	/**
+	 * Tests if an intersection occurs between two line segments.
+	 * @param ax the first line segment, first point, x-coordinate.
+	 * @param ay the first line segment, first point, y-coordinate.
+	 * @param bx the first line segment, second point, x-coordinate.
+	 * @param by the first line segment, second point, y-coordinate.
+	 * @param cx the second line segment, first point, x-coordinate.
+	 * @param cy the second line segment, first point, y-coordinate.
+	 * @param dx the second line segment, second point, x-coordinate.
+	 * @param dy the second line segment, second point, y-coordinate.
+	 * @return a scalar value representing how far along the first line segment the intersection occurred, or {@link Double#NaN} if no intersection.
+	 */
+	public static double getLineSegmentIntersection(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
+	{
+		double a1 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, dx, dy);
+		double a2 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy);
+		
+		// If the triangle areas have opposite signs. 
+		if (a1 != 0.0 && a2 != 0.0 && a1 * a2 < 0.0)
+		{
+			double a3 = RMath.getTriangleAreaDoubleSigned(cx, cy, dx, dy, ax, ay);
+			double a4 = a3 + a2 - a1;
+			
+			if (a3 * a4 < 0.0)
+			{
+				return a3 / (a3 - a4);
+			}
+		}
+		
+		return Double.NaN;
+	}
+
+	/**
+	 * Tests if a line segment intersects with a circle.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param ccx the circle center, x-coordinate.
+	 * @param ccy the circle center, y-coordinate.
+	 * @param crad the circle radius.
+	 * @return if an intersection occurred.
+	 * @since 2.21.0
+	 */
+	public static boolean getLineCircleIntersection(double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
+	{
+		// cull short lines.
+		if (RMath.getVectorLength(bx - ax, by - ay) < RMath.getVectorLength(ccx - ax, ccy - ay) - crad)
+			return false;
+
+		// cull outside of possible vectors (dot product of line and line start to center).
+		if (RMath.getVectorUnitDotProduct(ccx - ax, ccy - ay, bx - ax, by - ay) <= 0)
+			return false;
+
+		double dotp = RMath.getVectorUnitDotProduct(bx - ax, by - ay, bx - ccx, by - ccy);
+
+		// line ends at circle center.
+		if (Double.isNaN(dotp))
+			return true;
+		// line ends before circle center.
+		else if (dotp < 0)
+		{
+			if (RMath.getVectorLength(ccx - bx, ccy - by) >= crad)
+				return false;
+			else
+				return true;
+		}
+		// line ends after circle center.
+		else
+		{
+			// project point
+			double tx = bx - ax;
+			double ty = by - ay;
+			double dot = ccx * tx + ccy * ty;
+			
+			double fact = tx * tx + ty * ty;
+			double dpofact = dot / fact;
+			double ppx = dpofact * tx;
+			double ppy = dpofact * ty;
+
+			// no collision if distance to projected less than radius
+			if (RMath.getLineLength(ccx, ccy, ppx, ppy) > crad)
+				return false;
+			else
+				return true;
+		}
+	}
+
+	/**
+	 * Returns if two described circles intersect.  
+	 * @param spx the first circle center, x-coordinate.
+	 * @param spy the first circle center, y-coordinate.
+	 * @param srad the first circle radius.
+	 * @param tpx the second circle center, x-coordinate.
+	 * @param tpy the second circle center, y-coordinate.
+	 * @param trad the second circle radius.
+	 * @since 2.21.0
+	 */
+	public static boolean getCircleIntersection(double spx, double spy, double srad, double tpx, double tpy, double trad)
+	{
+		return RMath.getLineLength(spx, spy, tpx, tpy) < srad + trad;
+	}
+
+	/**
+	 * Returns if a circle and box intersect.  
+	 * @param ccx the circle center, x-coordinate.
+	 * @param ccy the circle center, y-coordinate.
+	 * @param crad the circle radius.
+	 * @param bcx the box center, x-coordinate.
+	 * @param bcy the box center, y-coordinate.
+	 * @param bhw the box half width.
+	 * @param bhh the box half height.
+	 * @return if an intersection occurred.
+	 * @since 2.21.0
+	 */
+	public static boolean getCircleBoxIntersection(double ccx, double ccy, double crad, double bcx, double bcy, double bhw, double bhh)
+	{
+		double tx0 = bcx - bhw;
+		double tx1 = bcx + bhw;
+		double ty0 = bcy - bhh;
+		double ty1 = bcy + bhh;
+
+		// Voronoi Region Test.
+		if (ccx < tx0)
+		{
+			if (ccy < ty0)
+				return RMath.getLineLength(ccx, ccy, tx0, ty0) < crad;
+			else if (ccy > ty1)
+				return RMath.getLineLength(ccx, ccy, tx0, ty1) < crad;
+			else
+				return RMath.getLineLength(ccx, ccy, tx0, ccy) < crad;
+		}
+		else if (ccx > tx1)
+		{
+			if (ccy < ty0)
+				return RMath.getLineLength(ccx, ccy, tx1, ty0) < crad;
+			else if (ccy > ty1)
+				return RMath.getLineLength(ccx, ccy, tx1, ty1) < crad;
+			else
+				return RMath.getLineLength(ccx, ccy, tx1, ccy) < crad;
+		}
+		else
+		{
+			if (ccy < ty0)
+				return RMath.getLineLength(ccx, ccy, ccx, ty0) < crad;
+			else if (ccy > ty1)
+				return RMath.getLineLength(ccx, ccy, ccx, ty1) < crad;
+			else // circle center is inside box
+				return true;
+		}
+
+	}
+
+	/**
 	 * Returns the doubled signed area of a triangular area made up of 3 points.  
 	 * @param spx the first box center, x-coordinate.
 	 * @param spy the first box center, y-coordinate.
@@ -1067,6 +1220,7 @@ public final class RMath
 	 * @param tpy the second box center, y-coordinate.
 	 * @param thw the second box half width.
 	 * @param thh the second box half height.
+	 * @return if an intersection occurred.
 	 * @since 2.21.0
 	 */
 	public static boolean getBoxIntersection(double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
@@ -1111,38 +1265,6 @@ public final class RMath
 				return true;
 			}
 		}
-	}
-	
-	/**
-	 * Tests if an intersection occurs between two line segments.
-	 * @param ax the first line segment, first point, x-coordinate.
-	 * @param ay the first line segment, first point, y-coordinate.
-	 * @param bx the first line segment, second point, x-coordinate.
-	 * @param by the first line segment, second point, y-coordinate.
-	 * @param cx the second line segment, first point, x-coordinate.
-	 * @param cy the second line segment, first point, y-coordinate.
-	 * @param dx the second line segment, second point, x-coordinate.
-	 * @param dy the second line segment, second point, y-coordinate.
-	 * @return a scalar value representing how far along the first line segment the intersection occurred, or {@link Double#NaN} if no intersection.
-	 */
-	public static double getLineSegmentIntersection(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
-	{
-		double a1 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, dx, dy);
-		double a2 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy);
-		
-		// If the triangle areas have opposite signs. 
-		if (a1 != 0.0 && a2 != 0.0 && a1 * a2 < 0.0)
-		{
-			double a3 = RMath.getTriangleAreaDoubleSigned(cx, cy, dx, dy, ax, ay);
-			double a4 = a3 + a2 - a1;
-			
-			if (a3 * a4 < 0.0)
-			{
-				return a3 / (a3 - a4);
-			}
-		}
-		
-		return Double.NaN;
 	}
 	
 	/**
