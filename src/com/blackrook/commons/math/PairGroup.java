@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.blackrook.commons.math;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -14,7 +15,6 @@ import com.blackrook.commons.Common;
 import com.blackrook.commons.ResettableIterable;
 import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.Sizable;
-import com.blackrook.commons.list.ComparatorList;
 import com.blackrook.commons.math.Pair;
 
 /**
@@ -39,13 +39,13 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	private static class Cache
 	{
-		Pair pair;
 		int[] orderingSource;
 		int[] randomOrdering;
+		Pair pair;
 		
 		Cache()
 		{
-			pair = new Pair();
+			this.pair = new Pair();
 		}
 		
 		void doRandom(Random random, int length, int amount)
@@ -85,14 +85,40 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	}
 		
 	/** A list of the contained pairs. */
-	private ComparatorList<Pair> pairList;
+	private Pair[] pairList;
+	/** Current size. */
+	private int size;
 	
 	/**
-	 * Created a Pair group with no Pairs in it.
+	 * Created a Pair group with no Pairs added to it.
+	 * @param capacity the group capacity.
 	 */
-	public PairGroup()
+	private PairGroup(int capacity)
 	{
-		pairList = new ComparatorList<Pair>(PAIR_COMPARATOR, 50);
+		setCapacity(capacity);
+		size = 0;
+	}
+	
+	// Sets the internal capacity.
+	private void setCapacity(int capacity)
+	{
+		int oldCapacity = pairList != null ? pairList.length : 0;
+		Pair[] oldArray = pairList;
+				
+		if (oldCapacity == capacity)
+			return;
+		
+		Pair[] newArray = new Pair[capacity];
+		if (oldArray != null)
+			System.arraycopy(oldArray, 0, newArray, 0, Math.min(oldCapacity, capacity));
+		
+		for (int i = oldCapacity; i < capacity; i++)
+			newArray[i] = new Pair();
+
+		if (capacity < oldCapacity)
+			size = capacity;
+		
+		pairList = newArray;
 	}
 	
 	private Cache getCache()
@@ -104,11 +130,86 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	}
 
 	/**
+	 * Sorts a pair from an index.
+	 * @param start the starting index.
+	 */
+	private void sort(int start)
+	{
+		while (start > 0 && PAIR_COMPARATOR.compare(pairList[start - 1], pairList[start]) >= 1)
+		{
+			Pair tmp = pairList[start - 1];
+			pairList[start - 1] = pairList[start];
+			pairList[start] = tmp;
+			start--;
+		}
+	}
+	
+	// Set circle points.
+	private void setCirclePoints(int cx, int cy, int x, int y)
+	{
+		if (x == 0)
+		{
+			add(cx, cy + y);
+			add(cx, cy - y);
+			add(cx + y, cy);
+			add(cx - y, cy);
+		}
+		else if (x == y)
+		{
+			add(cx + x, cy + y);
+			add(cx - x, cy + y);
+			add(cx + x, cy - y);
+			add(cx - x, cy - y);
+		}
+		else if (x < y) 
+		{
+			add(cx + x, cy + y);
+			add(cx - x, cy + y);
+			add(cx + x, cy - y);
+			add(cx - x, cy - y);
+			add(cx + y, cy + x);
+			add(cx - y, cy + x);
+			add(cx + y, cy - x);
+			add(cx - y, cy - x);
+		}
+	}
+
+	// Set filled circle points.
+	private void connectCirclePoints(int cx, int cy, int x, int y)
+	{
+		if (x == 0)
+		{
+			addLine(cx, cy + y, cx, cy - y);
+			addLine(cx + y, cy, cx - y, cy);
+		}
+		else if (x == y)
+		{
+			addLine(cx + x, cy + y, cx - x, cy + y);
+			addLine(cx + x, cy - y, cx - x, cy - y);
+		}
+		else if (x < y) 
+		{
+			addLine(cx + x, cy + y, cx - x, cy + y);
+			addLine(cx + x, cy - y, cx - x, cy - y);
+			addLine(cx + y, cy + x, cx - y, cy + x);
+			addLine(cx + y, cy - x, cx - y, cy - x);
+		}
+	}
+
+	/**
 	 * Returns a new, empty PairGroup.
 	 */
 	public static PairGroup empty()
 	{
-		return new PairGroup();
+		return new PairGroup(32);
+	}
+	
+	/**
+	 * Returns a new, empty PairGroup with an initial, specific capacity.
+	 */
+	public static PairGroup empty(int capacity)
+	{
+		return new PairGroup(capacity);
 	}
 	
 	/**
@@ -117,7 +218,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public static PairGroup wrap(Pair ... pairs)
 	{
-		PairGroup out = new PairGroup();
+		PairGroup out = empty(pairs.length);
 		for (Pair p : pairs)
 			out.add(p.x, p.y);
 		return out;
@@ -129,7 +230,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public static PairGroup wrap(Iterable<Pair> pairs)
 	{
-		PairGroup out = new PairGroup();
+		PairGroup out = empty();
 		for (Pair p : pairs)
 			out.add(p.x, p.y);
 		return out;
@@ -142,7 +243,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public static PairGroup point(int x, int y)
 	{
-		PairGroup out = new PairGroup();
+		PairGroup out = empty(1);
 		out.add(x, y);
 		return out;
 	}
@@ -172,7 +273,8 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public static PairGroup line(int x0, int y0, int x1, int y1, boolean solid)
 	{
-		PairGroup out = new PairGroup();
+		int capacity = Math.max(Math.max(x0, x1) - Math.min(x0, x1) + 1, Math.max(y0, y1) - Math.min(y0, y1) + 1);
+		PairGroup out = new PairGroup(capacity);
 		out.addLine(x0, y0, x1, y1, solid);
 		return out;
 	}
@@ -187,7 +289,8 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public static PairGroup circle(int cx, int cy, int radius)
 	{
-		PairGroup out = new PairGroup();
+		radius = radius < 0 ? -radius : radius;
+		PairGroup out = new PairGroup(radius * 8);
 		out.addCircle(cx, cy, radius);
 		return out;
 	}
@@ -202,7 +305,8 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public static PairGroup circleFilled(int cx, int cy, int radius)
 	{
-		PairGroup out = new PairGroup();
+		radius = radius < 0 ? -radius : radius;
+		PairGroup out = new PairGroup(radius * radius * 2);
 		out.addCircleFilled(cx, cy, radius);
 		return out;
 	}
@@ -216,7 +320,13 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public static PairGroup box(int x0, int y0, int x1, int y1)
 	{
-		PairGroup out = new PairGroup();
+		int dx = Math.max(x0, x1) - Math.min(x0, x1) + 1;
+		int dy = Math.max(y0, y1) - Math.min(y0, y1) + 1;
+		
+		int ix = Math.max(dx - 2, 0);
+		int iy = Math.max(dy - 2, 0);
+
+		PairGroup out = empty(dx * dy - ix * iy);
 		out.addBox(x0, y0, x1, y1);
 		return out;
 	}
@@ -230,7 +340,9 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public static PairGroup boxFilled(int x0, int y0, int x1, int y1)
 	{
-		PairGroup out = new PairGroup();
+		int dx = Math.max(x0, x1) - Math.min(x0, x1) + 1;
+		int dy = Math.max(y0, y1) - Math.min(y0, y1) + 1;
+		PairGroup out = empty(dx * dy);
 		out.addBoxFilled(x0, y0, x1, y1);
 		return out;
 	}
@@ -243,11 +355,16 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public PairGroup add(int x, int y)
 	{
-		Cache c = getCache();
-		c.pair.x = x;
-		c.pair.y = y;
-		if (!pairList.contains(c.pair))
-			pairList.add(new Pair(c.pair.x, c.pair.y));
+		if (!contains(x, y))
+		{
+			if (size == pairList.length)
+				setCapacity(pairList.length * 2);
+			
+			pairList[size].x = x; 
+			pairList[size].y = y;
+			sort(size);
+			size++;
+		}
 		
 		return this;
 	}
@@ -405,58 +522,6 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		return this;
 	}
 
-	// Set circle points.
-	private void setCirclePoints(int cx, int cy, int x, int y)
-	{
-		if (x == 0)
-		{
-			add(cx, cy + y);
-			add(cx, cy - y);
-			add(cx + y, cy);
-			add(cx - y, cy);
-		}
-		else if (x == y)
-		{
-			add(cx + x, cy + y);
-			add(cx - x, cy + y);
-			add(cx + x, cy - y);
-			add(cx - x, cy - y);
-		}
-		else if (x < y) 
-		{
-			add(cx + x, cy + y);
-			add(cx - x, cy + y);
-			add(cx + x, cy - y);
-			add(cx - x, cy - y);
-			add(cx + y, cy + x);
-			add(cx - y, cy + x);
-			add(cx + y, cy - x);
-			add(cx - y, cy - x);
-		}
-	}
-
-	// Set filled circle points.
-	private void connectCirclePoints(int cx, int cy, int x, int y)
-	{
-		if (x == 0)
-		{
-			addLine(cx, cy + y, cx, cy - y);
-			addLine(cx + y, cy, cx - y, cy);
-		}
-		else if (x == y)
-		{
-			addLine(cx + x, cy + y, cx - x, cy + y);
-			addLine(cx + x, cy - y, cx - x, cy - y);
-		}
-		else if (x < y) 
-		{
-			addLine(cx + x, cy + y, cx - x, cy + y);
-			addLine(cx + x, cy - y, cx - x, cy - y);
-			addLine(cx + y, cy + x, cx - y, cy + x);
-			addLine(cx + y, cy - x, cx - y, cy - x);
-		}
-	}
-
 	/**
 	 * Adds a set of pairs that make up a box.
 	 * @param x0 origin x-coordinate.
@@ -484,14 +549,20 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public PairGroup addBoxFilled(int x0, int y0, int x1, int y1)
 	{
-		for (int j = y0; j <= y1; j++)
-			for (int i = x0; i <= x1; i++)
+		int minx = Math.min(x0, x1);
+		int maxx = Math.max(x0, x1);
+		int miny = Math.min(y0, y1);
+		int maxy = Math.max(y0, y1);
+
+		for (int j = miny; j <= maxy; j++)
+			for (int i = minx; i <= maxx; i++)
 				add(i, j);
 		return this;
 	}
 	
 	/**
-	 * Removes a pair.
+	 * Removes a pair. 
+	 * If it doesn't exist in the group, no removal happens.
 	 * @param x x-coordinate.
 	 * @param y y-coordinate.
 	 * @return itself, to chain method calls.
@@ -501,7 +572,26 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		Cache c = getCache();
 		c.pair.x = x;
 		c.pair.y = y;
-		pairList.remove(c.pair);
+		int index = Arrays.binarySearch(pairList, c.pair, PAIR_COMPARATOR);
+		if (index < 0)
+			return this;
+		
+		if (index == size - 1)
+		{
+			size--;
+			return this;
+		}
+		
+		Pair rem = pairList[index];
+		while (index < size - 1)
+		{
+			pairList[index] = pairList[index + 1];
+			index++;
+		}
+		pairList[index] = rem;
+		
+		size--;
+		
 		return this;
 	}
 	
@@ -545,7 +635,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		Cache c = getCache();
 		c.pair.x = x;
 		c.pair.y = y;
-		return pairList.contains(c.pair);
+		return Arrays.binarySearch(pairList, 0, size, c.pair, PAIR_COMPARATOR) >= 0;
 	}
 
 	/**
@@ -557,10 +647,10 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public PairGroup translate(int x, int y)
 	{
-		for (Pair p : this)
+		for (int i = 0; i < size; i++)
 		{
-			p.x += x;
-			p.y += y;
+			pairList[i].x += x;
+			pairList[i].y += y;
 		}
 		return this;
 	}
@@ -570,8 +660,8 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public PairGroup copy()
 	{
-		PairGroup out = new PairGroup();
-		for (Pair p : pairList)
+		PairGroup out = new PairGroup(pairList.length);
+		for (Pair p : this)
 			out.add(p.x, p.y);
 		return out;
 	}
@@ -592,13 +682,17 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 * Creates a new PairGroup that is the intersection of
 	 * two groups. The new group will only have the Pairs that
 	 * are both in this group and the provided group.
+	 * @return a new PairGroup.
 	 */
 	public PairGroup intersection(PairGroup group)
 	{
-		PairGroup out = new PairGroup();
-		for (Pair p : this)
+		PairGroup out = new PairGroup(pairList.length);
+		for (int i = 0; i < size; i++)
+		{
+			Pair p = pairList[i];
 			if (group.contains(p.x, p.y))
 				out.add(p.x, p.y);
+		}
 		return out;
 	}
 
@@ -654,10 +748,10 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		else if (chance >= 1f)
 			return copy();
 
-		PairGroup out = new PairGroup();
-		for (Pair p : this)
+		PairGroup out = empty(pairList.length);
+		for (int i = 0; i < size; i++)
 			if (random.nextFloat() < chance)
-				out.add(p.x, p.y);
+				out.add(pairList[i].x, pairList[i].y);
 		
 		return out;
 	}
@@ -679,10 +773,10 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		int amount = Math.min(size(), count);
 		c.doRandom(random, size(), amount);
 		
-		PairGroup out = empty();
+		PairGroup out = empty(count);
 		for (int i = 0; i < amount; i++)
 		{
-			Pair p = pairList.getByIndex(c.randomOrdering[i]);
+			Pair p = pairList[c.randomOrdering[i]];
 			out.add(p.x, p.y);
 		}
 		
@@ -692,7 +786,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	@Override
 	public ResettableIterator<Pair> iterator()
 	{
-		return pairList.iterator();
+		return new PairGroupIterator(this);
 	}
 	
 	/**
@@ -701,7 +795,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	@Override
 	public int size()
 	{
-		return pairList.size();
+		return size;
 	}
 
 	@Override
@@ -713,6 +807,83 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	@Override
 	public String toString()
 	{
-		return pairList.toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		int i = 0;
+		while (i < size)
+		{
+			sb.append(pairList[i]);
+			if (i < size - 1)
+				sb.append(", ");
+			i++;
+		}
+		sb.append(']');
+		return sb.toString();
 	}
+	
+	/**
+	 * Iterator for this group.
+	 * Changing the Pairs returned by this iterator will not change the contents of the group.
+	 */
+	public static class PairGroupIterator implements ResettableIterator<Pair>
+	{
+		/** Pair group. */
+		private PairGroup group;
+		/** Surrogate Pair to return. */
+		private Pair surrogateCurrent;
+		/** Current pair. */
+		int current;
+		/** Removed? */
+		boolean removed;
+		
+		public PairGroupIterator(PairGroup group)
+		{
+			this.surrogateCurrent = new Pair(0, 0);
+			this.group = group;
+			this.removed = false;
+			this.current = 0;
+		}
+		
+		@Override
+		public boolean hasNext()
+		{
+			return current < group.size;
+		}
+
+		@Override
+		public Pair next() 
+		{
+			Pair p = group.pairList[current];
+			surrogateCurrent.x = p.x;
+			surrogateCurrent.y = p.y;
+			removed = false;
+
+			if (!removed)
+				current++;
+			else
+				removed = false;
+
+			return surrogateCurrent;
+		}
+
+		@Override
+		public void reset() 
+		{
+			this.removed = false;
+			this.current = 0;
+		}
+		
+		@Override
+		public void remove()
+		{
+			if (!removed)
+			{
+				Pair p = group.pairList[current];
+				group.remove(p.x, p.y);
+				removed = true;
+			}
+		}
+		
+	}
+	
 }

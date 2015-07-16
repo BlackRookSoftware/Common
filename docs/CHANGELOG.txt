@@ -18,6 +18,8 @@ Slated for 2.21.0
   types.
 - Added: AbstractTrie.clear().
 - Added: HashedHashMap.containsValue(K, V).
+- Changed: PairGroup now uses a pooled array of pairs instead creating many 
+  pair objects over and over again.
 
 Changed in 2.20.2
 =================
