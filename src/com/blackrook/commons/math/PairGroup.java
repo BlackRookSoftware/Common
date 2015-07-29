@@ -348,6 +348,15 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	}
 	
 	/**
+	 * Clears this group.
+	 * @since 2.21.0
+	 */
+	public void clear()
+	{
+		size = 0;
+	}
+	
+	/**
 	 * Adds a pair.
 	 * @param x x-coordinate.
 	 * @param y y-coordinate.
