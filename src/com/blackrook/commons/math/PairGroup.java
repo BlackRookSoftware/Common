@@ -129,21 +129,6 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		return out;
 	}
 
-	/**
-	 * Sorts a pair from an index.
-	 * @param start the starting index.
-	 */
-	private void sort(int start)
-	{
-		while (start > 0 && PAIR_COMPARATOR.compare(pairList[start - 1], pairList[start]) >= 1)
-		{
-			Pair tmp = pairList[start - 1];
-			pairList[start - 1] = pairList[start];
-			pairList[start] = tmp;
-			start--;
-		}
-	}
-	
 	// Set circle points.
 	private void setCirclePoints(int cx, int cy, int x, int y)
 	{
@@ -371,7 +356,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 			
 			pairList[size].x = x; 
 			pairList[size].y = y;
-			sort(size);
+			Common.sortFrom(pairList, size, PAIR_COMPARATOR);
 			size++;
 		}
 		

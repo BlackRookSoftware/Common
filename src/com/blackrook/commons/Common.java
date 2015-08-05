@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.zip.ZipFile;
@@ -2889,6 +2890,64 @@ public final class Common
 		}
 		
 		return out;
+	}
+	
+	/**
+	 * Adds an object to an array that presumably contains sorted elements.
+	 * An object is added at some point in the array, and the element is shifted down to an appropriate
+	 * position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param array the array to add an object to.
+	 * @param object the object to add.
+	 * @param start the index to add it to (the contents are replaced).
+	 * @return the final index in the array of the added object.
+	 * @throw {@link NullPointerException} if a comparison happens on a null object at some point.
+	 * @see Comparable#compareTo(Object)
+	 * @see #sortFrom(Comparable[], int)
+	 * @since 2.21.0 
+	 */
+	public static <T extends Comparable<T>> int addSorted(T[] array, T object, int start)
+	{
+		array[start] = object;
+		return sortFrom(array, start);
+	}
+	
+	/**
+	 * Shifts an object to an appropriate position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param array the array to shift the contents of.
+	 * @param index the index to add it to (the contents are replaced).
+	 * @return the final index in the array of the sorted object.
+	 * @since 2.21.0 
+	 */
+	public static <T extends Comparable<T>> int sortFrom(T[] array, int index)
+	{
+		while (index > 0 && array[index].compareTo(array[index - 1]) < 0)
+		{
+			T tmp = array[index - 1];
+			array[index - 1] = array[index];
+			array[index] = tmp;
+			index--;
+		}
+		return index;
+	}
+	
+	/**
+	 * Shifts an object to an appropriate position according to the provided <code>comparator</code> function.
+	 * @param array the array to shift the contents of.
+	 * @param index the index to add it to (the contents are replaced).
+	 * @param comparator the comparator to use.
+	 * @return the final index in the array of the sorted object.
+	 * @since 2.21.0 
+	 */
+	public static <T> int sortFrom(T[] array, int index, Comparator<T> comparator)
+	{
+		while (index > 0 && comparator.compare(array[index], array[index - 1]) < 0)
+		{
+			T tmp = array[index - 1];
+			array[index - 1] = array[index];
+			array[index] = tmp;
+			index--;
+		}
+		return index;
 	}
 	
 	/**
