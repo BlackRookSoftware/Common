@@ -52,6 +52,29 @@ public class Pair
 	}
 	
 	/**
+	 * Sets both components.
+	 * @param x the x-coordinate.
+	 * @param y the y-coordinate.
+	 * @since 2.21.0
+	 */
+	public void set(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	/**
+	 * Sets both components using an existing pair.
+	 * @param p the source pair.
+	 * @since 2.21.0
+	 */
+	public void set(Pair p)
+	{
+		this.x = p.x;
+		this.y = p.y;
+	}
+	
+	/**
 	 * Checks if this pair equals another.
 	 */
 	public boolean equals(Pair p)

@@ -23,6 +23,7 @@ Slated for 2.21.0
 - Changed: PairGroup.clear().
 - Added: To Common: addSorted(T[], T, int), sortFrom(T[], int), 
   sortFrom(T[], int, Comparator<T>)
+- Added: Pair.set(int, int), Pair.set(Pair).
 
 Changed in 2.20.2
 =================
