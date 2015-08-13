@@ -247,7 +247,7 @@ public class SpatialIndex2D<T> extends AbstractSpatialIndex<T>
 					break;
 			}
 			
-			if (!Double.isNaN(RMath.getLineSegmentIntersection(x0, y0, x1, y1, sx, sy, tx, ty)))
+			if (!Double.isNaN(RMath.getIntersectionLineSegment(x0, y0, x1, y1, sx, sy, tx, ty)))
 				return true;
 		}
 		
@@ -270,7 +270,7 @@ public class SpatialIndex2D<T> extends AbstractSpatialIndex<T>
 		double hw = cache.tempPoint.x;
 		double hh = cache.tempPoint.y;
 
-		return RMath.getBoxIntersection(centerX, centerY, halfWidth, halfHeight, cx, cy, hw, hh);
+		return RMath.getIntersectionBox(centerX, centerY, halfWidth, halfHeight, cx, cy, hw, hh);
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class SpatialIndex2D<T> extends AbstractSpatialIndex<T>
 		double thw = cache.tempPoint.x;
 		double thh = cache.tempPoint.y;
 		
-		return RMath.getBoxIntersection(spx, spy, shw, shh, tpx, tpy, thw, thh);
+		return RMath.getIntersectionBox(spx, spy, shw, shh, tpx, tpy, thw, thh);
 	}
 
 	// Returns threadlocal cache.

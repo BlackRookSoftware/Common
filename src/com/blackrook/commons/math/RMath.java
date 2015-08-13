@@ -10,6 +10,7 @@ package com.blackrook.commons.math;
 import java.util.Random;
 
 import com.blackrook.commons.math.geometry.Point2D;
+import com.blackrook.commons.math.geometry.Vect2D;
 
 /**
  * A class with static methods that perform "other" types of mathematics.
@@ -690,6 +691,16 @@ public final class RMath
 	}
 
 	/**
+	 * Returns (val - min) if val is closer to min than max, (max - val) otherwise.
+	 * Result is always positive.
+	 * @since 2.21.0 
+	 */
+	public static double closerComponent(double val, double min, double max)
+	{
+		return Math.abs(val - min) < Math.abs(val - max) ? (val - min) : (max - val);
+	}
+
+	/**
 	 * Returns the value that "value" is farthest from.
 	 * @param value		the input value
 	 * @param v1		first evaluating value
@@ -744,6 +755,56 @@ public final class RMath
 	}
 	
 	/**
+	 * Special angle interpolation. 
+	 * Best used for presentation, not for calculation.
+	 * @param factor interpolation factor.
+	 * @param degA the first angle in degrees.
+	 * @param degB the second angle in degrees.
+	 * @return the resultant angle.
+	 * @since 2.21.0
+	 */
+	public static double angleInterpolateDegrees(double factor, double degA, double degB)
+	{
+		double max = Math.max(degA, degB);
+		double min = Math.min(degA, degB);
+		
+		if (max - min > 180.0)
+		{
+			if (degA > degB)
+				degA = degA - 360.0;
+			else if (degB > degA)
+				degB = degB - 360.0;
+		}
+		
+		return factor * (degB - degA) + degA;		
+	}
+	
+	/**
+	 * Special angle interpolation. 
+	 * Best used for presentation, not for calculation.
+	 * @param factor interpolation factor.
+	 * @param radA the first angle in degrees.
+	 * @param radB the second angle in degrees.
+	 * @return the resultant angle.
+	 * @since 2.21.0
+	 */
+	public static double angleInterpolateRadians(double factor, double radA, double radB)
+	{
+		double max = Math.max(radA, radB);
+		double min = Math.min(radA, radB);
+		
+		if (max - min > Math.PI)
+		{
+			if (radA > radB)
+				radA = radA - Math.PI*2;
+			else if (radB > radA)
+				radB = radB - Math.PI*2;
+		}
+		
+		return factor * (radB - radA) + radA;		
+	}
+	
+	/**
 	 * Gets a scalar factor that equals how "far along" a value is along an interval.
 	 * @param value	the value to test.
 	 * @param lo	the lower value of the interval.
@@ -779,7 +840,7 @@ public final class RMath
 	public static double getVectorAngleDegrees(double x, double y)
 	{
 		return x != 0.0 
-			? RMath.radToDeg(Math.atan(y / x)) + (x < 0 ? 180 : 0) 
+			? radToDeg(Math.atan(y / x)) + (x < 0 ? 180 : 0) 
 			: (y < 0 ? 270d : 90d);
 	}
 	
@@ -920,6 +981,34 @@ public final class RMath
 		v2y = v2y / v2d;
 		v2z = v2z / v2d;
 		return getVectorDotProduct(v1x, v1y, v1z, v2x, v2y, v2z);
+	}
+
+	/**
+	 * Returns a simulated dot product between two radian angles
+	 * as though they were unit vectors, rotated.
+	 * @param radA the first angle in radians.
+	 * @param radB the second angle in radians.
+	 * @return the resultant dot product.
+	 */
+	public static double getAngleDotProductRadians(double radA, double radB)
+	{
+		double v1x = Math.cos(radA);
+		double v1y = Math.sin(radA);
+		double v2x = Math.cos(radB);
+		double v2y = Math.sin(radB);
+		return getVectorDotProduct(v1x, v1y, v2x, v2y);
+	}
+
+	/**
+	 * Returns a simulated dot product between two degree angles
+	 * as though they were unit vectors, rotated.
+	 * @param degA the first angle in degrees.
+	 * @param degB the second angle in degrees.
+	 * @return the resultant dot product.
+	 */
+	public static double getAngleDotProductDegrees(double degA, double degB)
+	{
+		return getAngleDotProductRadians(degToRad(degA), degToRad(degB));
 	}
 
 	/**
@@ -1069,15 +1158,15 @@ public final class RMath
 	 * @param dy the second line segment, second point, y-coordinate.
 	 * @return a scalar value representing how far along the first line segment the intersection occurred, or {@link Double#NaN} if no intersection.
 	 */
-	public static double getLineSegmentIntersection(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
+	public static double getIntersectionLineSegment(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
 	{
-		double a1 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, dx, dy);
-		double a2 = RMath.getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy);
+		double a1 = getTriangleAreaDoubleSigned(ax, ay, bx, by, dx, dy);
+		double a2 = getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy);
 		
 		// If the triangle areas have opposite signs. 
 		if (a1 != 0.0 && a2 != 0.0 && a1 * a2 < 0.0)
 		{
-			double a3 = RMath.getTriangleAreaDoubleSigned(cx, cy, dx, dy, ax, ay);
+			double a3 = getTriangleAreaDoubleSigned(cx, cy, dx, dy, ax, ay);
 			double a4 = a3 + a2 - a1;
 			
 			if (a3 * a4 < 0.0)
@@ -1101,17 +1190,17 @@ public final class RMath
 	 * @return if an intersection occurred.
 	 * @since 2.21.0
 	 */
-	public static boolean getLineCircleIntersection(double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
+	public static boolean getIntersectionLineCircle(double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
 	{
 		// cull short lines.
-		if (RMath.getVectorLength(bx - ax, by - ay) < RMath.getVectorLength(ccx - ax, ccy - ay) - crad)
+		if (getVectorLength(bx - ax, by - ay) < getVectorLength(ccx - ax, ccy - ay) - crad)
 			return false;
 
 		// cull outside of possible vectors (dot product of line and line start to center).
-		if (RMath.getVectorUnitDotProduct(ccx - ax, ccy - ay, bx - ax, by - ay) <= 0)
+		if (getVectorUnitDotProduct(ccx - ax, ccy - ay, bx - ax, by - ay) <= 0)
 			return false;
 
-		double dotp = RMath.getVectorUnitDotProduct(bx - ax, by - ay, bx - ccx, by - ccy);
+		double dotp = getVectorUnitDotProduct(bx - ax, by - ay, bx - ccx, by - ccy);
 
 		// line ends at circle center.
 		if (Double.isNaN(dotp))
@@ -1119,7 +1208,7 @@ public final class RMath
 		// line ends before circle center.
 		else if (dotp < 0)
 		{
-			if (RMath.getVectorLength(ccx - bx, ccy - by) >= crad)
+			if (getVectorLength(ccx - bx, ccy - by) >= crad)
 				return false;
 			else
 				return true;
@@ -1138,7 +1227,7 @@ public final class RMath
 			double ppy = dpofact * ty;
 
 			// no collision if distance to projected less than radius
-			if (RMath.getLineLength(ccx, ccy, ppx, ppy) > crad)
+			if (getLineLength(ccx, ccy, ppx, ppy) > crad)
 				return false;
 			else
 				return true;
@@ -1155,9 +1244,9 @@ public final class RMath
 	 * @param trad the second circle radius.
 	 * @since 2.21.0
 	 */
-	public static boolean getCircleIntersection(double spx, double spy, double srad, double tpx, double tpy, double trad)
+	public static boolean getIntersectionCircle(double spx, double spy, double srad, double tpx, double tpy, double trad)
 	{
-		return RMath.getLineLength(spx, spy, tpx, tpy) < srad + trad;
+		return getLineLength(spx, spy, tpx, tpy) < srad + trad;
 	}
 
 	/**
@@ -1172,46 +1261,46 @@ public final class RMath
 	 * @return if an intersection occurred.
 	 * @since 2.21.0
 	 */
-	public static boolean getCircleBoxIntersection(double ccx, double ccy, double crad, double bcx, double bcy, double bhw, double bhh)
+	public static boolean getIntersectionCircleBox(double ccx, double ccy, double crad, double bcx, double bcy, double bhw, double bhh)
 	{
 		double tx0 = bcx - bhw;
 		double tx1 = bcx + bhw;
 		double ty0 = bcy - bhh;
 		double ty1 = bcy + bhh;
-
+	
 		// Voronoi Region Test.
 		if (ccx < tx0)
 		{
 			if (ccy < ty0)
-				return RMath.getLineLength(ccx, ccy, tx0, ty0) < crad;
+				return getLineLength(ccx, ccy, tx0, ty0) < crad;
 			else if (ccy > ty1)
-				return RMath.getLineLength(ccx, ccy, tx0, ty1) < crad;
+				return getLineLength(ccx, ccy, tx0, ty1) < crad;
 			else
-				return RMath.getLineLength(ccx, ccy, tx0, ccy) < crad;
+				return getLineLength(ccx, ccy, tx0, ccy) < crad;
 		}
 		else if (ccx > tx1)
 		{
 			if (ccy < ty0)
-				return RMath.getLineLength(ccx, ccy, tx1, ty0) < crad;
+				return getLineLength(ccx, ccy, tx1, ty0) < crad;
 			else if (ccy > ty1)
-				return RMath.getLineLength(ccx, ccy, tx1, ty1) < crad;
+				return getLineLength(ccx, ccy, tx1, ty1) < crad;
 			else
-				return RMath.getLineLength(ccx, ccy, tx1, ccy) < crad;
+				return getLineLength(ccx, ccy, tx1, ccy) < crad;
 		}
 		else
 		{
 			if (ccy < ty0)
-				return RMath.getLineLength(ccx, ccy, ccx, ty0) < crad;
+				return getLineLength(ccx, ccy, ccx, ty0) < crad;
 			else if (ccy > ty1)
-				return RMath.getLineLength(ccx, ccy, ccx, ty1) < crad;
+				return getLineLength(ccx, ccy, ccx, ty1) < crad;
 			else // circle center is inside box
 				return true;
 		}
-
+	
 	}
 
 	/**
-	 * Returns the doubled signed area of a triangular area made up of 3 points.  
+	 * Tests if two boxes intersect.  
 	 * @param spx the first box center, x-coordinate.
 	 * @param spy the first box center, y-coordinate.
 	 * @param shw the first box half width.
@@ -1220,10 +1309,10 @@ public final class RMath
 	 * @param tpy the second box center, y-coordinate.
 	 * @param thw the second box half width.
 	 * @param thh the second box half height.
-	 * @return if an intersection occurred.
+	 * @return true if an intersection occurred, false if not.
 	 * @since 2.21.0
 	 */
-	public static boolean getBoxIntersection(double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
+	public static boolean getIntersectionBox(double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
 	{
 		if (spx < tpx) // box to the left.
 		{
@@ -1266,7 +1355,7 @@ public final class RMath
 			}
 		}
 	}
-	
+
 	/**
 	 * Calculates the intersection point as the result of a <code>getLineSegmentIntersection</code> call.
 	 * @param out the point to write the information to.
@@ -1275,12 +1364,237 @@ public final class RMath
 	 * @param bx the first line segment, second point, x-coordinate.
 	 * @param by the first line segment, second point, y-coordinate.
 	 * @param intersectionScalar the scalar along the line.
-	 * @see #getLineSegmentIntersection(double, double, double, double, double, double, double, double)
+	 * @see #getIntersectionLineSegment(double, double, double, double, double, double, double, double)
 	 */
 	public static void getIntersectionPoint(Point2D out, double ax, double ay, double bx, double by, double intersectionScalar)
 	{
 		out.x = ax + intersectionScalar * (bx - ax);
 		out.y = ay + intersectionScalar * (by - ay);
+	}
+
+	/**
+	 * Returns if two described circles intersect.  
+	 * @param overlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param incident the output point for the incident point.
+	 * @param spx the first circle center, x-coordinate.
+	 * @param spy the first circle center, y-coordinate.
+	 * @param srad the first circle radius.
+	 * @param tpx the second circle center, x-coordinate.
+	 * @param tpy the second circle center, y-coordinate.
+	 * @param trad the second circle radius.
+	 * @see RMath#getIntersectionCircle(double, double, double, double, double, double)
+	 * @since 2.21.0
+	 */
+	public static void getOverlapCircle(Vect2D overlap, Point2D incident, double spx, double spy, double srad, double tpx, double tpy, double trad)
+	{
+		double cdist = getLineLength(spx, spy, tpx, tpy);
+		double rdist = srad + trad;
+		overlap.set(tpx - spx, tpy - spy);
+		overlap.setLength(srad);
+
+		double dx = overlap.x;
+		double dy = overlap.y;
+		
+		overlap.setLength(rdist - cdist);
+		incident.set(spx + dx - overlap.x, spy + dy - overlap.y);
+	}
+
+	/**
+	 * Returns the amount of overlap in a circle-to-box collision in a provided output vector.
+	 * @param overlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param incident the output point for the incident point.
+	 * @param ccx the circle center, x-coordinate.
+	 * @param ccy the circle center, y-coordinate.
+	 * @param crad the circle radius.
+	 * @param bcx the box center, x-coordinate.
+	 * @param bcy the box center, y-coordinate.
+	 * @param bhw the box half width.
+	 * @param bhh the box half height.
+	 * @since 2.21.0
+	 * @see RMath#getIntersectionCircleBox(double, double, double, double, double, double, double)
+	 */
+	public static void getOverlapCircleBox(Vect2D overlap, Point2D incident, double ccx, double ccy, double crad, double bcx, double bcy, double bhw, double bhh)
+	{
+		double tx0 = bcx - bhw;
+		double tx1 = bcx + bhw;
+		double ty0 = bcy - bhh;
+		double ty1 = bcy + bhh;
+
+		// Voronoi Region Test.
+		if (ccx < tx0)
+		{
+			if (ccy < ty0)
+				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx0, ty0);
+			else if (ccy > ty1)
+				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx0, ty1);
+			else
+				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx0, ccy);
+		}
+		else if (ccx > tx1)
+		{
+			if (ccy < ty0)
+				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx1, ty0);
+			else if (ccy > ty1)
+				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx1, ty1);
+			else
+				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx1, ccy);
+		}
+		else
+		{
+			if (ccy < ty0)
+				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, ccx, ty0);
+			else if (ccy > ty1)
+				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, ccx, ty1);
+			else // circle center is inside box
+			{
+				double closeX = closerComponent(ccx, tx0, tx1);
+				double closeY = closerComponent(ccy, ty0, ty1);
+				
+				if (closeX < closeY)
+				{
+					double tpx = bcx;
+					if (ccx < tpx)
+					{
+						overlap.set(closeX + crad, 0);
+						incident.set(tx0, ccy);
+					}
+					else
+					{
+						overlap.set(-closeX - crad, 0);
+						incident.set(tx1, ccy);
+					}
+				}
+				else
+				{
+					double tpy = bcy;
+					if (ccy < tpy)
+					{
+						overlap.set(0, closeY + crad);
+						incident.set(ccx, ty0);
+					}
+					else
+					{
+						overlap.set(0, -closeY - crad);
+						incident.set(ccx, ty1);
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Sets incident vectors and points if a collision occurs between Circles and Boxes.
+	 */
+	private static void getOverlapCalculationCircleBox(Vect2D overlap, Point2D incident, double srcradius, double spx, double spy, double ax, double ay)
+	{
+		overlap.set(ax - spx, ay - spy);
+		overlap.setLength(srcradius - getLineLength(spx, spy, ax, ay));
+		incident.set(ax, ay);
+	}
+
+	/**
+	 * Returns the amount of overlap in a box-to-box collision.
+	 * @param overlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param incident the output point for the incident point.
+	 * @param spx the first box center, x-coordinate.
+	 * @param spy the first box center, y-coordinate.
+	 * @param shw the first box half width.
+	 * @param shh the first box half height.
+	 * @param tpx the second box center, x-coordinate.
+	 * @param tpy the second box center, y-coordinate.
+	 * @param thw the second box half width.
+	 * @param thh the second box half height.
+	 * @since 2.21.0
+	 * @see RMath#getIntersectionBox(double, double, double, double, double, double, double, double)
+	 */
+	public static void getOverlapBox(Vect2D overlap, Point2D incident, double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
+	{
+		if (spx < tpx) // box to the left.
+		{
+			if (spy < tpy) // box to the bottom.
+			{
+				double dx = Math.abs((spx + shw) - (tpx - thw));
+				double dy = Math.abs((spy + shh) - (tpy - thh));
+				
+				if (dx < dy)
+				{
+					overlap.set(dx, 0);
+					double d0 = Math.max(tpy - thh, spy - shh); 
+					double d1 = Math.min(tpy + thh, spy + shh); 
+					incident.set(spx + shw - dx, (d0 + d1) / 2.0);
+				}
+				else
+				{
+					overlap.set(0, dy);
+					double d0 = Math.max(tpx - thw, spx - shw); 
+					double d1 = Math.min(tpx + thw, spx + shw); 
+					incident.set((d0 + d1) / 2.0, spy + shh - dy);
+				}
+			}
+			else // box to the top.
+			{
+				double dx = Math.abs((spx + shw) - (tpx - thw));
+				double dy = Math.abs((tpy + thh) - (spy - shh));
+				
+				if (dx < dy)
+				{
+					overlap.set(dx, 0);
+					double d0 = Math.max(tpy - thh, spy - shh); 
+					double d1 = Math.min(tpy + thh, spy + shh); 
+					incident.set(spx + shw - dx, (d0 + d1) / 2.0);
+				}
+				else
+				{
+					overlap.set(0, -dy);
+					double d0 = Math.max(tpx - thw, spx - shw); 
+					double d1 = Math.min(tpx + thw, spx + shw); 
+					incident.set((d0 + d1) / 2.0, spy - shh + dy);
+				}
+			}
+		}
+		else // box to the right
+		{
+			if (spy < tpy) // box to the bottom.
+			{
+				double dx = Math.abs((tpx + thw) - (spx - shw));
+				double dy = Math.abs((spy + shh) - (tpy - thh));
+				
+				if (dx < dy)
+				{
+					overlap.set(-dx, 0);
+					double d0 = Math.max(tpy - thh, spy - shh); 
+					double d1 = Math.min(tpy + thh, spy + shh); 
+					incident.set(spx - shw + dx, (d0 + d1) / 2.0);
+				}
+				else
+				{
+					overlap.set(0, dy);
+					double d0 = Math.max(tpx - thw, spx - shw); 
+					double d1 = Math.min(tpx + thw, spx + shw); 
+					incident.set((d0 + d1) / 2.0, spy + shh - dy);
+				}
+			}
+			else // box to the top.
+			{
+				double dx = Math.abs((tpx + thw) - (spx - shw));
+				double dy = Math.abs((tpy + thh) - (spy - shh));
+				
+				if (dx < dy)
+				{
+					overlap.set(-dx, 0);
+					double d0 = Math.max(tpy - thh, spy - shh); 
+					double d1 = Math.min(tpy + thh, spy + shh); 
+					incident.set(spx - shw + dx, (d0 + d1) / 2.0);
+				}
+				else
+				{
+					overlap.set(0, -dy);
+					double d0 = Math.max(tpx - thw, spx - shw); 
+					double d1 = Math.min(tpx + thw, spx + shw); 
+					incident.set((d0 + d1) / 2.0, spy - shh + dy);
+				}
+			}
+		}
 	}
 	
 }
