@@ -3076,9 +3076,23 @@ public final class Common
 	}
 
 	/**
+	 * Gets a singleton object local to the current thread.
+	 * Equivalent to <code>(T)getLocal(object.getClass().getCannonicalName())</code>
+	 * @param object the object key to use.
+	 * @since 2.21.0
+	 * @see #getLocal(String)
+	 * @throws NullPointerException if object.getClass().getCannonicalName() would return null or object is null.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getLocal(T object)
+	{
+		return (T)THREADLOCAL_HASHMAP.get().get(object.getClass().getCanonicalName());
+	}
+	
+	/**
 	 * Sets an object local to the current thread via a String key that
 	 * can be retrieved by {@link #getLocal(String)}. Objects set this way
-	 * are accessible to the thread in which they were set.
+	 * are accessible ONLY to the thread in which they were set.
 	 * @param key the String key to use.
 	 * @param object the object to set.
 	 * @since 2.10.0
@@ -3086,6 +3100,21 @@ public final class Common
 	public static void setLocal(String key, Object object)
 	{
 		THREADLOCAL_HASHMAP.get().put(key, object);
+	}
+
+	/**
+	 * Sets an object local to the current thread that
+	 * can be retrieved by {@link #getLocal(Object)}. Objects set this way
+	 * are accessible ONLY to the thread in which they were set.
+	 * Equivalent to <code>(T)setLocal(object.getClass().getCannonicalName(), object)</code>
+	 * @param object the object to set.
+	 * @since 2.21.0
+	 * @see #setLocal(String, Object)
+	 * @throws NullPointerException if object.getClass().getCannonicalName() would return null or object is null.
+	 */
+	public static <T> void setLocal(T object)
+	{
+		THREADLOCAL_HASHMAP.get().put(object.getClass().getCanonicalName(), object);
 	}
 
 	/**
