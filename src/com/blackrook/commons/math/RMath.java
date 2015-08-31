@@ -911,8 +911,8 @@ public final class RMath
 	 * Returns the dot product of two vectors.
 	 * @param v1x the first vector's x-component.
 	 * @param v1y the first vector's y-component.
-	 * @param v2x the second point's x-component.
-	 * @param v2y the second point's y-component.
+	 * @param v2x the second vector's x-component.
+	 * @param v2y the second vector's y-component.
 	 * @return the dot product of both vectors.
 	 * @since 2.21.0
 	 */
@@ -926,9 +926,9 @@ public final class RMath
 	 * @param v1x the first vector's x-component.
 	 * @param v1y the first vector's y-component.
 	 * @param v1z the first vector's z-component.
-	 * @param v2x the second point's x-component.
-	 * @param v2y the second point's y-component.
-	 * @param v2z the second point's z-component.
+	 * @param v2x the second vector's x-component.
+	 * @param v2y the second vector's y-component.
+	 * @param v2z the second vector's z-component.
 	 * @return the dot product of both vectors.
 	 * @since 2.21.0
 	 */
@@ -942,8 +942,8 @@ public final class RMath
 	 * NOTE: Zero vectors will cause a <b>divide by zero</b>!
 	 * @param v1x the first vector's x-component.
 	 * @param v1y the first vector's y-component.
-	 * @param v2x the second point's x-component.
-	 * @param v2y the second point's y-component.
+	 * @param v2x the second vector's x-component.
+	 * @param v2y the second vector's y-component.
 	 * @return the dot product of both vectors.
 	 * @since 2.21.0
 	 */
@@ -964,9 +964,9 @@ public final class RMath
 	 * @param v1x the first vector's x-component.
 	 * @param v1y the first vector's y-component.
 	 * @param v1z the first vector's z-component.
-	 * @param v2x the second point's x-component.
-	 * @param v2y the second point's y-component.
-	 * @param v2z the second point's z-component.
+	 * @param v2x the second vector's x-component.
+	 * @param v2y the second vector's y-component.
+	 * @param v2z the second vector's z-component.
 	 * @return the dot product of both vectors.
 	 * @since 2.21.0
 	 */
