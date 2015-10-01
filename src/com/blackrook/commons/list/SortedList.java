@@ -87,7 +87,7 @@ public class SortedList<T extends Comparable<T>> extends AbstractVector<T>
 	 * Resorts this vector (insertion sort) from an index.
 	 * @param index	the index.
 	 */
-	public void resort(int index)
+	private void resort(int index)
 	{
 		while (index > 0 && getByIndex(index).compareTo(getByIndex(index-1)) < 0)
 			swap(index--);
@@ -96,7 +96,7 @@ public class SortedList<T extends Comparable<T>> extends AbstractVector<T>
 	/** 
 	 * Swaps the object at this index with the one before it (used in sort).
 	 */
-	protected final void swap(int index)
+	private void swap(int index)
 	{
 		T tmp = getByIndex(index);
 		setByIndex(index, getByIndex(index-1));

@@ -174,7 +174,7 @@ public abstract class AbstractMappedVector<T extends Object, K extends Object> e
 	}
 
 	@Override
-	public void sort(Comparator<T> comp)
+	public void sort(Comparator<? super T> comp)
 	{
 		super.sort(comp);
 		reMap(0, size());
@@ -188,7 +188,7 @@ public abstract class AbstractMappedVector<T extends Object, K extends Object> e
 	}
 
 	@Override
-	public void sort(Comparator<T> comp, int startIndex, int endIndex)
+	public void sort(Comparator<? super T> comp, int startIndex, int endIndex)
 	{
 		super.sort(comp, startIndex, endIndex);
 		reMap(startIndex, endIndex);

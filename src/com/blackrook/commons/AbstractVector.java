@@ -62,12 +62,26 @@ public abstract class AbstractVector<T extends Object>
 
 	/**
 	 * Clears the vector.
+	 * As of 2.21.0, this fills this vector with nulls instead of using allocating a new array.
 	 */
 	public void clear()
 	{
-		if (isEmpty()) return;
-		Object[] newList = new Object[storageArray.length];
-		storageArray = newList;
+		if (isEmpty()) 
+			return;
+		shallowClear();
+		Arrays.fill(storageArray, null);
+	}
+
+	/**
+	 * Clears the vector shallowly - removes no references and just sets the current size to 0.
+	 * This can be prone to holding references in memory longer than necessary, so know what
+	 * you are doing if you care about garbage collecting. 
+	 * @since 2.21.0
+	 */
+	public void shallowClear()
+	{
+		if (isEmpty()) 
+			return;
 		size = 0;
 	}
 
@@ -158,6 +172,24 @@ public abstract class AbstractVector<T extends Object>
 	}
 
 	/**
+	 * Adds an object to the end of the vector, and attempts to sort it down to a sorted position.
+	 * @param object the object to add.
+	 * @param comparator the comparator to use.
+	 * @since 2.21.0
+	 * @throws NullPointerException if object or comparator is null.
+	 */
+	public void addAndSort(T object, Comparator<? super T> comparator)
+	{
+		int index = size;
+		add(size, object);
+		while (index > 0 && comparator.compare(getByIndex(index), getByIndex(index - 1)) < 0)
+		{
+			swap(index, index - 1);
+			index--;
+		}
+	}
+	
+	/**
 	 * Sets an object at an index. Used for replacing contents.
 	 * If index is greater than or equal to the size, it will add it at the end.
 	 * If index is less than 0, this does nothing.
@@ -180,6 +212,7 @@ public abstract class AbstractVector<T extends Object>
 	 * Sequential search.
 	 * @param object the object to search for and remove.
 	 * @return true if removed, false if not in the vector.
+	 * @throws NullPointerException if object is null.
 	 */
 	public boolean remove(T object)
 	{
@@ -220,6 +253,7 @@ public abstract class AbstractVector<T extends Object>
 	 * Sequential search.
 	 * @param object the object to search for.
 	 * @return the index of the object if it is in the vector, or -1 if it is not present.
+	 * @throws NullPointerException if object is null.
 	 */
 	public int getIndexOf(T object)
 	{
@@ -227,6 +261,42 @@ public abstract class AbstractVector<T extends Object>
 			if (object.equals(storageArray[i]))
 				return i;
 		return -1;
+	}
+
+	/**
+	 * Gets the index of an object, presumably in the vector via binary search.
+	 * Expects the contents of this vector to be sorted.
+	 * @param object the object to search for.
+	 * @param comparator the comparator to use for comparison or equivalence.
+	 * @return the index of the object if it is in the vector, or -1 if it is not present.
+	 * @since 2.21.0
+	 * @throws NullPointerException if object or comparator is null.
+	 */
+	public int getIndexOf(T object, Comparator<? super T> comparator)
+	{
+		int hi = size, lo = 0;
+		int i = (hi + lo) / 2;
+		int prev = hi;
+		
+		while (i != prev)
+		{
+			if (getByIndex(i).equals((T)object))
+				return i;
+			
+			int c = comparator.compare(getByIndex(i),(T)object);
+			
+			if (c < 0)
+				lo = i;
+			else if (c == 0)
+				return i;
+			else
+				hi = i;
+			
+			prev = i;
+			i = (hi + lo) / 2;
+		}
+		
+		return lo - 1;
 	}
 
 	/**
@@ -239,7 +309,7 @@ public abstract class AbstractVector<T extends Object>
 
 	/**
 	 * Sorts this vector using NATURAL ORDERING.
-	 * Calls java.util.Arrays.sort() on the internal storage array.
+	 * Calls {@link Arrays#sort(Object[], int, int)} on the internal storage array.
 	 */
 	@SuppressWarnings("unchecked")
 	public void sort()
@@ -249,17 +319,17 @@ public abstract class AbstractVector<T extends Object>
 
 	/**
 	 * Sorts this vector using a comparator.
-	 * Calls java.util.Arrays.sort() on the internal storage array, using the specified comparator.
+	 * Calls {@link Arrays#sort(Object[], int, int, Comparator)} on the internal storage array, using the specified comparator.
 	 */
 	@SuppressWarnings("unchecked")
-	public void sort(Comparator<T> comp)
+	public void sort(Comparator<? super T> comp)
 	{
 		Arrays.sort((T[])storageArray, 0, size, comp);
 	}
 
 	/**
 	 * Sorts this vector using NATURAL ORDERING.
-	 * Calls java.util.Arrays.sort() on the internal storage array.
+	 * Calls {@link Arrays#sort(Object[], int, int)} on the internal storage array.
 	 * @param startIndex the starting index of the sort.
 	 * @param endIndex the ending index of the sort, exclusive.
 	 */
@@ -271,12 +341,12 @@ public abstract class AbstractVector<T extends Object>
 
 	/**
 	 * Sorts this vector using a comparator.
-	 * Calls java.util.Arrays.sort() on the internal storage array, using the specified comparator.
+	 * Calls {@link Arrays#sort(Object[], int, int, Comparator)} on the internal storage array, using the specified comparator.
 	 * @param startIndex the starting index of the sort.
 	 * @param endIndex the ending index of the sort, exclusive.
 	 */
 	@SuppressWarnings("unchecked")
-	public void sort(Comparator<T> comp, int startIndex, int endIndex)
+	public void sort(Comparator<? super T> comp, int startIndex, int endIndex)
 	{
 		Arrays.sort((T[])storageArray, startIndex, endIndex, comp);
 	}

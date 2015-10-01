@@ -59,12 +59,12 @@ public class ComparatorList<T extends Object> extends AbstractVector<T>
 	 * Adds an object to the end of the vector and sorts it
 	 * to the correct position in the vector.
 	 * @param object the object to add.
+	 * @see AbstractVector#addAndSort(Object, Comparator)
 	 */
 	@Override
 	public void add(T object)
 	{
-		super.add(object);
-		resort(size-1);
+		super.addAndSort(object, comparator);
 	}
 	
 	/**
@@ -72,54 +72,12 @@ public class ComparatorList<T extends Object> extends AbstractVector<T>
 	 * Binary search.
 	 * @param object the object to search for.
 	 * @return the index of the object if it is in the vector, or -1 if it is not present.
+	 * @see AbstractVector#getIndexOf(Object, Comparator)
 	 */
 	@Override
 	public int getIndexOf(T object)
 	{
-		int u = size, l = 0;
-		int i = (u+l)/2;
-		int prev = u;
-		
-		while (i != prev)
-		{
-			
-			if (getByIndex(i).equals((T)object))
-				return i;
-			
-			int c = comparator.compare(getByIndex(i),(T)object);
-			
-			if (c < 0)
-				l = i;
-			else if (c == 0)
-				return i;
-			else
-				u = i;
-			
-			prev = i;
-			i = (u+l)/2;
-		}
-		
-		return -1;
-	}
-
-	/**
-	 * Resorts this vector (insertion sort) from an index.
-	 * @param index	the index.
-	 */
-	public void resort(int index)
-	{
-		while (index > 0 && comparator.compare(getByIndex(index), getByIndex(index-1)) < 0)
-			swap(index--);
-	}
-
-	/** 
-	 * Swaps the object at this index with the one before it (used in sort).
-	 */
-	protected final void swap(int index)
-	{
-		T tmp = getByIndex(index);
-		setByIndex(index, getByIndex(index-1));
-		setByIndex(index-1, tmp);
+		return super.getIndexOf(object, comparator);
 	}
 
 }
