@@ -172,24 +172,6 @@ public abstract class AbstractVector<T extends Object>
 	}
 
 	/**
-	 * Adds an object to the end of the vector, and attempts to sort it down to a sorted position.
-	 * @param object the object to add.
-	 * @param comparator the comparator to use.
-	 * @since 2.21.0
-	 * @throws NullPointerException if object or comparator is null.
-	 */
-	public void addAndSort(T object, Comparator<? super T> comparator)
-	{
-		int index = size;
-		add(size, object);
-		while (index > 0 && comparator.compare(getByIndex(index), getByIndex(index - 1)) < 0)
-		{
-			swap(index, index - 1);
-			index--;
-		}
-	}
-	
-	/**
 	 * Sets an object at an index. Used for replacing contents.
 	 * If index is greater than or equal to the size, it will add it at the end.
 	 * If index is less than 0, this does nothing.
@@ -268,35 +250,15 @@ public abstract class AbstractVector<T extends Object>
 	 * Expects the contents of this vector to be sorted.
 	 * @param object the object to search for.
 	 * @param comparator the comparator to use for comparison or equivalence.
-	 * @return the index of the object if it is in the vector, or -1 if it is not present.
+	 * @return the index of the object if it is in the vector, or less than 0 if it is not present.
+	 * If less than 0, it is equal to where it would be added in the array. Add 1 then negate.
 	 * @since 2.21.0
 	 * @throws NullPointerException if object or comparator is null.
 	 */
-	public int getIndexOf(T object, Comparator<? super T> comparator)
+	@SuppressWarnings("unchecked")
+	public int search(T object, Comparator<? super T> comparator)
 	{
-		int hi = size, lo = 0;
-		int i = (hi + lo) / 2;
-		int prev = hi;
-		
-		while (i != prev)
-		{
-			if (getByIndex(i).equals((T)object))
-				return i;
-			
-			int c = comparator.compare(getByIndex(i),(T)object);
-			
-			if (c < 0)
-				lo = i;
-			else if (c == 0)
-				return i;
-			else
-				hi = i;
-			
-			prev = i;
-			i = (hi + lo) / 2;
-		}
-		
-		return lo - 1;
+		return Arrays.binarySearch((T[])storageArray, object, comparator);
 	}
 
 	/**

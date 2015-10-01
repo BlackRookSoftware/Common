@@ -59,25 +59,30 @@ public class ComparatorList<T extends Object> extends AbstractVector<T>
 	 * Adds an object to the end of the vector and sorts it
 	 * to the correct position in the vector.
 	 * @param object the object to add.
-	 * @see AbstractVector#addAndSort(Object, Comparator)
 	 */
 	@Override
 	public void add(T object)
 	{
-		super.addAndSort(object, comparator);
+		int index = size;
+		add(size, object);
+		while (index > 0 && comparator.compare(getByIndex(index), getByIndex(index - 1)) < 0)
+		{
+			swap(index, index - 1);
+			index--;
+		}
 	}
 	
 	/**
-	 * Gets the index of an object, presumably in the vector.
-	 * Binary search.
+	 * Gets the index of an object, presumably in the vector, binary search.
 	 * @param object the object to search for.
-	 * @return the index of the object if it is in the vector, or -1 if it is not present.
-	 * @see AbstractVector#getIndexOf(Object, Comparator)
+	 * @return the index of the object if it is in the vector, or less than 0 if it is not present.
+	 * If less than 0, it is equal to where it would be added in the array. Add 1 then negate.
+	 * @see AbstractVector#search(Object, Comparator)
 	 */
 	@Override
 	public int getIndexOf(T object)
 	{
-		return super.getIndexOf(object, comparator);
+		return search(object, comparator);
 	}
 
 }

@@ -25,7 +25,7 @@ Slated for 2.21.0
 - Added: Pair.set(int, int), Pair.set(Pair).
 - Added: Common.set/getLocal(Object).
 - Added: Sorting/searching functions in AbstractVector. Changed functions in
-  ComparatorList and SortedList to use them.
+  ComparatorList to use them.
 
 Changed in 2.20.2
 =================
