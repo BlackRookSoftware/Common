@@ -1157,6 +1157,7 @@ public final class RMath
 	 * @param dx the second line segment, second point, x-coordinate.
 	 * @param dy the second line segment, second point, y-coordinate.
 	 * @return a scalar value representing how far along the first line segment the intersection occurred, or {@link Double#NaN} if no intersection.
+	 * @since 2.21.0
 	 */
 	public static double getIntersectionLineSegment(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
 	{
