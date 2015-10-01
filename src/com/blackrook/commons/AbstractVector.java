@@ -258,7 +258,7 @@ public abstract class AbstractVector<T extends Object>
 	@SuppressWarnings("unchecked")
 	public int search(T object, Comparator<? super T> comparator)
 	{
-		return Arrays.binarySearch((T[])storageArray, object, comparator);
+		return Arrays.binarySearch((T[])storageArray, 0, size, object, comparator);
 	}
 
 	/**
