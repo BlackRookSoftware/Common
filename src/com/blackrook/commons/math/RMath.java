@@ -9,6 +9,7 @@ package com.blackrook.commons.math;
 
 import java.util.Random;
 
+import com.blackrook.commons.math.geometry.Line2D;
 import com.blackrook.commons.math.geometry.Point2D;
 import com.blackrook.commons.math.geometry.Vect2D;
 
@@ -1147,6 +1148,186 @@ public final class RMath
 	}
 
 	/**
+	 * Projects a point onto a 2D vector.
+	 * The input point is altered.
+	 * @param point the input point to change.
+	 * @param vx the vector to project onto, x-component.
+	 * @param vy the vector to project onto, y-component.
+	 * @since 2.21.0
+	 */
+	public static void getProjectedPoint(Point2D point, double vx, double vy)
+	{
+		double dotp = RMath.getVectorDotProduct(point.x, point.y, vx, vy);
+		double fact = vx * vx + vy * vy;
+		double dpofact = dotp / fact;
+		point.x = dpofact * vx;
+		point.y = dpofact * vy;
+	}
+
+	/**
+	 * Projects a circle onto a 2D vector - result is a line segment.
+	 * @param outLine the output line to change.
+	 * @param vx the vector to project onto, x-component.
+	 * @param vy the vector to project onto, y-component.
+	 * @param cx the circle center point, x-coordinate.
+	 * @param cy the circle center point, y-coordinate.
+	 * @param crad the circle radius.
+	 * @since 2.21.0
+	 */
+	public static <T> void getProjectedCircle(Line2D outLine, double vx, double vy, double cx, double cy, double crad)
+	{
+		getProjectedCircleFirstPoint(outLine.pointA, vx, vy, cx, cy, crad);
+		getProjectedCircleSecondPoint(outLine.pointB, vx, vy, cx, cy, crad);
+	}
+
+	// Projects the first box corner.
+	private static void getProjectedCircleFirstPoint(Point2D outPoint, double vx, double vy, double cx, double cy, double crad)
+	{
+		boolean swap = vx < 0 ^ vy < 0;
+		
+		if (vx != 0.0)
+		{
+			double theta = Math.atan(vy / vx);
+			if (theta < 0) theta = -theta;
+			double dx = crad * Math.cos(theta);
+			double dy = crad * Math.sin(theta);
+			
+			if (swap)
+			{
+				outPoint.x = cx - dx;
+				outPoint.y = cy + dy;
+			}
+			else
+			{
+				outPoint.x = cx - dx;
+				outPoint.y = cy - dy;
+			}
+		}
+		else
+		{
+			outPoint.x = cx;
+			outPoint.y = cy - crad;
+		}
+	
+		getProjectedPoint(outPoint, vx, vy);
+	}
+	
+	// Projects the second box corner.
+	private static void getProjectedCircleSecondPoint(Point2D outPoint, double vx, double vy, double cx, double cy, double crad)
+	{
+		boolean swap = vx < 0 ^ vy < 0;
+		
+		if (vx != 0.0)
+		{
+			double theta = Math.atan(vy / vx);
+			if (theta < 0) theta = -theta;
+			double dx = crad * Math.cos(theta);
+			double dy = crad * Math.sin(theta);
+			
+			if (swap)
+			{
+				outPoint.x = cx + dx;
+				outPoint.y = cy - dy;
+			}
+			else
+			{
+				outPoint.x = cx + dx;
+				outPoint.y = cy + dy;
+			}
+		}
+		else
+		{
+			outPoint.x = cx;
+			outPoint.y = cy + crad;
+		}
+	
+		getProjectedPoint(outPoint, vx, vy);
+	}
+	
+	/**
+	 * Projects a circle onto a 2D vector - result is a line segment.
+	 * @param outLine the output line to change.
+	 * @param vx the vector to project onto, x-component.
+	 * @param vy the vector to project onto, y-component.
+	 * @param cx the box center point, x-coordinate.
+	 * @param cy the box center point, y-coordinate.
+	 * @param hw the box center point, half-width.
+	 * @param hh the box center point, half-height.
+	 * @since 2.21.0
+	 */
+	public static <T> void getProjectedBox(Line2D outLine, double vx, double vy, double cx, double cy, double hw, double hh)
+	{
+		getProjectedBoxFirstPoint(outLine.pointA, vx, vy, cx, cy, hw, hh);
+		getProjectedBoxSecondPoint(outLine.pointB, vx, vy, cx, cy, hw, hh);
+	}
+
+	// Projects the first box corner.
+	private static void getProjectedBoxFirstPoint(Point2D outPoint, double vx, double vy, double cx, double cy, double hw, double hh)
+	{
+		boolean swap = vx < 0 ^ vy < 0;
+		
+		if (vx != 0.0)
+		{
+			double theta = Math.atan(vy / vx);
+			if (theta < 0) theta = -theta;
+			double hl = (hh * Math.sin(theta)) + (hw * Math.cos(theta));
+			double dx = hl * Math.cos(theta);
+			double dy = hl * Math.sin(theta);
+			
+			if (swap)
+			{
+				outPoint.x = cx - dx;
+				outPoint.y = cy + dy;
+			}
+			else
+			{
+				outPoint.x = cx - dx;
+				outPoint.y = cy - dy;
+			}
+		}
+		else
+		{
+			outPoint.x = cx;
+			outPoint.y = cy - hh;
+		}
+	
+		getProjectedPoint(outPoint, vx, vy);
+	}
+	
+	// Projects the second box corner.
+	private static void getProjectedBoxSecondPoint(Point2D outPoint, double vx, double vy, double cx, double cy, double hw, double hh)
+	{
+		boolean swap = vx < 0 ^ vy < 0;
+		
+		if (vx != 0.0)
+		{
+			double theta = Math.atan(vy / vx);
+			if (theta < 0) theta = -theta;
+			double hl = (hh * Math.sin(theta)) + (hw * Math.cos(theta));
+			double dx = hl * Math.cos(theta);
+			double dy = hl * Math.sin(theta);
+			
+			if (swap)
+			{
+				outPoint.x = cx + dx;
+				outPoint.y = cy - dy;
+			}
+			else
+			{
+				outPoint.x = cx + dx;
+				outPoint.y = cy + dy;
+			}
+		}
+		else
+		{
+			outPoint.x = cx;
+			outPoint.y = cy + hh;
+		}
+	
+		getProjectedPoint(outPoint, vx, vy);
+	}
+	
+	/**
 	 * Tests if an intersection occurs between two line segments.
 	 * @param ax the first line segment, first point, x-coordinate.
 	 * @param ay the first line segment, first point, y-coordinate.
@@ -1159,7 +1340,7 @@ public final class RMath
 	 * @return a scalar value representing how far along the first line segment the intersection occurred, or {@link Double#NaN} if no intersection.
 	 * @since 2.21.0
 	 */
-	public static double getIntersectionLineSegment(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
+	public static double getIntersectionLine(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
 	{
 		double a1 = getTriangleAreaDoubleSigned(ax, ay, bx, by, dx, dy);
 		double a2 = getTriangleAreaDoubleSigned(ax, ay, bx, by, cx, cy);
@@ -1235,6 +1416,61 @@ public final class RMath
 		}
 	}
 
+	/**
+	 * Tests if a line segment intersects with a box.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param bcx the box center, x-coordinate.
+	 * @param bcy the box center, y-coordinate.
+	 * @param bhw the box half width.
+	 * @param bhh the box half height.
+	 * @return if an intersection occurred.
+	 * @since 2.21.0
+	 */
+	public static boolean getIntersectionLineBox(double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			double sx, sy, tx, ty;
+			
+			switch (i)
+			{
+				default: // just 'cuz
+				case 0:
+					sx = bcx - bhw;
+					sy = bcy - bhh;
+					tx = bcx + bhw;
+					ty = bcy - bhh;
+					break;
+				case 1:
+					sx = bcx - bhw;
+					sy = bcy - bhh;
+					tx = bcx - bhw;
+					ty = bcy + bhh;
+					break;
+				case 2:
+					sx = bcx - bhw;
+					sy = bcy + bhh;
+					tx = bcx + bhw;
+					ty = bcy + bhh;
+					break;
+				case 3:
+					sx = bcx + bhw;
+					sy = bcy - bhh;
+					tx = bcx + bhw;
+					ty = bcy + bhh;
+					break;
+			}
+			
+			if (!Double.isNaN(getIntersectionLine(ax, ay, bx, by, sx, sy, tx, ty)))
+				return true;
+		}
+
+		return false;
+	}
+	
 	/**
 	 * Returns if two described circles intersect.  
 	 * @param spx the first circle center, x-coordinate.
@@ -1365,18 +1601,127 @@ public final class RMath
 	 * @param bx the first line segment, second point, x-coordinate.
 	 * @param by the first line segment, second point, y-coordinate.
 	 * @param intersectionScalar the scalar along the line.
-	 * @see #getIntersectionLineSegment(double, double, double, double, double, double, double, double)
+	 * @see #getIntersectionLine(double, double, double, double, double, double, double, double)
+	 * @since 2.21.0
 	 */
-	public static void getIntersectionPoint(Point2D out, double ax, double ay, double bx, double by, double intersectionScalar)
+	public static void getOverlapPoint(Point2D out, double ax, double ay, double bx, double by, double intersectionScalar)
 	{
 		out.x = ax + intersectionScalar * (bx - ax);
 		out.y = ay + intersectionScalar * (by - ay);
 	}
 
 	/**
-	 * Returns if two described circles intersect.  
-	 * @param overlap the output vector for the overlap (a.k.a. incident vector).
-	 * @param incident the output point for the incident point.
+	 * Returns the overlap of a line-box intersection.
+	 * An intersection is assumed to have happened.  
+	 * @param outOverlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncident the output point for the incident point.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param bcx the box center, x-coordinate.
+	 * @param bcy the box center, y-coordinate.
+	 * @param bhw the box half width.
+	 * @param bhh the box half height.
+	 * @since 2.21.0
+	 * @see RMath#getIntersectionLineBox(double, double, double, double, double, double, double, double)
+	 */
+	public static void getOverlapLineBox(Vect2D outOverlap, Point2D outIncident, double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
+	{
+		// perpendicular vector axis to line.
+		double pvx = -(by - ay);
+		double pvy = bx - ax;
+
+		// use incident point object for temp point.
+		
+		// centerpoint of projection.
+		outIncident.set(ax, ay);
+		getProjectedPoint(outIncident, pvx, pvy);
+		double cx = outIncident.x;
+		double cy = outIncident.y;
+
+		getProjectedBoxFirstPoint(outIncident, pvx, pvy, bcx, bcy, bhw, bhh);
+		double p1x = outIncident.x; 
+		double p1y = outIncident.y; 
+		getProjectedBoxSecondPoint(outIncident, pvx, pvy, bcx, bcy, bhw, bhh);
+		double p2x = outIncident.x; 
+		double p2y = outIncident.y; 
+		
+		if (getVectorLengthSquared(cx - p1x, cy - p1y) < getVectorLengthSquared(cx - p2x, cy - p2y))
+			outOverlap.set(p1x - cx, p1y - cy);
+		else
+			outOverlap.set(cx - p2x, cy - p2y);
+		
+		double tx0 = bcx - bhw;
+		double tx1 = bcx + bhw;
+		double ty0 = bcy - bhh;
+		double ty1 = bcy + bhh;
+		double intersection = Double.NaN;
+		
+		// Voronoi Region Test for line start.
+		if (ax < tx0)
+		{
+			if (ay < ty0) // southwest
+			{
+				if (!Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1)))
+					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx1, ty0);
+				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
+			}
+			else if (ay > ty1) // northwest
+			{
+				if (!Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1)))
+					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty1, tx1, ty1);
+				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
+			}
+			else // west
+			{
+				intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1);
+				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
+			}
+		}
+		else if (ax > tx1)
+		{
+			if (ay < ty0) // southeast
+			{
+				if (!Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1)))
+					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx1, ty0);
+				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
+			}
+			else if (ay > ty1) // northeast
+			{
+				if (!Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1)))
+					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty1, tx1, ty1);
+				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
+			}
+			else // east
+			{
+				intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1);
+				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
+			}
+		}
+		else
+		{
+			if (ay < ty0) // south
+			{
+				intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx1, ty0);
+				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
+			}
+			else if (ay > ty1) // north
+			{
+				intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty1, tx1, ty1);
+				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
+			}
+			else // incident is inside box
+				outIncident.set(ax, ay);
+		}
+		
+	}
+	
+	/**
+	 * Returns the overlap of two circles.
+	 * The circles are assumed to be intersecting.  
+	 * @param outOverlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncident the output point for the incident point.
 	 * @param spx the first circle center, x-coordinate.
 	 * @param spy the first circle center, y-coordinate.
 	 * @param srad the first circle radius.
@@ -1386,24 +1731,24 @@ public final class RMath
 	 * @see RMath#getIntersectionCircle(double, double, double, double, double, double)
 	 * @since 2.21.0
 	 */
-	public static void getOverlapCircle(Vect2D overlap, Point2D incident, double spx, double spy, double srad, double tpx, double tpy, double trad)
+	public static void getOverlapCircle(Vect2D outOverlap, Point2D outIncident, double spx, double spy, double srad, double tpx, double tpy, double trad)
 	{
 		double cdist = getLineLength(spx, spy, tpx, tpy);
 		double rdist = srad + trad;
-		overlap.set(tpx - spx, tpy - spy);
-		overlap.setLength(srad);
+		outOverlap.set(tpx - spx, tpy - spy);
+		outOverlap.setLength(srad);
 
-		double dx = overlap.x;
-		double dy = overlap.y;
+		double dx = outOverlap.x;
+		double dy = outOverlap.y;
 		
-		overlap.setLength(rdist - cdist);
-		incident.set(spx + dx - overlap.x, spy + dy - overlap.y);
+		outOverlap.setLength(rdist - cdist);
+		outIncident.set(spx + dx - outOverlap.x, spy + dy - outOverlap.y);
 	}
 
 	/**
 	 * Returns the amount of overlap in a circle-to-box collision in a provided output vector.
-	 * @param overlap the output vector for the overlap (a.k.a. incident vector).
-	 * @param incident the output point for the incident point.
+	 * @param outOverlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncident the output point for the incident point.
 	 * @param ccx the circle center, x-coordinate.
 	 * @param ccy the circle center, y-coordinate.
 	 * @param crad the circle radius.
@@ -1414,7 +1759,7 @@ public final class RMath
 	 * @since 2.21.0
 	 * @see RMath#getIntersectionCircleBox(double, double, double, double, double, double, double)
 	 */
-	public static void getOverlapCircleBox(Vect2D overlap, Point2D incident, double ccx, double ccy, double crad, double bcx, double bcy, double bhw, double bhh)
+	public static void getOverlapCircleBox(Vect2D outOverlap, Point2D outIncident, double ccx, double ccy, double crad, double bcx, double bcy, double bhw, double bhh)
 	{
 		double tx0 = bcx - bhw;
 		double tx1 = bcx + bhw;
@@ -1425,27 +1770,27 @@ public final class RMath
 		if (ccx < tx0)
 		{
 			if (ccy < ty0)
-				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx0, ty0);
+				getOverlapCalculationCircleBox(outOverlap, outIncident, crad, ccx, ccy, tx0, ty0);
 			else if (ccy > ty1)
-				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx0, ty1);
+				getOverlapCalculationCircleBox(outOverlap, outIncident, crad, ccx, ccy, tx0, ty1);
 			else
-				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx0, ccy);
+				getOverlapCalculationCircleBox(outOverlap, outIncident, crad, ccx, ccy, tx0, ccy);
 		}
 		else if (ccx > tx1)
 		{
 			if (ccy < ty0)
-				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx1, ty0);
+				getOverlapCalculationCircleBox(outOverlap, outIncident, crad, ccx, ccy, tx1, ty0);
 			else if (ccy > ty1)
-				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx1, ty1);
+				getOverlapCalculationCircleBox(outOverlap, outIncident, crad, ccx, ccy, tx1, ty1);
 			else
-				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, tx1, ccy);
+				getOverlapCalculationCircleBox(outOverlap, outIncident, crad, ccx, ccy, tx1, ccy);
 		}
 		else
 		{
 			if (ccy < ty0)
-				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, ccx, ty0);
+				getOverlapCalculationCircleBox(outOverlap, outIncident, crad, ccx, ccy, ccx, ty0);
 			else if (ccy > ty1)
-				getOverlapCalculationCircleBox(overlap, incident, crad, ccx, ccy, ccx, ty1);
+				getOverlapCalculationCircleBox(outOverlap, outIncident, crad, ccx, ccy, ccx, ty1);
 			else // circle center is inside box
 			{
 				double closeX = closerComponent(ccx, tx0, tx1);
@@ -1456,13 +1801,13 @@ public final class RMath
 					double tpx = bcx;
 					if (ccx < tpx)
 					{
-						overlap.set(closeX + crad, 0);
-						incident.set(tx0, ccy);
+						outOverlap.set(closeX + crad, 0);
+						outIncident.set(tx0, ccy);
 					}
 					else
 					{
-						overlap.set(-closeX - crad, 0);
-						incident.set(tx1, ccy);
+						outOverlap.set(-closeX - crad, 0);
+						outIncident.set(tx1, ccy);
 					}
 				}
 				else
@@ -1470,13 +1815,13 @@ public final class RMath
 					double tpy = bcy;
 					if (ccy < tpy)
 					{
-						overlap.set(0, closeY + crad);
-						incident.set(ccx, ty0);
+						outOverlap.set(0, closeY + crad);
+						outIncident.set(ccx, ty0);
 					}
 					else
 					{
-						overlap.set(0, -closeY - crad);
-						incident.set(ccx, ty1);
+						outOverlap.set(0, -closeY - crad);
+						outIncident.set(ccx, ty1);
 					}
 				}
 			}
@@ -1486,17 +1831,17 @@ public final class RMath
 	/**
 	 * Sets incident vectors and points if a collision occurs between Circles and Boxes.
 	 */
-	private static void getOverlapCalculationCircleBox(Vect2D overlap, Point2D incident, double srcradius, double spx, double spy, double ax, double ay)
+	private static void getOverlapCalculationCircleBox(Vect2D outOverlap, Point2D outIncident, double srcradius, double spx, double spy, double ax, double ay)
 	{
-		overlap.set(ax - spx, ay - spy);
-		overlap.setLength(srcradius - getLineLength(spx, spy, ax, ay));
-		incident.set(ax, ay);
+		outOverlap.set(ax - spx, ay - spy);
+		outOverlap.setLength(srcradius - getLineLength(spx, spy, ax, ay));
+		outIncident.set(ax, ay);
 	}
 
 	/**
 	 * Returns the amount of overlap in a box-to-box collision.
-	 * @param overlap the output vector for the overlap (a.k.a. incident vector).
-	 * @param incident the output point for the incident point.
+	 * @param outOverlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncident the output point for the incident point.
 	 * @param spx the first box center, x-coordinate.
 	 * @param spy the first box center, y-coordinate.
 	 * @param shw the first box half width.
@@ -1508,7 +1853,7 @@ public final class RMath
 	 * @since 2.21.0
 	 * @see RMath#getIntersectionBox(double, double, double, double, double, double, double, double)
 	 */
-	public static void getOverlapBox(Vect2D overlap, Point2D incident, double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
+	public static void getOverlapBox(Vect2D outOverlap, Point2D outIncident, double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
 	{
 		if (spx < tpx) // box to the left.
 		{
@@ -1519,17 +1864,17 @@ public final class RMath
 				
 				if (dx < dy)
 				{
-					overlap.set(dx, 0);
+					outOverlap.set(dx, 0);
 					double d0 = Math.max(tpy - thh, spy - shh); 
 					double d1 = Math.min(tpy + thh, spy + shh); 
-					incident.set(spx + shw - dx, (d0 + d1) / 2.0);
+					outIncident.set(spx + shw - dx, (d0 + d1) / 2.0);
 				}
 				else
 				{
-					overlap.set(0, dy);
+					outOverlap.set(0, dy);
 					double d0 = Math.max(tpx - thw, spx - shw); 
 					double d1 = Math.min(tpx + thw, spx + shw); 
-					incident.set((d0 + d1) / 2.0, spy + shh - dy);
+					outIncident.set((d0 + d1) / 2.0, spy + shh - dy);
 				}
 			}
 			else // box to the top.
@@ -1539,17 +1884,17 @@ public final class RMath
 				
 				if (dx < dy)
 				{
-					overlap.set(dx, 0);
+					outOverlap.set(dx, 0);
 					double d0 = Math.max(tpy - thh, spy - shh); 
 					double d1 = Math.min(tpy + thh, spy + shh); 
-					incident.set(spx + shw - dx, (d0 + d1) / 2.0);
+					outIncident.set(spx + shw - dx, (d0 + d1) / 2.0);
 				}
 				else
 				{
-					overlap.set(0, -dy);
+					outOverlap.set(0, -dy);
 					double d0 = Math.max(tpx - thw, spx - shw); 
 					double d1 = Math.min(tpx + thw, spx + shw); 
-					incident.set((d0 + d1) / 2.0, spy - shh + dy);
+					outIncident.set((d0 + d1) / 2.0, spy - shh + dy);
 				}
 			}
 		}
@@ -1562,17 +1907,17 @@ public final class RMath
 				
 				if (dx < dy)
 				{
-					overlap.set(-dx, 0);
+					outOverlap.set(-dx, 0);
 					double d0 = Math.max(tpy - thh, spy - shh); 
 					double d1 = Math.min(tpy + thh, spy + shh); 
-					incident.set(spx - shw + dx, (d0 + d1) / 2.0);
+					outIncident.set(spx - shw + dx, (d0 + d1) / 2.0);
 				}
 				else
 				{
-					overlap.set(0, dy);
+					outOverlap.set(0, dy);
 					double d0 = Math.max(tpx - thw, spx - shw); 
 					double d1 = Math.min(tpx + thw, spx + shw); 
-					incident.set((d0 + d1) / 2.0, spy + shh - dy);
+					outIncident.set((d0 + d1) / 2.0, spy + shh - dy);
 				}
 			}
 			else // box to the top.
@@ -1582,17 +1927,17 @@ public final class RMath
 				
 				if (dx < dy)
 				{
-					overlap.set(-dx, 0);
+					outOverlap.set(-dx, 0);
 					double d0 = Math.max(tpy - thh, spy - shh); 
 					double d1 = Math.min(tpy + thh, spy + shh); 
-					incident.set(spx - shw + dx, (d0 + d1) / 2.0);
+					outIncident.set(spx - shw + dx, (d0 + d1) / 2.0);
 				}
 				else
 				{
-					overlap.set(0, -dy);
+					outOverlap.set(0, -dy);
 					double d0 = Math.max(tpx - thw, spx - shw); 
 					double d1 = Math.min(tpx + thw, spx + shw); 
-					incident.set((d0 + d1) / 2.0, spy - shh + dy);
+					outIncident.set((d0 + d1) / 2.0, spy - shh + dy);
 				}
 			}
 		}

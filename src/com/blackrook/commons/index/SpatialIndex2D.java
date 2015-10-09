@@ -247,7 +247,7 @@ public class SpatialIndex2D<T> extends AbstractSpatialIndex<T>
 					break;
 			}
 			
-			if (!Double.isNaN(RMath.getIntersectionLineSegment(x0, y0, x1, y1, sx, sy, tx, ty)))
+			if (!Double.isNaN(RMath.getIntersectionLine(x0, y0, x1, y1, sx, sy, tx, ty)))
 				return true;
 		}
 		
