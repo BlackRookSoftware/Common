@@ -1155,7 +1155,7 @@ public final class RMath
 	 * @param vy the vector to project onto, y-component.
 	 * @since 2.21.0
 	 */
-	public static void getProjectedPoint(Point2D point, double vx, double vy)
+	public static void getProjectedPoint(Tuple2D point, double vx, double vy)
 	{
 		double dotp = RMath.getVectorDotProduct(point.x, point.y, vx, vy);
 		double fact = vx * vx + vy * vy;
@@ -1374,6 +1374,10 @@ public final class RMath
 	 */
 	public static boolean getIntersectionLineCircle(double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
 	{
+		// starts in circle.
+		if (getVectorLength(ax - ccx, ay - ccy) < crad)
+			return true;
+		
 		// cull short lines.
 		if (getVectorLength(bx - ax, by - ay) < getVectorLength(ccx - ax, ccy - ay) - crad)
 			return false;
@@ -1431,6 +1435,10 @@ public final class RMath
 	 */
 	public static boolean getIntersectionLineBox(double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
 	{
+		// if start is inside box, 
+		if (ax < bcx + bhw && ax > bcx - bhw && ay < bcy + bhh && ay > bcy - bhh)
+			return true;
+		
 		for (int i = 0; i < 4; i++)
 		{
 			double sx, sy, tx, ty;
@@ -1610,6 +1618,84 @@ public final class RMath
 		out.y = ay + intersectionScalar * (by - ay);
 	}
 
+	
+	/**
+	 * Returns the overlap of a line-circle intersection.
+	 * An intersection is assumed to have happened.  
+	 * @param outOverlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncident the output point for the incident point.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param ccx the circle center, x-coordinate.
+	 * @param ccy the circle center, y-coordinate.
+	 * @param crad the circle radius.
+	 * @since 2.21.0
+	 * @see RMath#getIntersectionLineCircle(double, double, double, double, double, double, double)
+	 */
+	public static void getOverlapLineCircle(Vect2D outOverlap, Point2D outIncident, double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
+	{
+		// perpendicular vector axis to line.
+		double pvx = -(by - ay);
+		double pvy = bx - ax;
+
+		if (ax == bx && ay == by)
+		{
+			outOverlap.set(crad, 0.0);
+			outIncident.set(ax, ay);
+			return;
+		}
+
+		if (ax == ccx && ay == ccy)
+		{
+			outOverlap.set(pvx, pvy);
+			outOverlap.setLength(crad);
+			outIncident.set(ax, ay);
+			return;
+		}
+		
+		// use incident point object for temp point.
+		
+		// centerpoint of projection.
+		outIncident.set(ax, ay);
+		getProjectedPoint(outIncident, pvx, pvy);
+		double px = outIncident.x;
+		double py = outIncident.y;
+
+		// centerpoint of projection onto line axis.
+		outIncident.set(ccx, ccy);
+		getProjectedPoint(outIncident, bx - ax, by - ay);
+		double cpx = outIncident.x;
+		double cpy = outIncident.y;
+
+		getProjectedCircleFirstPoint(outIncident, pvx, pvy, ccx, ccy, crad);
+		double p1x = outIncident.x; 
+		double p1y = outIncident.y; 
+		getProjectedCircleSecondPoint(outIncident, pvx, pvy, ccx, ccy, crad);
+		double p2x = outIncident.x; 
+		double p2y = outIncident.y; 
+		
+		if (getVectorLengthSquared(px - p1x, py - p1y) < getVectorLengthSquared(px - p2x, py - p2y))
+			outOverlap.set(p1x - px, p1y - py);
+		else
+			outOverlap.set(p2x - px, p2y - py);
+
+		double seg = getVectorLength(cpx - ccx, cpy - ccy);
+
+		double length = Math.sqrt((crad * crad) - (seg * seg));
+
+		if (getVectorLength(ax - ccx, ay - ccx) < crad)
+			outIncident.set(ax, ay);
+		else
+		{
+			outIncident.set(ax - cpx, ay - cpy);
+			outIncident.setLength(length);
+			outIncident.set(outIncident.x + cpx, outIncident.y + cpy);
+		}
+		
+	}
+	
 	/**
 	 * Returns the overlap of a line-box intersection.
 	 * An intersection is assumed to have happened.  
@@ -1628,6 +1714,12 @@ public final class RMath
 	 */
 	public static void getOverlapLineBox(Vect2D outOverlap, Point2D outIncident, double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
 	{
+		if (ax == bx && ay == by)
+		{
+			outIncident.set(ax, ay);
+			bx = ax + 1.0;
+		}
+
 		// perpendicular vector axis to line.
 		double pvx = -(by - ay);
 		double pvy = bx - ax;
@@ -1650,7 +1742,7 @@ public final class RMath
 		if (getVectorLengthSquared(cx - p1x, cy - p1y) < getVectorLengthSquared(cx - p2x, cy - p2y))
 			outOverlap.set(p1x - cx, p1y - cy);
 		else
-			outOverlap.set(cx - p2x, cy - p2y);
+			outOverlap.set(p2x - cx, p2y - cy);
 		
 		double tx0 = bcx - bhw;
 		double tx1 = bcx + bhw;
@@ -1663,13 +1755,13 @@ public final class RMath
 		{
 			if (ay < ty0) // southwest
 			{
-				if (!Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1)))
+				if (Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1)))
 					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx1, ty0);
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 			else if (ay > ty1) // northwest
 			{
-				if (!Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1)))
+				if (Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1)))
 					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty1, tx1, ty1);
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
@@ -1683,13 +1775,13 @@ public final class RMath
 		{
 			if (ay < ty0) // southeast
 			{
-				if (!Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1)))
+				if (Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1)))
 					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx1, ty0);
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 			else if (ay > ty1) // northeast
 			{
-				if (!Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1)))
+				if (Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1)))
 					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty1, tx1, ty1);
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
