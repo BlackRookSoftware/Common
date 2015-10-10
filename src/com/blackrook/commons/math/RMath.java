@@ -1825,6 +1825,14 @@ public final class RMath
 	 */
 	public static void getOverlapCircle(Vect2D outOverlap, Point2D outIncident, double spx, double spy, double srad, double tpx, double tpy, double trad)
 	{
+		if (spx == tpx && spy == tpy)
+		{
+			double rdist = srad + trad;
+			outIncident.set(spx - srad, spy);
+			outOverlap.set(rdist, 0.0);
+			return;
+		}
+		
 		double cdist = getLineLength(spx, spy, tpx, tpy);
 		double rdist = srad + trad;
 		outOverlap.set(tpx - spx, tpy - spy);
@@ -1921,12 +1929,119 @@ public final class RMath
 	}
 	
 	/**
+	 * Returns the amount of overlap in a box-to-circle collision in a provided output vector.
+	 * @param outOverlap the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncident the output point for the incident point.
+	 * @param bcx the box center, x-coordinate.
+	 * @param bcy the box center, y-coordinate.
+	 * @param bhw the box half width.
+	 * @param bhh the box half height.
+	 * @param ccx the circle center, x-coordinate.
+	 * @param ccy the circle center, y-coordinate.
+	 * @param crad the circle radius.
+	 * @since 2.21.0
+	 * @see RMath#getIntersectionCircleBox(double, double, double, double, double, double, double)
+	 */
+	public static void getOverlapBoxCircle(Vect2D outOverlap, Point2D outIncident, double bcx, double bcy, double bhw, double bhh, double ccx, double ccy, double crad)
+	{
+		double bx0 = bcx - bhw;
+		double bx1 = bcx + bhw;
+		double by0 = bcy - bhh;
+		double by1 = bcy + bhh;
+
+		// Voronoi Test
+		
+		// Complete Left
+		if (bx1 < ccx)
+		{
+			// Complete Bottom
+			if (by1 < ccy)
+				getOverlapCalculationBoxCircle(outOverlap, outIncident, crad, bx1, by1, ccx, ccy);
+			// Complete Top
+			else if (by0 > ccy)
+				getOverlapCalculationBoxCircle(outOverlap, outIncident, crad, bx1, by0, ccx, ccy);
+			// Straddle Y
+			else
+				getOverlapCalculationBoxCircle(outOverlap, outIncident, crad, bx1, ccy, ccx, ccy);
+		}
+		// Complete Right
+		else if (bx0 > ccx)
+		{
+			// Complete Bottom
+			if (by1 < ccy)
+				getOverlapCalculationBoxCircle(outOverlap, outIncident, crad, bx0, by1, ccx, ccy);
+			// Complete Top
+			else if (by0 > ccy)
+				getOverlapCalculationBoxCircle(outOverlap, outIncident, crad, bx0, by0, ccx, ccy);
+			// Straddle Y
+			else
+				getOverlapCalculationBoxCircle(outOverlap, outIncident, crad, bx0, ccy, ccx, ccy);
+		}
+		// Straddle X
+		else
+		{
+			// Complete Bottom
+			if (by1 < ccy)
+				getOverlapCalculationBoxCircle(outOverlap, outIncident, crad, ccx, by1, ccx, ccy);
+			// Complete Top
+			else if (by0 > ccy)
+				getOverlapCalculationBoxCircle(outOverlap, outIncident, crad, ccx, by0, ccx, ccy);
+			// Straddle Y
+			else
+			{
+				double closeX = closerComponent(ccx, bx0, bx1);
+				double closeY = closerComponent(ccy, by0, by1);
+
+				if (closeX < closeY)
+				{
+					if (ccx < bcx)
+					{
+						outOverlap.set(-closeX - crad, 0);
+						outIncident.set(ccx + crad, ccy);
+					}
+					else
+					{
+						outOverlap.set(closeX + crad, 0);
+						outIncident.set(ccx - crad, ccy);
+					}
+				}
+				else
+				{
+					if (ccy < bcy)
+					{
+						outOverlap.set(0, -closeY - crad);
+						outIncident.set(ccx, ccy + crad);
+					}
+					else
+					{
+						outOverlap.set(0, closeY + crad);
+						outIncident.set(ccx, ccy - crad);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Sets incident vectors and points if a collision occurs between
+	 * AABBs and Circles.
+	 */
+	private static void getOverlapCalculationBoxCircle(Vect2D outOverlap, Point2D outIncident, double radius, double bx, double by, double cx, double cy)
+	{
+		double dist = RMath.getLineLength(cx, cy, bx, by);
+		double theta = RMath.getVectorAngleRadians(bx - cx, by - cy);
+		outOverlap.set(cx - bx, cy - by);
+		outOverlap.setLength(radius - dist);
+		outIncident.set(radius * Math.cos(theta) + cx, radius * Math.sin(theta) + cy);
+	}
+	
+	/**
 	 * Sets incident vectors and points if a collision occurs between Circles and Boxes.
 	 */
-	private static void getOverlapCalculationCircleBox(Vect2D outOverlap, Point2D outIncident, double srcradius, double spx, double spy, double ax, double ay)
+	private static void getOverlapCalculationCircleBox(Vect2D outOverlap, Point2D outIncident, double radius, double spx, double spy, double ax, double ay)
 	{
 		outOverlap.set(ax - spx, ay - spy);
-		outOverlap.setLength(srcradius - getLineLength(spx, spy, ax, ay));
+		outOverlap.setLength(radius - getLineLength(spx, spy, ax, ay));
 		outIncident.set(ax, ay);
 	}
 
