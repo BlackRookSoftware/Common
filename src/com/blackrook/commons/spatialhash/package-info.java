@@ -6,8 +6,7 @@
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  ******************************************************************************/
 /** 
- * Contains a set of classes for spatial hashing. Use this instead of the <i>scene</i> package. 
- * @deprecated Since 2.21.0. Use the spatial indexing packages instead.
+ * Contains a set of classes for spatial hashing. Use this instead of the <i>scene</i> package.
  */
-@java.lang.Deprecated 
+@Deprecated
 package com.blackrook.commons.spatialhash;
