@@ -1101,6 +1101,30 @@ public final class RMath
 		double diff = Math.abs((angle2 % TWO_PI) - (angle1 % TWO_PI));
 		return diff > Math.PI ? TWO_PI - diff : diff; 
 	}
+
+	/**
+	 * Returns the relative angle between two angles.
+	 * @param angle1 the first angle in DEGREES.
+	 * @param angle2 the second angle in DEGREES.
+	 * @return a number in the range [-180, 180]. 0 is an EXACT match.
+	 * @Since 2.21.0 
+	 */
+	public static double getRelativeAngleDegrees(double angle1, double angle2)
+	{
+		return ((((angle1 - angle2) % 360.0) + 540.0) % 360.0) - 180.0;
+	}
+	
+	/**
+	 * Returns the relative angle between two angles.
+	 * @param angle1 the first angle in RADIANS.
+	 * @param angle2 the second angle in RADIANS.
+	 * @return a number in the range [-Math.PI, Math.PI]. 0 is an EXACT match.
+	 * @Since 2.21.0 
+	 */
+	public static double getRelativeAngleRadians(double angle1, double angle2)
+	{
+		return ((((angle1 - angle2) % (2.0 * Math.PI)) + (3.0 * Math.PI / 2.0)) % (2.0 * Math.PI)) - Math.PI;
+	}
 	
 	/**
 	 * Returns the signed area of a triangular area made up of 3 points.
