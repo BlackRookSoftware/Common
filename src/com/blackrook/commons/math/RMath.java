@@ -1123,9 +1123,41 @@ public final class RMath
 	 */
 	public static double getRelativeAngleRadians(double angle1, double angle2)
 	{
-		return ((((angle1 - angle2) % (2.0 * Math.PI)) + (3.0 * Math.PI / 2.0)) % (2.0 * Math.PI)) - Math.PI;
+		return ((((angle1 - angle2) % TWO_PI) + (3 * Math.PI)) % TWO_PI) - Math.PI;
+	}
+
+	/**
+	 * Returns the observed angle of an object in space facing a direction. 
+	 * @param viewX the view origin X-coordinate.
+	 * @param viewY the view origin Y-coordinate.
+	 * @param targetX the target origin X-coordinate.
+	 * @param targetY the target origin Y-coordinate.
+	 * @param targetDegrees the target facing degrees. 0 is EAST, 90 is NORTH...
+	 * @return the observed absolute angle (degrees) from the view. 
+	 * @since 2.21.0
+	 */
+	public static double getObservedAngleDegrees(double viewX, double viewY, double targetX, double targetY, double targetDegrees)
+	{
+		double signedDegrees = -targetDegrees + radToDeg(Math.atan2(targetX - viewX, targetY - viewY));
+		return signedDegrees < 0 ? signedDegrees + 360.0 : signedDegrees;
 	}
 	
+	/**
+	 * Returns the observed angle of an object in space facing a direction. 
+	 * @param viewX the view origin X-coordinate.
+	 * @param viewY the view origin Y-coordinate.
+	 * @param targetX the target origin X-coordinate.
+	 * @param targetY the target origin Y-coordinate.
+	 * @param targetRadians the target facing radians. 0 is EAST, PI/2 is NORTH...
+	 * @return the observed absolute angle (radians) from the view. 
+	 * @since 2.21.0
+	 */
+	public static double getObservedAngleRadians(double viewX, double viewY, double targetX, double targetY, double targetRadians)
+	{
+		double signedRads = -targetRadians + Math.atan2(targetX - viewX, targetY - viewY);
+		return signedRads < 0 ? signedRads + TWO_PI : signedRads;
+	}
+
 	/**
 	 * Returns the signed area of a triangular area made up of 3 points.
 	 * @param ax the first point, x-coordinate.
