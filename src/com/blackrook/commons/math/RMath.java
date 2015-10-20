@@ -10,8 +10,6 @@ package com.blackrook.commons.math;
 import java.util.Random;
 
 import com.blackrook.commons.math.geometry.Line2D;
-import com.blackrook.commons.math.geometry.Point2D;
-import com.blackrook.commons.math.geometry.Vect2D;
 
 /**
  * A class with static methods that perform "other" types of mathematics.
@@ -1237,7 +1235,7 @@ public final class RMath
 	}
 
 	// Projects the first box corner.
-	private static void getProjectedCircleFirstPoint(Point2D outPoint, double vx, double vy, double cx, double cy, double crad)
+	private static void getProjectedCircleFirstPoint(Tuple2D outPoint, double vx, double vy, double cx, double cy, double crad)
 	{
 		boolean swap = vx < 0 ^ vy < 0;
 		
@@ -1269,7 +1267,7 @@ public final class RMath
 	}
 	
 	// Projects the second box corner.
-	private static void getProjectedCircleSecondPoint(Point2D outPoint, double vx, double vy, double cx, double cy, double crad)
+	private static void getProjectedCircleSecondPoint(Tuple2D outPoint, double vx, double vy, double cx, double cy, double crad)
 	{
 		boolean swap = vx < 0 ^ vy < 0;
 		
@@ -1318,7 +1316,7 @@ public final class RMath
 	}
 
 	// Projects the first box corner.
-	private static void getProjectedBoxFirstPoint(Point2D outPoint, double vx, double vy, double cx, double cy, double hw, double hh)
+	private static void getProjectedBoxFirstPoint(Tuple2D outPoint, double vx, double vy, double cx, double cy, double hw, double hh)
 	{
 		boolean swap = vx < 0 ^ vy < 0;
 		
@@ -1351,7 +1349,7 @@ public final class RMath
 	}
 	
 	// Projects the second box corner.
-	private static void getProjectedBoxSecondPoint(Point2D outPoint, double vx, double vy, double cx, double cy, double hw, double hh)
+	private static void getProjectedBoxSecondPoint(Tuple2D outPoint, double vx, double vy, double cx, double cy, double hw, double hh)
 	{
 		boolean swap = vx < 0 ^ vy < 0;
 		
@@ -1414,6 +1412,35 @@ public final class RMath
 		}
 		
 		return Double.NaN;
+	}
+
+	/**
+	 * Tests if a line intersects with a plane.
+	 * @param ax the line's first point, x-coordinate.
+	 * @param ay the line's first point, y-coordinate.
+	 * @param az the line's first point, z-coordinate.
+	 * @param bx the line's second point, x-coordinate.
+	 * @param by the line's second point, y-coordinate.
+	 * @param bz the line's second point, z-coordinate.
+	 * @param pnx the unit-vector plane normal, x-component.
+	 * @param pny the unit-vector plane normal, y-component.
+	 * @param pnz the unit-vector plane normal, z-component.
+	 * @param pdist the distance of the plane from the origin (dot product of normal and a point on the plane).
+	 * @return a scalar value representing how far along the line segment the intersection occurred, or {@link Double#NaN} if no intersection.
+	 */
+	public static double getIntersectionLinePlane(double ax, double ay, double az, double bx, double by, double bz, double pnx, double pny, double pnz, double pdist)
+	{
+		double vx = bx - ax;
+		double vy = by - ay;
+		double vz = bz - az;
+		
+		double dotnormline = getVectorDotProduct(pnx, pny, pnz, vx, vy, vz);
+		if (dotnormline == 0.0)
+			return Double.NaN;
+		
+		double t = pdist - getVectorDotProduct(pnx, pny, pnz, ax, ay, az) / dotnormline;
+		
+		return t >= 0.0 && t <= 1.0 ? t : Double.NaN;
 	}
 
 	/**
@@ -1658,7 +1685,7 @@ public final class RMath
 	}
 
 	/**
-	 * Calculates the intersection point as the result of a <code>getLineSegmentIntersection</code> call.
+	 * Calculates the intersection point as the result of a <code>getIntersectionLine</code> call.
 	 * @param out the point to write the information to.
 	 * @param ax the first line segment, first point, x-coordinate.
 	 * @param ay the first line segment, first point, y-coordinate.
@@ -1668,12 +1695,31 @@ public final class RMath
 	 * @see #getIntersectionLine(double, double, double, double, double, double, double, double)
 	 * @since 2.21.0
 	 */
-	public static void getOverlapPoint(Point2D out, double ax, double ay, double bx, double by, double intersectionScalar)
+	public static void getOverlapPoint(Tuple2D out, double ax, double ay, double bx, double by, double intersectionScalar)
 	{
 		out.x = ax + intersectionScalar * (bx - ax);
 		out.y = ay + intersectionScalar * (by - ay);
 	}
 
+	/**
+	 * Calculates the intersection point as the result of a <code>getIntersectionLinePlane</code> call.
+	 * @param out the point to write the information to.
+	 * @param ax the first line segment, first point, x-coordinate.
+	 * @param ay the first line segment, first point, y-coordinate.
+	 * @param az the first line segment, first point, z-coordinate.
+	 * @param bx the first line segment, second point, x-coordinate.
+	 * @param by the first line segment, second point, y-coordinate.
+	 * @param bz the first line segment, second point, z-coordinate.
+	 * @param intersectionScalar the scalar along the line.
+	 * @see #getIntersectionLinePlane(double, double, double, double, double, double, double, double, double, double)
+	 * @since 2.21.0
+	 */
+	public static void getOverlapPoint(Tuple3D out, double ax, double ay, double az, double bx, double by, double bz, double intersectionScalar)
+	{
+		out.x = ax + intersectionScalar * (bx - ax);
+		out.y = ay + intersectionScalar * (by - ay);
+		out.z = az + intersectionScalar * (bz - az);
+	}
 	
 	/**
 	 * Returns the overlap of a line-circle intersection.
@@ -1690,7 +1736,7 @@ public final class RMath
 	 * @since 2.21.0
 	 * @see RMath#getIntersectionLineCircle(double, double, double, double, double, double, double)
 	 */
-	public static void getOverlapLineCircle(Vect2D outOverlap, Point2D outIncident, double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
+	public static void getOverlapLineCircle(Tuple2D outOverlap, Tuple2D outIncident, double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
 	{
 		// perpendicular vector axis to line.
 		double pvx = -(by - ay);
@@ -1768,7 +1814,7 @@ public final class RMath
 	 * @since 2.21.0
 	 * @see RMath#getIntersectionLineBox(double, double, double, double, double, double, double, double)
 	 */
-	public static void getOverlapLineBox(Vect2D outOverlap, Point2D outIncident, double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
+	public static void getOverlapLineBox(Tuple2D outOverlap, Tuple2D outIncident, double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
 	{
 		if (ax == bx && ay == by)
 		{
@@ -1879,7 +1925,7 @@ public final class RMath
 	 * @see RMath#getIntersectionCircle(double, double, double, double, double, double)
 	 * @since 2.21.0
 	 */
-	public static void getOverlapCircle(Vect2D outOverlap, Point2D outIncident, double spx, double spy, double srad, double tpx, double tpy, double trad)
+	public static void getOverlapCircle(Tuple2D outOverlap, Tuple2D outIncident, double spx, double spy, double srad, double tpx, double tpy, double trad)
 	{
 		if (spx == tpx && spy == tpy)
 		{
@@ -1915,7 +1961,7 @@ public final class RMath
 	 * @since 2.21.0
 	 * @see RMath#getIntersectionCircleBox(double, double, double, double, double, double, double)
 	 */
-	public static void getOverlapCircleBox(Vect2D outOverlap, Point2D outIncident, double ccx, double ccy, double crad, double bcx, double bcy, double bhw, double bhh)
+	public static void getOverlapCircleBox(Tuple2D outOverlap, Tuple2D outIncident, double ccx, double ccy, double crad, double bcx, double bcy, double bhw, double bhh)
 	{
 		double tx0 = bcx - bhw;
 		double tx1 = bcx + bhw;
@@ -1998,7 +2044,7 @@ public final class RMath
 	 * @since 2.21.0
 	 * @see RMath#getIntersectionCircleBox(double, double, double, double, double, double, double)
 	 */
-	public static void getOverlapBoxCircle(Vect2D outOverlap, Point2D outIncident, double bcx, double bcy, double bhw, double bhh, double ccx, double ccy, double crad)
+	public static void getOverlapBoxCircle(Tuple2D outOverlap, Tuple2D outIncident, double bcx, double bcy, double bhw, double bhh, double ccx, double ccy, double crad)
 	{
 		double bx0 = bcx - bhw;
 		double bx1 = bcx + bhw;
@@ -2082,7 +2128,7 @@ public final class RMath
 	 * Sets incident vectors and points if a collision occurs between
 	 * AABBs and Circles.
 	 */
-	private static void getOverlapCalculationBoxCircle(Vect2D outOverlap, Point2D outIncident, double radius, double bx, double by, double cx, double cy)
+	private static void getOverlapCalculationBoxCircle(Tuple2D outOverlap, Tuple2D outIncident, double radius, double bx, double by, double cx, double cy)
 	{
 		double dist = RMath.getLineLength(cx, cy, bx, by);
 		double theta = RMath.getVectorAngleRadians(bx - cx, by - cy);
@@ -2094,7 +2140,7 @@ public final class RMath
 	/**
 	 * Sets incident vectors and points if a collision occurs between Circles and Boxes.
 	 */
-	private static void getOverlapCalculationCircleBox(Vect2D outOverlap, Point2D outIncident, double radius, double spx, double spy, double ax, double ay)
+	private static void getOverlapCalculationCircleBox(Tuple2D outOverlap, Tuple2D outIncident, double radius, double spx, double spy, double ax, double ay)
 	{
 		outOverlap.set(ax - spx, ay - spy);
 		outOverlap.setLength(radius - getLineLength(spx, spy, ax, ay));
@@ -2116,7 +2162,7 @@ public final class RMath
 	 * @since 2.21.0
 	 * @see RMath#getIntersectionBox(double, double, double, double, double, double, double, double)
 	 */
-	public static void getOverlapBox(Vect2D outOverlap, Point2D outIncident, double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
+	public static void getOverlapBox(Tuple2D outOverlap, Tuple2D outIncident, double spx, double spy, double shw, double shh, double tpx, double tpy, double thw, double thh)
 	{
 		if (spx < tpx) // box to the left.
 		{
