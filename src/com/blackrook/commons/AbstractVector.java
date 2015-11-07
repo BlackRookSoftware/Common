@@ -112,6 +112,28 @@ public abstract class AbstractVector<T extends Object>
 	}
 
 	/**
+	 * Sets this vector's capacity to its current size.
+	 * If this vector's size is 0, it will be cleared and have its capacity set to 1,
+	 * since you cannot have a vector with a capacity of less than 1. 
+	 * @see #clear()
+	 * @see #setCapacity(int)
+	 * @see #size()
+	 * @since 2.21.0
+	 */
+	public void trim()
+	{
+		if (isEmpty())
+		{
+			clear();
+			setCapacity(1);
+		}
+		else
+		{
+			setCapacity(size());
+		}
+	}
+	
+	/**
 	 * Returns the capacity increment value.
 	 */
 	public int getCapacityIncrement()
