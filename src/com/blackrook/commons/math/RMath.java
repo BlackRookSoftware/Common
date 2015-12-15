@@ -845,8 +845,8 @@ public final class RMath
 	
 	/**
 	 * Returns the angular rotation of a vector described in two dimensions.
-	 * Result is in degrees.
-	 * @return a number in the range [0, 360). 0 is considered to be EAST. 
+	 * Result is in radians.
+	 * @return a number in the range [0, 2*PI). 0 is considered to be EAST. 
 	 * @since 2.10.0
 	 */
 	public static double getVectorAngleRadians(double x, double y)
