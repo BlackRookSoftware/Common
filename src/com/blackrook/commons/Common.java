@@ -93,6 +93,8 @@ public final class Common
 	private static boolean IS_WINDOWS_7 = false;
 	/** Are we using Windows 8? */
 	private static boolean IS_WINDOWS_8 = false;
+	/** Are we using Windows 8? */
+	private static boolean IS_WINDOWS_10 = false;
 	/** Are we using Windows NT? */
 	private static boolean IS_WINDOWS_NT = false;
 	/** Are we using Windows 2003 (Server)? */
@@ -153,6 +155,7 @@ public final class Common
 			IS_WINDOWS_VISTA = osName.contains("Vista");
 			IS_WINDOWS_7 = osName.contains(" 7");
 			IS_WINDOWS_8 = osName.contains(" 8");
+			IS_WINDOWS_10 = osName.contains(" 10");
 			IS_WIN32 = IS_X86;
 			IS_WIN64 = IS_X64;
 		}
@@ -281,6 +284,15 @@ public final class Common
 		return IS_WINDOWS_8;
 	}
 
+	/** 
+	 * Are we using Windows 10? 
+	 * @since 2.21.0 
+	 */
+	public static boolean isWindows10()
+	{
+		return IS_WINDOWS_10;
+	}
+
 	/** Are we using Windows 95/98? */
 	public static boolean isWindows9X()
 	{
@@ -323,6 +335,18 @@ public final class Common
 		return IS_SOLARIS;
 	}
 
+	/**
+	 * Returns the first object if it is not null, otherwise returns the second. 
+	 * @param testObject the first ("tested") object.
+	 * @param nullReturn the object to return if testObject is null.
+	 * @return testObject if not null, nullReturn otherwise.
+	 * @since 2.21.0
+	 */
+	public static <T> T isNull(T testObject, T nullReturn)
+	{
+		return testObject != null ? testObject : nullReturn;
+	}
+	
 	/**
 	 * Returns the first object in the supplied list of objects that isn't null. 
 	 * @param objects the list of objects.

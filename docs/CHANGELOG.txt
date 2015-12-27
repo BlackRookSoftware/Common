@@ -24,6 +24,7 @@ Slated for 2.21.0
   sortFrom(T[], int, Comparator<T>)
 - Added: Pair.set(int, int), Pair.set(Pair).
 - Added: Common.set/getLocal(Object).
+- Added: Common.isNull(Object, Object).
 - Added: Sorting/searching functions in AbstractVector. Changed functions in
   ComparatorList to use them.
 
