@@ -72,6 +72,21 @@ public class SparseQueueGridMap<T extends Object> extends SparseGridMap<Queue<T>
 	}
 	
 	/**
+	 * Dequeues an object at a particular grid coordinate.
+	 * @param x the x-coordinate.
+	 * @param y the y-coordinate.
+	 * @return the first object added at the set of coordinates, null if no objects enqueued.
+	 * @since 2.21.0
+	 */
+	public boolean remove(int x, int y, T object)
+	{
+		boolean out =  getQueue(x, y).remove(object);
+		if (out)
+			trueSize--;
+		return out;
+	}
+	
+	/**
 	 * Returns an iterator for a queue at a particular grid coordinate.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
