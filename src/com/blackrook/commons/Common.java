@@ -2975,6 +2975,26 @@ public final class Common
 	}
 	
 	/**
+	 * Copies references from one array to another until 
+	 * it hits a null sentinel reference or the end of the source array.
+	 * @param source the source array.
+	 * @param sourceOffset the source offset.
+	 * @param destination the destination array.
+	 * @param destinationOffset the starting destination offset.
+	 * @return how many references were copied.
+	 * @throws ArrayIndexOutOfBoundsException if this tries to resolve a destination that is out of bounds.
+	 * @since 2.21.0
+	 */
+	public static <T> int arrayCopyToNull(T[] source, int sourceOffset, T[] destination, int destinationOffset)
+	{
+		int s;
+		for (s = 0; s + sourceOffset < source.length && source[s + sourceOffset] != null; s++)
+			destination[s + destinationOffset] = source[s + sourceOffset];
+		return s;
+	}
+	
+	
+	/**
 	 * Joins an array of strings into one string, with a separator between them.
 	 * @param separator the separator to insert between strings. Can be empty or null.
 	 * @param strings the strings to join.
