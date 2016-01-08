@@ -2888,6 +2888,20 @@ public final class Common
 	}
 
 	/**
+	 * Swaps the contents of two indices of an array.
+	 * @param array the input array.
+	 * @param a the first index.
+	 * @param b the second index.
+	 * @since 2.21.0
+	 */
+	public static <T> void arraySwap(T[] array, int a, int b)
+	{
+		T temp = array[a];
+		array[a] = array[b];
+		array[b] = temp;
+	}
+
+	/**
 	 * Concatenates a set of arrays together, such that the contents of each
 	 * array are joined into one array. Null arrays are skipped.
 	 * @param arrays the list of arrays.
@@ -2946,9 +2960,7 @@ public final class Common
 	{
 		while (index > 0 && array[index].compareTo(array[index - 1]) < 0)
 		{
-			T tmp = array[index - 1];
-			array[index - 1] = array[index];
-			array[index] = tmp;
+			arraySwap(array, index, index - 1);
 			index--;
 		}
 		return index;
@@ -2962,16 +2974,109 @@ public final class Common
 	 * @return the final index in the array of the sorted object.
 	 * @since 2.21.0 
 	 */
-	public static <T> int sortFrom(T[] array, int index, Comparator<T> comparator)
+	public static <T> int sortFrom(T[] array, int index, Comparator<? super T> comparator)
 	{
 		while (index > 0 && comparator.compare(array[index], array[index - 1]) < 0)
 		{
-			T tmp = array[index - 1];
-			array[index - 1] = array[index];
-			array[index] = tmp;
+			arraySwap(array, index, index - 1);
 			index--;
 		}
 		return index;
+	}
+	
+	/**
+	 * Performs an in-place QuickSort on the provided array.
+	 * The array's contents will change upon completion.
+	 * Convenience method for <code>quicksort(array, 0, array.length - 1);</code>
+	 * @param array the input array.
+	 * @since 2.21.0
+	 */
+	public static <T extends Comparable<T>> void quicksort(T[] array)
+	{
+		quicksort(array, 0, array.length - 1);
+	}
+	
+	/**
+	 * Performs an in-place QuickSort on the provided array using a compatible Comparator.
+	 * The array's contents will change upon completion.
+	 * Convenience method for <code>quicksort(array, 0, array.length - 1, comparator);</code>
+	 * @param array the input array.
+	 * @param comparator the comparator to use for comparing.
+	 * @since 2.21.0
+	 */
+	public static <T extends Comparable<T>> void quicksort(T[] array, Comparator<? super T> comparator)
+	{
+		quicksort(array, 0, array.length - 1, comparator);
+	}
+	
+	/**
+	 * Performs an in-place QuickSort on the provided array within an interval of indices.
+	 * The array's contents will change upon completion.
+	 * If <code>lo</code> is greater than <code>hi</code>, this does nothing. 
+	 * @param array the input array.
+	 * @param lo the low index to start the sort (inclusive).
+	 * @param hi the high index to start the sort (inclusive).
+	 * @since 2.21.0
+	 */
+	public static <T extends Comparable<T>> void quicksort(T[] array, int lo, int hi)
+	{
+		if (lo >= hi)
+			return;
+        int p = quicksortPartition(array, lo, hi);
+        quicksort(array, lo, p - 1);
+        quicksort(array, p + 1, hi);
+	}
+	
+	/**
+	 * Performs an in-place QuickSort on the provided array within an interval of indices.
+	 * The array's contents will change upon completion.
+	 * If <code>lo</code> is greater than <code>hi</code>, this does nothing. 
+	 * @param array the input array.
+	 * @param lo the low index to start the sort (inclusive).
+	 * @param hi the high index to start the sort (inclusive).
+	 * @since 2.21.0
+	 */
+	public static <T> void quicksort(T[] array, int lo, int hi, Comparator<? super T> comparator)
+	{
+		if (lo >= hi)
+			return;
+        int p = quicksortPartition(array, lo, hi, comparator);
+        quicksort(array, lo, p - 1, comparator);
+        quicksort(array, p + 1, hi, comparator);
+	}
+	
+	// Do quicksort partition - pivot sort.
+	private static <T extends Comparable<T>> int quicksortPartition(T[] array, int lo, int hi)
+	{
+		T pivot = array[hi];
+	    int i = lo;
+	    for (int j = lo; j <= hi - 1; j++)
+	    {
+	        if (array[j].compareTo(pivot) <= 0)
+	        {
+	        	arraySwap(array, i, j);
+	            i++;
+	        }
+	    }
+    	arraySwap(array, i, hi);
+	    return i;
+	}
+	
+	// Do quicksort partition - pivot sort.
+	private static <T> int quicksortPartition(T[] array, int lo, int hi, Comparator<? super T> comparator)
+	{
+		T pivot = array[hi];
+	    int i = lo;
+	    for (int j = lo; j <= hi - 1; j++)
+	    {
+	        if (comparator.compare(array[j], pivot) <= 0)
+	        {
+	        	arraySwap(array, i, j);
+	            i++;
+	        }
+	    }
+    	arraySwap(array, i, hi);
+	    return i;
 	}
 	
 	/**
