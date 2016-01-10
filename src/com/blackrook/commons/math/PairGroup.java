@@ -829,13 +829,22 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		int current;
 		/** Removed? */
 		boolean removed;
-		
+
 		public PairGroupIterator(PairGroup group)
 		{
-			this.surrogateCurrent = new Pair(0, 0);
+			this.surrogateCurrent = getCachePair();
 			this.group = group;
 			this.removed = false;
 			this.current = 0;
+		}
+		
+		private Pair getCachePair()
+		{
+			final String LOCALNAME = "IteratorPairCache-"+Pair.class.getCanonicalName();
+			Pair out = null;
+			if ((out = (Pair)Common.getLocal(LOCALNAME)) == null)
+				Common.setLocal(LOCALNAME, out = new Pair());
+			return out;
 		}
 		
 		@Override
