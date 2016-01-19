@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -2947,6 +2947,69 @@ public final class Common
 	{
 		array[start] = object;
 		return sortFrom(array, start);
+	}
+	
+	/**
+	 * Adds an object to an array that presumably contains sorted elements.
+	 * An object is added at some point in the array, and the element is shifted down to an appropriate
+	 * position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param array the array to add an object to.
+	 * @param object the object to add.
+	 * @param start the index to add it to (the contents are replaced).
+	 * @param comparator the comparator to use for comparisons.
+	 * @return the final index in the array of the added object.
+	 * @throw {@link NullPointerException} if a comparison happens on a null object at some point.
+	 * @see Comparable#compareTo(Object)
+	 * @see #sortFrom(T[], int, Comparator)
+	 * @since 2.21.0 
+	 */
+	public static <T> int addSorted(T[] array, T object, int start, Comparator<T> comparator)
+	{
+		array[start] = object;
+		return sortFrom(array, start, comparator);
+	}
+	
+	/**
+	 * Adds an object to an array that presumably contains sorted elements, but only if it isn't found via binary search.
+	 * An object is added at some point in the array, and the element is shifted down to an appropriate
+	 * position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param array the array to add an object to.
+	 * @param object the object to add.
+	 * @param start the index to add it to (the contents are replaced).
+	 * @return the final index in the array of the added object, or -1 if not added.
+	 * @throw {@link NullPointerException} if a comparison happens on a null object at some point.
+	 * @see Comparable#compareTo(Object)
+	 * @see #addSorted(Comparable[], Comparable, int)
+	 * @since 2.21.0 
+	 */
+	public static <T extends Comparable<T>> int addSortedUnique(T[] array, T object, int start)
+	{
+		if (Arrays.binarySearch(array, 0, start, object) < 0)
+			return addSorted(array, object, start);
+		else
+			return -1;
+	}
+	
+	/**
+	 * Adds an object to an array that presumably contains sorted elements, but only if it isn't found via binary search.
+	 * An object is added at some point in the array, and the element is shifted down to an appropriate
+	 * position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param array the array to add an object to.
+	 * @param object the object to add.
+	 * @param start the index to add it to (the contents are replaced).
+	 * @param comparator the comparator to use for comparisons.
+	 * @return the final index in the array of the added object, or -1 if not added.
+	 * @throw {@link NullPointerException} if a comparison happens on a null object at some point.
+	 * @see Comparable#compareTo(Object)
+	 * @see #addSorted(Object[], Object, int, Comparator)
+	 * @since 2.21.0 
+	 */
+	public static <T> int addSortedUnique(T[] array, T object, int start, Comparator<T> comparator)
+	{
+		if (Arrays.binarySearch(array, 0, start, object) < 0)
+			return addSorted(array, object, start, comparator);
+		else
+			return -1;
 	}
 	
 	/**
