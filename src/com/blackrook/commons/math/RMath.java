@@ -421,21 +421,40 @@ public final class RMath
 	}
 
 	/**
-	 * Converts radians to degrees.
-	 * @return the resultant angle in degrees.
-	 */
-	public static int radToDeg(int radians)
-	{
-		return new Double(radians * (180/Math.PI)).intValue();
-	}
-
-	/**
 	 * Converts degrees to radians.
 	 * @return the resultant angle in radians.
 	 */
 	public static double degToRad(double degrees)
 	{
 		return (degrees * Math.PI)/180;
+	}
+
+	/**
+	 * Takes an angle in degrees and corrects it to the [0, 360) interval.
+	 * @return the equivalent angle in degrees.
+	 * @since 2.21.0
+	 */
+	public static double sanitizeAngleDegrees(double angle)
+	{
+		if (angle >= 360.0)
+			angle %= 360.0;
+		else if (angle < 0.0)
+			angle = (angle % 360.0) + 360.0;
+		return angle;
+	}
+
+	/**
+	 * Takes an angle in radians and corrects it to the [0, 2PI) interval.
+	 * @return the equivalent angle in radians.
+	 * @since 2.21.0
+	 */
+	public static double sanitizeAngleRadians(double angle)
+	{
+		if (angle >= TWO_PI)
+			angle %= TWO_PI;
+		else if (angle < 0.0)
+			angle = (angle % TWO_PI) + TWO_PI;
+		return angle;
 	}
 
 	/**
