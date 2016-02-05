@@ -3006,7 +3006,7 @@ public final class Common
 	 */
 	public static <T> int addSortedUnique(T[] array, T object, int start, Comparator<T> comparator)
 	{
-		if (Arrays.binarySearch(array, 0, start, object) < 0)
+		if (Arrays.binarySearch(array, 0, start, object, comparator) < 0)
 			return addSorted(array, object, start, comparator);
 		else
 			return -1;

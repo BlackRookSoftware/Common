@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,6 +14,9 @@ import com.blackrook.commons.math.geometry.Line2D;
 /**
  * A class with static methods that perform "other" types of mathematics.
  * Also contains convenience methods for pseudorandomly generated numbers.
+ * <p>
+ * A bunch of the collision/intersection algorithms found in this class are 
+ * adapted from Real-Time Collision Detection by Christer Ericson (ISBN-13: 978-1-55860-732-3).
  * @author Matthew Tropiano
  */
 public final class RMath
@@ -1471,55 +1474,46 @@ public final class RMath
 	 * @param ccx the circle center, x-coordinate.
 	 * @param ccy the circle center, y-coordinate.
 	 * @param crad the circle radius.
-	 * @return if an intersection occurred.
+	 * @return a scalar value representing how far along the line segment the intersection occurred, or {@link Double#NaN} if no intersection.
 	 * @since 2.21.0
 	 */
-	public static boolean getIntersectionLineCircle(double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
+	public static double getIntersectionLineCircle(double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
 	{
-		// starts in circle.
-		if (getVectorLength(ax - ccx, ay - ccy) < crad)
-			return true;
+		// set up vector.
+		double mx = ax - ccx;
+		double my = ay - ccy;
 		
-		// cull short lines.
-		if (getVectorLength(bx - ax, by - ay) < getVectorLength(ccx - ax, ccy - ay) - crad)
-			return false;
+		double linelen = getLineLength(ax, ay, bx, by);
+		
+		// normalize line segment
+		double dx = (bx - ax) / linelen; 
+		double dy = (by - ay) / linelen;
+		
+		double b = getVectorDotProduct(mx, my, dx, dy);
+		double c = getVectorDotProduct(mx, my, mx, my) - (crad * crad);
+		
+		// Exit if r's origin outside s (c > 0) and r pointing away from s (b > 0)
+		if (c > 0.0 && b > 0.0)
+			return Double.NaN;
+		
+		double discr = (b * b) - c;
+		
+		// Negative discriminant = ray misses circle.
+		if (discr < 0.0)
+			return Double.NaN;
 
-		// cull outside of possible vectors (dot product of line and line start to center).
-		if (getVectorUnitDotProduct(ccx - ax, ccy - ay, bx - ax, by - ay) <= 0)
-			return false;
+		// Compute smallest distance on ray in intersection.
+		double out = -b - Math.sqrt(discr);
 
-		double dotp = getVectorUnitDotProduct(bx - ax, by - ay, bx - ccx, by - ccy);
-
-		// line ends at circle center.
-		if (Double.isNaN(dotp))
-			return true;
-		// line ends before circle center.
-		else if (dotp < 0)
-		{
-			if (getVectorLength(ccx - bx, ccy - by) >= crad)
-				return false;
-			else
-				return true;
-		}
-		// line ends after circle center.
-		else
-		{
-			// project point
-			double tx = bx - ax;
-			double ty = by - ay;
-			double dot = ccx * tx + ccy * ty;
-			
-			double fact = tx * tx + ty * ty;
-			double dpofact = dot / fact;
-			double ppx = dpofact * tx;
-			double ppy = dpofact * ty;
-
-			// no collision if distance to projected less than radius
-			if (getLineLength(ccx, ccy, ppx, ppy) > crad)
-				return false;
-			else
-				return true;
-		}
+		// if out > segment length, not intersecting.
+		if (out > linelen)
+			return Double.NaN;
+		
+		// out = negative = inside circle.
+		if (out < 0.0)
+			return 0.0;
+		
+		return out / linelen;
 	}
 
 	/**
@@ -1532,53 +1526,60 @@ public final class RMath
 	 * @param bcy the box center, y-coordinate.
 	 * @param bhw the box half width.
 	 * @param bhh the box half height.
-	 * @return if an intersection occurred.
+	 * @return a scalar value representing how far along the line segment the intersection occurred, or {@link Double#NaN} if no intersection.
 	 * @since 2.21.0
 	 */
-	public static boolean getIntersectionLineBox(double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
+	public static double getIntersectionLineBox(double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
 	{
-		// if start is inside box, 
-		if (ax < bcx + bhw && ax > bcx - bhw && ay < bcy + bhh && ay > bcy - bhh)
-			return true;
+		double linelen = getLineLength(ax, ay, bx, by);
+		double tmin = 0.0;
+		double tmax = linelen;
 		
-		for (int i = 0; i < 4; i++)
-		{
-			double sx, sy, tx, ty;
-			
-			switch (i)
-			{
-				default: // just 'cuz
-				case 0:
-					sx = bcx - bhw;
-					sy = bcy - bhh;
-					tx = bcx + bhw;
-					ty = bcy - bhh;
-					break;
-				case 1:
-					sx = bcx - bhw;
-					sy = bcy - bhh;
-					tx = bcx - bhw;
-					ty = bcy + bhh;
-					break;
-				case 2:
-					sx = bcx - bhw;
-					sy = bcy + bhh;
-					tx = bcx + bhw;
-					ty = bcy + bhh;
-					break;
-				case 3:
-					sx = bcx + bhw;
-					sy = bcy - bhh;
-					tx = bcx + bhw;
-					ty = bcy + bhh;
-					break;
-			}
-			
-			if (!Double.isNaN(getIntersectionLine(ax, ay, bx, by, sx, sy, tx, ty)))
-				return true;
-		}
+		// normalize line segment
+		double dx = (bx - ax) / linelen; 
+		double dy = (by - ay) / linelen;
 
-		return false;
+		// x-slab
+		if (Math.abs(dx) == 0.0)
+		{
+			// Ray is parallel to slab - check if origin is inside.
+			if (ax < bcx - bhw || ax > bcx + bhw)
+				return Double.NaN;
+		}
+		else
+		{
+			// Compute intersection t value with near and far plane.
+			double ood = 1.0 / dx;
+			double t1 = (bcx - bhw - ax) * ood;
+			double t2 = (bcx + bhw - ax) * ood;
+			tmin = Math.max(tmin, Math.min(t1,  t2));
+			tmax = Math.min(tmax, Math.max(t1,  t2));
+			// Exit with no collision?
+			if (tmin > tmax)
+				return Double.NaN;
+		}
+		
+		// y-slab
+		if (Math.abs(dy) == 0.0)
+		{
+			// Ray is parallel to slab - check if origin is inside.
+			if (ay < bcy - bhh || ay > bcy + bhh)
+				return Double.NaN;
+		}
+		else
+		{
+			// Compute intersection t value with near and far plane.
+			double ood = 1.0 / dy;
+			double t1 = (bcy - bhh - ay) * ood;
+			double t2 = (bcy + bhh - ay) * ood;
+			tmin = Math.max(tmin, Math.min(t1,  t2));
+			tmax = Math.min(tmax, Math.max(t1,  t2));
+			// Exit with no collision?
+			if (tmin > tmax)
+				return Double.NaN;
+		}
+		
+		return tmin / linelen;
 	}
 	
 	/**
@@ -1878,17 +1879,23 @@ public final class RMath
 			{
 				if (Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1)))
 					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx1, ty0);
+				if (Double.isNaN(intersection))
+					intersection = 1.0;
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 			else if (ay > ty1) // northwest
 			{
 				if (Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1)))
 					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty1, tx1, ty1);
+				if (Double.isNaN(intersection))
+					intersection = 1.0;
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 			else // west
 			{
 				intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx0, ty1);
+				if (Double.isNaN(intersection))
+					intersection = 1.0;
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 		}
@@ -1898,17 +1905,23 @@ public final class RMath
 			{
 				if (Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1)))
 					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx1, ty0);
+				if (Double.isNaN(intersection))
+					intersection = 1.0;
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 			else if (ay > ty1) // northeast
 			{
 				if (Double.isNaN(intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1)))
 					intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty1, tx1, ty1);
+				if (Double.isNaN(intersection))
+					intersection = 1.0;
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 			else // east
 			{
 				intersection = getIntersectionLine(ax, ay, bx, by, tx1, ty0, tx1, ty1);
+				if (Double.isNaN(intersection))
+					intersection = 1.0;
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 		}
@@ -1917,11 +1930,15 @@ public final class RMath
 			if (ay < ty0) // south
 			{
 				intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty0, tx1, ty0);
+				if (Double.isNaN(intersection))
+					intersection = 1.0;
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 			else if (ay > ty1) // north
 			{
 				intersection = getIntersectionLine(ax, ay, bx, by, tx0, ty1, tx1, ty1);
+				if (Double.isNaN(intersection))
+					intersection = 1.0;
 				getOverlapPoint(outIncident, ax, ay, bx, by, intersection);
 			}
 			else // incident is inside box
