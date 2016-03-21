@@ -17,28 +17,31 @@ public class Vect3F extends Tuple3F implements VectF
 {
 	/**
 	 * Creates a copy of another Vect3D.
+	 * @param v the source vector.
 	 */
-	public Vect3F(Vect3F t)
+	public Vect3F(Vect3F v)
 	{
-		super(t.x,t.y,t.z);
+		super(v.x,v.y,v.z);
 	}
 
 	/**
 	 * Creates a new three-dimensional vector, from a Vect2D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param v the source vector.
 	 */
-	public Vect3F(Vect2F t)
+	public Vect3F(Vect2F v)
 	{
-		super(t.x,t.y,0);
+		super(v.x,v.y,0);
 	}
 
 	/**
 	 * Creates a new three-dimensional vector, from a Vect1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param v the source vector.
 	 */
-	public Vect3F(Vect1F t)
+	public Vect3F(Vect1F v)
 	{
-		super(t.x,0,0);
+		super(v.x,0,0);
 	}
 
 	/**
@@ -50,7 +53,10 @@ public class Vect3F extends Tuple3F implements VectF
 	}
 
 	/**
-	 * Creates a new three-dimensional vector. 
+	 * Creates a new three-dimensional vector.
+	 * @param x		the initial x-coordinate value of this vector.
+	 * @param y		the initial y-coordinate value of this vector.
+	 * @param z		the initial z-coordinate value of this vector.
 	 */
 	public Vect3F(float x, float y, float z)
 	{
@@ -82,6 +88,5 @@ public class Vect3F extends Tuple3F implements VectF
 		y = dest.y - source.y;
 		z = dest.z - source.z;
 	}
-
 
 }

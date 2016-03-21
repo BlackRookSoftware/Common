@@ -18,6 +18,7 @@ public class Point3F extends Tuple3F implements PointF
 	/**
 	 * Creates a new three-dimensional point, from a Point3D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param p the source point.
 	 */
 	public Point3F(Point3F p)
 	{
@@ -27,19 +28,21 @@ public class Point3F extends Tuple3F implements PointF
 	/**
 	 * Creates a new three-dimensional point, from a Point2D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param p the source point.
 	 */
 	public Point3F(Point2F p)
 	{
-		super(p.x,p.y,0);
+		super(p.x,p.y,0f);
 	}
 	
 	/**
 	 * Creates a new three-dimensional point, from a Point1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param p the source point.
 	 */
 	public Point3F(Point1F p)
 	{
-		super(p.x,0,0);
+		super(p.x,0f,0f);
 	}
 	
 	/**
@@ -52,9 +55,9 @@ public class Point3F extends Tuple3F implements PointF
 	
 	/**
 	 * Creates a new three-dimensional point. 
-	 * @param x		the initial x-coordinate value of this point.
-	 * @param y		the initial y-coordinate value of this point.
-	 * @param z		the initial z-coordinate value of this point.
+	 * @param x	the initial x-coordinate value of this point.
+	 * @param y	the initial y-coordinate value of this point.
+	 * @param z	the initial z-coordinate value of this point.
 	 */
 	public Point3F(float x, float y, float z)
 	{
@@ -62,8 +65,10 @@ public class Point3F extends Tuple3F implements PointF
 	}
 
 	/**
-	 * Returns the closest point in a list to this one.
+	 * Gets the closest point in a list to this one.
 	 * If the list is empty, null is returned.
+	 * @param points the list of points.
+	 * @return the closest point or null if no points provided.
 	 */
 	public Point3F getClosestPoint(Point3F ... points)
 	{

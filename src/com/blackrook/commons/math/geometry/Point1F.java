@@ -24,7 +24,8 @@ public class Point1F extends Tuple1F implements PointF
 	}
 	
 	/**
-	 * Creates a copy of another Point1F.
+	 * Creates a copy of another Point1D.
+	 * @param p the source point.
 	 */
 	public Point1F(Point1F p)
 	{
@@ -33,7 +34,7 @@ public class Point1F extends Tuple1F implements PointF
 
 	/**
 	 * Creates a new one-dimensional point. 
-	 * @param x		the initial x-coordinate value of this point.
+	 * @param x the initial x-coordinate value of this point.
 	 */
 	public Point1F(float x)
 	{
@@ -41,8 +42,10 @@ public class Point1F extends Tuple1F implements PointF
 	}
 	
 	/**
-	 * Returns the closest point in a list to this one.
+	 * Gets the closest point in a list to this one.
 	 * If the list is empty, null is returned.
+	 * @param points the list of points.
+	 * @return the closest point or null if no points provided.
 	 */
 	public Point1F getClosestPoint(Point1F ... points)
 	{

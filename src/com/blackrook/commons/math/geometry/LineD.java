@@ -37,7 +37,7 @@ public abstract class LineD<T extends PointD>
 		return pointB;
 	}
 	
-	/** Returns a copy of this line. */
+	/** @return a copy of this line. */
 	public abstract LineD<T> copy();
 
 	@Override

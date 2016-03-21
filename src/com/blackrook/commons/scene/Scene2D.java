@@ -104,6 +104,7 @@ public class Scene2D<T extends SceneObject> implements ResettableIterable<T>
 	/**
 	 * Removes an object from the scene. 
 	 * @param object the scene object to add.
+	 * @return true if removed, false if not.
 	 */
 	public synchronized boolean removeObject(T object)
 	{
@@ -125,6 +126,7 @@ public class Scene2D<T extends SceneObject> implements ResettableIterable<T>
 	/**
 	 * Updates the grid layout of an object in the Scene.
 	 * Checks which coordinates that the object is in, then changes it. 
+	 * @param scene2DObject the object to update.
 	 */
 	public synchronized void updateObject(T scene2DObject)
 	{
@@ -258,7 +260,7 @@ public class Scene2D<T extends SceneObject> implements ResettableIterable<T>
 	}
 
 	/**
-	 * Returns the number of objects in this scene.
+	 * @return the number of objects in this scene.
 	 * @since 2.2.0
 	 */
 	public int size()
@@ -436,6 +438,7 @@ public class Scene2D<T extends SceneObject> implements ResettableIterable<T>
 	 * @param x		the point, x-coordinate.
 	 * @param y		the point, y-coordinate.
 	 * @param object	the object.
+	 * @return true if so, false if not.
 	 */
 	protected boolean pointIntersect(double x, double y, T object)
 	{
@@ -450,8 +453,9 @@ public class Scene2D<T extends SceneObject> implements ResettableIterable<T>
 	 * Checks if an object intersects another bounding area.
 	 * This is NOT a comprehensive collision test, as two object's
 	 * BOUNDING volumes may intersect, but NOT their ACTUAL boundaries.
+	 * @param obj	the first object.
 	 * @param obj2	another object.
-	 * @return	true if their bounding areas overlap, false otherwise.
+	 * @return true if so, false if not.
 	 */
 	protected boolean elementIntersects(SceneObject obj, SceneObject obj2)
 	{

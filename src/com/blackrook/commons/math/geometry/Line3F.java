@@ -20,11 +20,13 @@ public class Line3F extends LineF<Point3F>
 	 */
 	public Line3F()
 	{
-		this(0f, 0f, 0f, 0f, 0f, 0f);
+		this(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	
 	/**
 	 * Creates a line segment from two points.
+	 * @param a the first point.
+	 * @param b the second point.
 	 */
 	public Line3F(Point3F a, Point3F b)
 	{
@@ -34,8 +36,12 @@ public class Line3F extends LineF<Point3F>
 	/**
 	 * Creates a line segment from a set from 
 	 * coordinates making up two points.
-	 * @param ax	start point x-coordinate.
-	 * @param bx	end point x-coordinate.
+	 * @param ax start point x-coordinate.
+	 * @param ay start point y-coordinate.
+	 * @param az start point z-coordinate.
+	 * @param bx end point x-coordinate.
+	 * @param by end point y-coordinate.
+	 * @param bz end point z-coordinate.
 	 */
 	public Line3F(float ax, float ay, float az, float bx, float by, float bz)
 	{
@@ -45,6 +51,7 @@ public class Line3F extends LineF<Point3F>
 	
 	/**
 	 * Creates a line by copying another.
+	 * @param line the source line
 	 */
 	public Line3F(Line3F line)
 	{
@@ -53,7 +60,7 @@ public class Line3F extends LineF<Point3F>
 	}
 	
 	/**
-	 * Returns the length of this line in units.
+	 * @return the length of this line in units.
 	 */
 	public float getLength()
 	{

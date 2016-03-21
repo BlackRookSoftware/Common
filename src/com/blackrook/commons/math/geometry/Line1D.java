@@ -25,6 +25,8 @@ public class Line1D extends LineD<Point1D>
 	
 	/**
 	 * Creates a line segment from two points.
+	 * @param a the first point.
+	 * @param b the second point.
 	 */
 	public Line1D(Point1D a, Point1D b)
 	{
@@ -34,8 +36,8 @@ public class Line1D extends LineD<Point1D>
 	/**
 	 * Creates a line segment from a set from 
 	 * coordinates making up two points.
-	 * @param ax	start point x-coordinate.
-	 * @param bx	end point x-coordinate.
+	 * @param ax start point x-coordinate.
+	 * @param bx end point x-coordinate.
 	 */
 	public Line1D(double ax, double bx)
 	{
@@ -45,6 +47,7 @@ public class Line1D extends LineD<Point1D>
 	
 	/**
 	 * Creates a line by copying another.
+	 * @param line the source line
 	 */
 	public Line1D(Line1D line)
 	{
@@ -53,7 +56,7 @@ public class Line1D extends LineD<Point1D>
 	}
 	
 	/**
-	 * Returns the length of this line in units.
+	 * @return the length of this line in units.
 	 */
 	public double getLength()
 	{

@@ -27,6 +27,7 @@ public class Vect1D extends Tuple1D implements VectD
 	
 	/**
 	 * Creates a copy of another Vect1D.
+	 * @param v the source vector.
 	 */
 	public Vect1D(Vect1D v)
 	{
@@ -35,7 +36,7 @@ public class Vect1D extends Tuple1D implements VectD
 	
 	/**
 	 * Creates a new one-dimensional vector. 
-	 * @param x		the initial x-coordinate value of this point.
+	 * @param x the initial x-coordinate value of this point.
 	 */
 	public Vect1D(double x)
 	{
@@ -45,8 +46,8 @@ public class Vect1D extends Tuple1D implements VectD
 	/**
 	 * Creates a new one-dimensional vector from two points
 	 * (a vector from one point to the other).
-	 * @param source	source point. 
-	 * @param dest		dest point. 
+	 * @param source source point. 
+	 * @param dest dest point. 
 	 */
 	public Vect1D(Point1D source, Point1D dest)
 	{
@@ -56,8 +57,8 @@ public class Vect1D extends Tuple1D implements VectD
 	/**
 	 * Sets this vector's value using two points
 	 * (a vector from one point to the other).
-	 * @param source	source point. 
-	 * @param dest		dest point. 
+	 * @param source source point. 
+	 * @param dest dest point. 
 	 */
 	public void set(Point1D source, Point1D dest)
 	{

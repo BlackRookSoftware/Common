@@ -18,32 +18,32 @@ import com.blackrook.commons.spatialhash.SpatialHashable;
 public interface SceneObject
 {
 	/**
-	 * Gets the object's absolute X coordinate in the scene (center).
+	 * @return the object's absolute X coordinate in the scene (center).
 	 */
 	public float getPositionX();
 
 	/**
-	 * Gets the object's absolute Y coordinate in the scene (center).
+	 * @return the object's absolute Y coordinate in the scene (center).
 	 */
 	public float getPositionY();
 
 	/**
-	 * Gets the object's absolute Z coordinate in the scene (center).
+	 * @return the object's absolute Z coordinate in the scene (center).
 	 */
 	public float getPositionZ();
 
 	/**
-	 * Gets the object's half-width.
+	 * @return the object's half-width.
 	 */
 	public float getHalfWidth();
 
 	/**
-	 * Gets the object's half-height.
+	 * @return the object's half-height.
 	 */
 	public float getHalfHeight();
 
 	/**
-	 * Gets the object's half-depth.
+	 * @return the object's half-depth.
 	 */
 	public float getHalfDepth();
 
@@ -53,12 +53,14 @@ public interface SceneObject
 	 * Since this could be an expensive call, this 
 	 * is not always used - it is used if the object's useRadius() 
 	 * function returns true, which leaves it in the hands of the implementor.
+	 * @return the object's radius.
 	 */
 	public float getRadius();
 
 	/**
 	 * Should the object's radius value be used for collision, rather
 	 * than its half-height or half-width?
+	 * @return true if so, false if not.
 	 */
 	public boolean useRadius();
 	

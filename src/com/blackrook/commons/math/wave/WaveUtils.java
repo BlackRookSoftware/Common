@@ -26,6 +26,7 @@ public final class WaveUtils
 	/**
 	 * Draws a wave to a Graphics2D context.
 	 * This does so by plotting the entire wave along the length of 
+	 * @param wft the waveform type.
 	 * @param g2d the Graphics2D context to use.
 	 * @param area the rectangular area with which to plot the wave. 
 	 * @param sampleColor the color of each discrete sample point in the wave.

@@ -25,6 +25,8 @@ public class Line2D extends LineD<Point2D>
 	
 	/**
 	 * Creates a line segment from two points.
+	 * @param a the first point.
+	 * @param b the second point.
 	 */
 	public Line2D(Point2D a, Point2D b)
 	{
@@ -34,8 +36,10 @@ public class Line2D extends LineD<Point2D>
 	/**
 	 * Creates a line segment from a set from 
 	 * coordinates making up two points.
-	 * @param ax	start point x-coordinate.
-	 * @param bx	end point x-coordinate.
+	 * @param ax start point x-coordinate.
+	 * @param ay start point y-coordinate.
+	 * @param bx end point x-coordinate.
+	 * @param by end point y-coordinate.
 	 */
 	public Line2D(double ax, double ay, double bx, double by)
 	{
@@ -45,6 +49,7 @@ public class Line2D extends LineD<Point2D>
 	
 	/**
 	 * Creates a line by copying another.
+	 * @param line the source line
 	 */
 	public Line2D(Line2D line)
 	{
@@ -53,7 +58,7 @@ public class Line2D extends LineD<Point2D>
 	}
 	
 	/**
-	 * Returns the length of this line in units.
+	 * @return the length of this line in units.
 	 */
 	public double getLength()
 	{

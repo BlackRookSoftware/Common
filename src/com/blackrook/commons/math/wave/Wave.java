@@ -46,7 +46,7 @@ public class Wave
 	}
 
 	/**
-	 * Gets the waveform type.
+	 * @return the underlying waveform type.
 	 */
 	public WaveFormType getWaveForm()
 	{
@@ -55,6 +55,7 @@ public class Wave
 
 	/**
 	 * Sets the waveform type.
+	 * @param waveForm the waveform type to set.
 	 */
 	public void setWaveForm(WaveFormType waveForm)
 	{
@@ -62,7 +63,7 @@ public class Wave
 	}
 
 	/** 
-	 * Gets the waveform period in milliseconds.
+	 * @return the waveform period in milliseconds.
 	 */
 	public int getPeriod()
 	{
@@ -71,6 +72,7 @@ public class Wave
 
 	/** 
 	 * Sets the waveform period in milliseconds.
+	 * @param period the period to set.
 	 */
 	public void setPeriod(int period)
 	{
@@ -79,7 +81,8 @@ public class Wave
 
 	/** 
 	 * Gets the offset time for the wave.
-	 * Measured in wavelengths
+	 * Measured in wavelengths.
+	 * @return the offset along the wave.
 	 */
 	public double getOffset()
 	{
@@ -88,6 +91,7 @@ public class Wave
 
 	/** 
 	 * Sets the offset time for the wave.
+	 * @param offset the offset to set.
 	 */
 	public void setOffset(double offset)
 	{
@@ -95,8 +99,10 @@ public class Wave
 	}
 	
 	/**
-	 * Gets the proper interpolated value between two input values.
-	 * @param time	the current time in milliseconds.
+	 * Gets the proper sampled value along the wave at a particular time.
+	 * @param time the current time in milliseconds.
+	 * @return the resultant sampled value. 
+	 * @see WaveForm#getSample(double)
 	 */
 	public double getSample(long time)
 	{
@@ -111,6 +117,7 @@ public class Wave
 	 * @param time	the current time in milliseconds.
 	 * @param a	the first sample bound value.
 	 * @param b	the second sample bound value.
+	 * @return the resultant sampled value. 
 	 */
 	public float getInterpolatedValue(long time, float a, float b)
 	{
@@ -138,6 +145,7 @@ public class Wave
 	 * @param time	the current time in milliseconds.
 	 * @param a	the first sample bound value.
 	 * @param b	the second sample bound value.
+	 * @return the resultant sampled value. 
 	 */
 	public double getInterpolatedValue(long time, double a, double b)
 	{
@@ -166,6 +174,7 @@ public class Wave
 	 * @param time	the current time in milliseconds.
 	 * @param a	the first sample bound value.
 	 * @param b	the second sample bound value.
+	 * @return the resultant sampled value. 
 	 */
 	public int getInterpolatedValue(long time, int a, int b)
 	{

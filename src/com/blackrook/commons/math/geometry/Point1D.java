@@ -25,6 +25,7 @@ public class Point1D extends Tuple1D implements PointD
 	
 	/**
 	 * Creates a copy of another Point1D.
+	 * @param p the source point.
 	 */
 	public Point1D(Point1D p)
 	{
@@ -33,7 +34,7 @@ public class Point1D extends Tuple1D implements PointD
 
 	/**
 	 * Creates a new one-dimensional point. 
-	 * @param x		the initial x-coordinate value of this point.
+	 * @param x the initial x-coordinate value of this point.
 	 */
 	public Point1D(double x)
 	{
@@ -41,8 +42,10 @@ public class Point1D extends Tuple1D implements PointD
 	}
 	
 	/**
-	 * Returns the closest point in a list to this one.
+	 * Gets the closest point in a list to this one.
 	 * If the list is empty, null is returned.
+	 * @param points the list of points.
+	 * @return the closest point or null if no points provided.
 	 */
 	public Point1D getClosestPoint(Point1D ... points)
 	{

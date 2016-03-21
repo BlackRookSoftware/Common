@@ -16,7 +16,8 @@ import com.blackrook.commons.math.Tuple2D;
 public class Point2D extends Tuple2D implements PointD
 {
 	/**
-	 * Creates a copy of a Point2D
+	 * Creates a copy of a Point2D.
+	 * @param p the source point.
 	 */
 	public Point2D(Point2D p)
 	{
@@ -26,6 +27,7 @@ public class Point2D extends Tuple2D implements PointD
 	/**
 	 * Creates a new two-dimensional point, from a Point1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param p the source point.
 	 */
 	public Point2D(Point1D p)
 	{
@@ -42,8 +44,8 @@ public class Point2D extends Tuple2D implements PointD
 	
 	/**
 	 * Creates a new two-dimensional point. 
-	 * @param x		the initial x-coordinate value of this point.
-	 * @param y		the initial y-coordinate value of this point.
+	 * @param x	the initial x-coordinate value of this point.
+	 * @param y	the initial y-coordinate value of this point.
 	 */
 	public Point2D(double x, double y)
 	{
@@ -51,8 +53,10 @@ public class Point2D extends Tuple2D implements PointD
 	}
 
 	/**
-	 * Returns the closest point in a list to this one.
+	 * Gets the closest point in a list to this one.
 	 * If the list is empty, null is returned.
+	 * @param points the list of points.
+	 * @return the closest point or null if no points provided.
 	 */
 	public Point2D getClosestPoint(Point2D ... points)
 	{

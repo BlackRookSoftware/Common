@@ -25,6 +25,8 @@ public class Line3D extends LineD<Point3D>
 	
 	/**
 	 * Creates a line segment from two points.
+	 * @param a the first point.
+	 * @param b the second point.
 	 */
 	public Line3D(Point3D a, Point3D b)
 	{
@@ -34,8 +36,12 @@ public class Line3D extends LineD<Point3D>
 	/**
 	 * Creates a line segment from a set from 
 	 * coordinates making up two points.
-	 * @param ax	start point x-coordinate.
-	 * @param bx	end point x-coordinate.
+	 * @param ax start point x-coordinate.
+	 * @param ay start point y-coordinate.
+	 * @param az start point z-coordinate.
+	 * @param bx end point x-coordinate.
+	 * @param by end point y-coordinate.
+	 * @param bz end point z-coordinate.
 	 */
 	public Line3D(double ax, double ay, double az, double bx, double by, double bz)
 	{
@@ -45,6 +51,7 @@ public class Line3D extends LineD<Point3D>
 	
 	/**
 	 * Creates a line by copying another.
+	 * @param line the source line
 	 */
 	public Line3D(Line3D line)
 	{
@@ -53,7 +60,7 @@ public class Line3D extends LineD<Point3D>
 	}
 	
 	/**
-	 * Returns the length of this line in units.
+	 * @return the length of this line in units.
 	 */
 	public double getLength()
 	{

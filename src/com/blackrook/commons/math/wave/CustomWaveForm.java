@@ -262,6 +262,7 @@ public class CustomWaveForm implements WaveFormType
 	 * Returns the deriviative of this waveform, which is the difference 
 	 * between all samples in the wave. A wave is returned reflecting this
 	 * change, leaving the original untouched.
+	 * @return a new waveform.
 	 */
 	public CustomWaveForm derive()
 	{
@@ -275,6 +276,7 @@ public class CustomWaveForm implements WaveFormType
 	 * returning a brand new instance with a new set of discrete
 	 * sample values, using the current interpolation type.
 	 * @param newSampleCount the new count of discrete samples.
+	 * @return a new waveform.
 	 */
 	public CustomWaveForm resample(int newSampleCount)
 	{
@@ -290,6 +292,7 @@ public class CustomWaveForm implements WaveFormType
 	 * changed by the same factor). A wave is returned reflecting this
 	 * change, leaving the original untouched.
 	 * @param value the value to scale each sample to.
+	 * @return a new waveform.
 	 */
 	public CustomWaveForm scaleAmplitude(double value)
 	{
@@ -304,7 +307,7 @@ public class CustomWaveForm implements WaveFormType
 	 * is dependent on the number of samples and the interpolation type in this
 	 * wave. The resultant sample values are clamped into this wave's amplitude.
 	 * @param source the wave to add to this one.
-	 * @return a new CustomWave that is the source wave plus this one.
+	 * @return a new CustomWaveForm that is the source wave plus this one.
 	 */
 	public CustomWaveForm modulate(WaveFormType source)
 	{
@@ -320,7 +323,7 @@ public class CustomWaveForm implements WaveFormType
 	 * interpolation type in this wave. The resultant sample values are clamped
 	 * into this wave's amplitude.
 	 * @param value the sample value to add to each sample.
-	 * @return a new CustomWave that is the source wave plus this one.
+	 * @return a new CustomWaveForm that is the source wave plus this one.
 	 */
 	public CustomWaveForm modulate(double value)
 	{
@@ -335,7 +338,7 @@ public class CustomWaveForm implements WaveFormType
 	 * is dependent on the number of samples and the interpolation type in this
 	 * wave. The resultant sample values are clamped into this wave's amplitude.
 	 * @param source the wave to add to this one.
-	 * @return a new CustomWave that is the source wave plus this one.
+	 * @return a new CustomWaveForm that is the source wave plus this one.
 	 */
 	public CustomWaveForm add(WaveFormType source)
 	{
@@ -351,7 +354,7 @@ public class CustomWaveForm implements WaveFormType
 	 * interpolation type in this wave. The resultant sample values are clamped
 	 * into this wave's amplitude.
 	 * @param value the sample value to add to each sample.
-	 * @return a new CustomWave that is the source wave plus this one.
+	 * @return a new CustomWaveFrom that is the source wave plus this one.
 	 */
 	public CustomWaveForm add(double value)
 	{
@@ -362,6 +365,7 @@ public class CustomWaveForm implements WaveFormType
 	
 	/**
 	 * Produces a deep copy of this wave, sample values and all.
+	 * @return a new, copied waveform.
 	 */
 	public CustomWaveForm copy()
 	{
@@ -419,7 +423,7 @@ public class CustomWaveForm implements WaveFormType
 	}
 	
 	/**
-	 * Returns the amount of discrete samples in the wave.
+	 * @return the amount of discrete samples in the wave.
 	 */
 	public int getSampleCount()
 	{
@@ -460,7 +464,7 @@ public class CustomWaveForm implements WaveFormType
 	}
 
 	/**
-	 * Returns the interpolation type for this wave. 
+	 * @return the interpolation type for this wave. 
 	 */
 	public InterpolationType getInterpolationType()
 	{
@@ -469,6 +473,7 @@ public class CustomWaveForm implements WaveFormType
 
 	/**
 	 * Sets the interpolation type for this wave. 
+	 * @param interpolationType the interpolation type to set.
 	 */
 	public void setInterpolationType(InterpolationType interpolationType)
 	{

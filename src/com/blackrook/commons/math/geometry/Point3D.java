@@ -18,6 +18,7 @@ public class Point3D extends Tuple3D implements PointD
 	/**
 	 * Creates a new three-dimensional point, from a Point3D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param p the source point.
 	 */
 	public Point3D(Point3D p)
 	{
@@ -27,6 +28,7 @@ public class Point3D extends Tuple3D implements PointD
 	/**
 	 * Creates a new three-dimensional point, from a Point2D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param p the source point.
 	 */
 	public Point3D(Point2D p)
 	{
@@ -36,6 +38,7 @@ public class Point3D extends Tuple3D implements PointD
 	/**
 	 * Creates a new three-dimensional point, from a Point1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param p the source point.
 	 */
 	public Point3D(Point1D p)
 	{
@@ -52,9 +55,9 @@ public class Point3D extends Tuple3D implements PointD
 	
 	/**
 	 * Creates a new three-dimensional point. 
-	 * @param x		the initial x-coordinate value of this point.
-	 * @param y		the initial y-coordinate value of this point.
-	 * @param z		the initial z-coordinate value of this point.
+	 * @param x	the initial x-coordinate value of this point.
+	 * @param y	the initial y-coordinate value of this point.
+	 * @param z	the initial z-coordinate value of this point.
 	 */
 	public Point3D(double x, double y, double z)
 	{
@@ -62,8 +65,10 @@ public class Point3D extends Tuple3D implements PointD
 	}
 
 	/**
-	 * Returns the closest point in a list to this one.
+	 * Gets the closest point in a list to this one.
 	 * If the list is empty, null is returned.
+	 * @param points the list of points.
+	 * @return the closest point or null if no points provided.
 	 */
 	public Point3D getClosestPoint(Point3D ... points)
 	{

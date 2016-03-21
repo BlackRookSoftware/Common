@@ -21,24 +21,26 @@ public class Vect2F extends Tuple2F implements VectF
 	 */
 	public Vect2F()
 	{
-		this(0,0);
+		this(0, 0);
 	}
 
 	/**
 	 * Creates a copy of another Vect2D.
+	 * @param v the source vector.
 	 */
 	public Vect2F(Vect2F v)
 	{
-		this(v.x,v.y);
+		this(v.x, v.y);
 	}
 
 	/**
 	 * Creates a new two-dimensional point, from a Vect1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param v the source vector.
 	 */
 	public Vect2F(Vect1F v)
 	{
-		this(v.x,0);
+		this(v.x, 0);
 	}
 
 	/**
@@ -56,18 +58,32 @@ public class Vect2F extends Tuple2F implements VectF
 	 * Creates a new two-dimensional vector from two points
 	 * (a vector from one point to the other).
 	 * @param source	source point. 
-	 * @param dest		dest point. 
+	 * @param dest		destination point. 
 	 */
 	public Vect2F(Point2F source, Point2F dest)
 	{
-		set(source,dest);
+		set(source, dest);
+	}
+	
+	/**
+	 * Creates a new two-dimensional vector from the components of two points
+	 * (a vector from one point to the other).
+	 * @param sourceX	source x-coordinate. 
+	 * @param sourceY	source y-coordinate. 
+	 * @param destX		destination x-coordinate. 
+	 * @param destY		destination y-coordinate.
+	 * @since 2.21.0 
+	 */
+	public Vect2F(float sourceX, float sourceY, float destX, float destY)
+	{
+		set(sourceX, sourceY, destX, destY);
 	}
 	
 	/**
 	 * Sets this vector's value using two points
 	 * (a vector from one point to the other).
 	 * @param source	source point. 
-	 * @param dest		dest point. 
+	 * @param dest		destination point. 
 	 */
 	public void set(Point2F source, Point2F dest)
 	{

@@ -16,7 +16,8 @@ import com.blackrook.commons.math.Tuple2F;
 public class Point2F extends Tuple2F implements PointF
 {
 	/**
-	 * Creates a copy of a Point2D
+	 * Creates a copy of a Point2D.
+	 * @param p the source point.
 	 */
 	public Point2F(Point2F p)
 	{
@@ -26,10 +27,11 @@ public class Point2F extends Tuple2F implements PointF
 	/**
 	 * Creates a new two-dimensional point, from a Point1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param p the source point.
 	 */
 	public Point2F(Point1F p)
 	{
-		super(p.x,0);
+		super(p.x, 0f);
 	}
 	
 	/**
@@ -42,8 +44,8 @@ public class Point2F extends Tuple2F implements PointF
 	
 	/**
 	 * Creates a new two-dimensional point. 
-	 * @param x		the initial x-coordinate value of this point.
-	 * @param y		the initial y-coordinate value of this point.
+	 * @param x	the initial x-coordinate value of this point.
+	 * @param y	the initial y-coordinate value of this point.
 	 */
 	public Point2F(float x, float y)
 	{
@@ -51,8 +53,10 @@ public class Point2F extends Tuple2F implements PointF
 	}
 
 	/**
-	 * Returns the closest point in a list to this one.
+	 * Gets the closest point in a list to this one.
 	 * If the list is empty, null is returned.
+	 * @param points the list of points.
+	 * @return the closest point or null if no points provided.
 	 */
 	public Point2F getClosestPoint(Point2F ... points)
 	{

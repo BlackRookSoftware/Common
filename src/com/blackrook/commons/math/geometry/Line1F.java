@@ -20,11 +20,13 @@ public class Line1F extends LineF<Point1F>
 	 */
 	public Line1F()
 	{
-		this(0f, 0f);
+		this(0.0f, 0.0f);
 	}
 	
 	/**
 	 * Creates a line segment from two points.
+	 * @param a the first point.
+	 * @param b the second point.
 	 */
 	public Line1F(Point1F a, Point1F b)
 	{
@@ -34,8 +36,8 @@ public class Line1F extends LineF<Point1F>
 	/**
 	 * Creates a line segment from a set from 
 	 * coordinates making up two points.
-	 * @param ax	start point x-coordinate.
-	 * @param bx	end point x-coordinate.
+	 * @param ax start point x-coordinate.
+	 * @param bx end point x-coordinate.
 	 */
 	public Line1F(float ax, float bx)
 	{
@@ -45,6 +47,7 @@ public class Line1F extends LineF<Point1F>
 	
 	/**
 	 * Creates a line by copying another.
+	 * @param line the source line
 	 */
 	public Line1F(Line1F line)
 	{
@@ -53,7 +56,7 @@ public class Line1F extends LineF<Point1F>
 	}
 	
 	/**
-	 * Returns the length of this line in units.
+	 * @return the length of this line in units.
 	 */
 	public float getLength()
 	{

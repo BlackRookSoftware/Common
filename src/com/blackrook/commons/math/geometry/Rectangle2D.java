@@ -29,7 +29,7 @@ public class Rectangle2D
 	 */
 	public Rectangle2D()
 	{
-		this(0, 0, 0, 0);
+		this(0.0, 0.0, 0.0, 0.0);
 	}
 	
 	/**

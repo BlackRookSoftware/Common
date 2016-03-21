@@ -37,7 +37,7 @@ public abstract class LineF<T extends PointF>
 		return pointB;
 	}
 	
-	/** Returns a copy of this line. */
+	/** @return a copy of this line. */
 	public abstract LineF<T> copy();
 
 	@Override
@@ -45,5 +45,5 @@ public abstract class LineF<T extends PointF>
 	{
 		return pointA + " to " + pointB; 
 	}
-
+	
 }

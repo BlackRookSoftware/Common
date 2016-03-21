@@ -21,7 +21,7 @@ public abstract class PlaneF<T extends VectF>
 	public float distance;
 	
 	/**
-	 * Returns this plane's normal vector.
+	 * @return this plane's normal vector.
 	 */
 	public T getNormal()
 	{
@@ -29,7 +29,7 @@ public abstract class PlaneF<T extends VectF>
 	}
 	
 	/**
-	 * Returns this plane's distance from the origin.
+	 * @return this plane's distance from the origin.
 	 */
 	public double getDistance()
 	{
@@ -94,7 +94,7 @@ public abstract class PlaneF<T extends VectF>
 		return sb.toString();
 	}
 	
-	/** Returns an exact copy of this Plane. */
+	/** @return an exact copy of this Plane. */
 	public abstract PlaneF<T> copy();
 
 	

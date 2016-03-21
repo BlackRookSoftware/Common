@@ -22,7 +22,7 @@ public interface WaveFormType
 	public double getSample(double time);
 	
 	/**
-	 * Returns this wave's amplitude.
+	 * @return this wave's amplitude.
 	 */
 	public double getAmplitude();
 

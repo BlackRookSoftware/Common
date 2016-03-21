@@ -35,6 +35,7 @@ public class Polynomial implements WaveFormType
 	/**
 	 * Always returns 1.
 	 */
+	@Override
 	public double getAmplitude()
 	{
 		return 1;
@@ -50,7 +51,7 @@ public class Polynomial implements WaveFormType
 	}
 
 	/**
-	 * Gets the starting exponent. 
+	 * @return the starting exponent value. 
 	 */
 	public int getStartingExponent()
 	{
@@ -59,6 +60,7 @@ public class Polynomial implements WaveFormType
 
 	/**
 	 * Gets the coefficients.
+	 * @return a reference to this polynomial's coefficients.
 	 */
 	public double[] getCoefficients()
 	{

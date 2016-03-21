@@ -26,6 +26,7 @@ public class Vect2D extends Tuple2D implements VectD
 
 	/**
 	 * Creates a copy of another Vect2D.
+	 * @param v the source vector.
 	 */
 	public Vect2D(Vect2D v)
 	{
@@ -35,6 +36,7 @@ public class Vect2D extends Tuple2D implements VectD
 	/**
 	 * Creates a new two-dimensional point, from a Vect1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param v the source vector.
 	 */
 	public Vect2D(Vect1D v)
 	{

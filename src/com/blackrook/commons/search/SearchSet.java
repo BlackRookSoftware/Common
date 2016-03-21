@@ -70,8 +70,9 @@ public class SearchSet<T extends Object> implements Sizable, ResettableIterable<
 	}
 
 	/**
-	 * Returns true if this set contains a particular object,
-	 * false otherwise.
+	 * Checks if this set contains a particular object.
+	 * @param object the object to search for.
+	 * @return true if this set contains a particular object, false otherwise.
 	 */
 	public boolean contains(T object)
 	{
@@ -209,7 +210,8 @@ public class SearchSet<T extends Object> implements Sizable, ResettableIterable<
 	 * are used to map to this object, and partials may be generated from each token to
 	 * map to those tokens.
 	 * <p>
-	 * This returns <code>object.toString()</code> unless overridden. 
+	 * This returns <code>object.toString()</code> unless overridden.
+	 * @param object the source object. 
 	 * @return a storable search string.
 	 * @throws NullPointerException if object is null.
 	 */

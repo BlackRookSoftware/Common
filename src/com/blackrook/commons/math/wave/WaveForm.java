@@ -135,6 +135,7 @@ public enum WaveForm implements WaveFormType
 	 * @param time	the time. 0 = period start, 1 = period end.
 	 * @param v1	first sample bound of the wave.
 	 * @param v2	second sample bound of the wave.
+	 * @return the resultant value.
 	 */
 	public double interpolateValue(double time, double v1, double v2)
 	{
@@ -146,6 +147,7 @@ public enum WaveForm implements WaveFormType
 	 * @param time	the time. 0 = period start, 1 = period end.
 	 * @param v1	first sample bound of the wave.
 	 * @param v2	second sample bound of the wave.
+	 * @return the resultant value.
 	 */
 	public int interpolateValue(double time, int v1, int v2)
 	{

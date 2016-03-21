@@ -17,28 +17,31 @@ public class Vect3D extends Tuple3D implements VectD
 {
 	/**
 	 * Creates a copy of another Vect3D.
+	 * @param v the source vector.
 	 */
-	public Vect3D(Vect3D t)
+	public Vect3D(Vect3D v)
 	{
-		super(t.x,t.y,t.z);
+		super(v.x,v.y,v.z);
 	}
 
 	/**
 	 * Creates a new three-dimensional vector, from a Vect2D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param v the source vector.
 	 */
-	public Vect3D(Vect2D t)
+	public Vect3D(Vect2D v)
 	{
-		super(t.x,t.y,0);
+		super(v.x,v.y,0);
 	}
 
 	/**
 	 * Creates a new three-dimensional vector, from a Vect1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param v the source vector.
 	 */
-	public Vect3D(Vect1D t)
+	public Vect3D(Vect1D v)
 	{
-		super(t.x,0,0);
+		super(v.x,0,0);
 	}
 
 	/**
@@ -50,7 +53,10 @@ public class Vect3D extends Tuple3D implements VectD
 	}
 
 	/**
-	 * Creates a new three-dimensional vector. 
+	 * Creates a new three-dimensional vector.
+	 * @param x		the initial x-coordinate value of this vector.
+	 * @param y		the initial y-coordinate value of this vector.
+	 * @param z		the initial z-coordinate value of this vector.
 	 */
 	public Vect3D(double x, double y, double z)
 	{
@@ -82,6 +88,5 @@ public class Vect3D extends Tuple3D implements VectD
 		y = dest.y - source.y;
 		z = dest.z - source.z;
 	}
-
 
 }

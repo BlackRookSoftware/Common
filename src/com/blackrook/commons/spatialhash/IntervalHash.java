@@ -209,6 +209,7 @@ public class IntervalHash<T extends IntervalHashable> extends AbstractSpatialHas
 	 * Tests if a point intersects with an object.
 	 * @param x	the point, x-coordinate.
 	 * @param object the object.
+	 * @return true if so, false if not.
 	 */
 	protected boolean pointIntersects(double x, T object)
 	{
