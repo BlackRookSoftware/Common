@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -26,25 +26,25 @@ public interface Grid
 		CLAMP
 	}
 	
-	/** Gets the total width of this grid in units. */
+	/** @return the total width of this grid in units. */
 	public int getWidth();
-	/** Gets the total height of this grid in units. */
+	/** @return the total height of this grid in units. */
 	public int getHeight();
-	/** Gets the total depth of this grid in units. */
+	/** @return the total depth of this grid in units. */
 	public int getDepth();
 	
 	/**
-	 * Returns one of the three wrapping types describing how this grid
+	 * @return one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the width axis.
 	 */
 	public WrapType getWidthWrapType();
 	/**
-	 * Returns one of the three wrapping types describing how this grid
+	 * @return one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the height axis.
 	 */
 	public WrapType getHeightWrapType();
 	/**
-	 * Returns one of the three wrapping types describing how this grid
+	 * @return one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the depth axis.
 	 */
 	public WrapType getDepthWrapType();

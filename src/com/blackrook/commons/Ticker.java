@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -34,7 +34,7 @@ public abstract class Ticker
 	private long nanos;
 	/** 
 	 * Creates a new Ticker that updates at a constant rate.
-	 * @param updatesPerSecond	the amount of times that doTick() is called in one second. 
+	 * @param updatesPerSecond	the target amount of times that doTick() is called in one second. 
 	 */
 	public Ticker(int updatesPerSecond)
 	{
@@ -43,17 +43,19 @@ public abstract class Ticker
 	
 	/** 
 	 * Creates a new Ticker that updates at a constant rate.
-	 * @param updatesPerSecond	the amount of times that doTick() is called in one second. 
+	 * @param name the name of the ticker. This is also the thread name.
+	 * @param updatesPerSecond	the target amount of times that doTick() is called in one second. 
 	 */
 	public Ticker(String name, int updatesPerSecond)
 	{
-		currentTick = 0;
 		setName(name);
 		setUpdatesPerSecond(updatesPerSecond);
+		currentTick = 0;
 	}
 	
 	/**
 	 * Sets the name of the Ticker.
+	 * @param name the name to set.
 	 */
 	public void setName(String name)
 	{
@@ -64,6 +66,7 @@ public abstract class Ticker
 	
 	/**
 	 * Gets the name of this ticker.
+	 * @return this ticker's name.
 	 */
 	public String getName()
 	{
@@ -72,6 +75,7 @@ public abstract class Ticker
 	
 	/**
 	 * Sets the updates per second of the Ticker.
+	 * @param updatesPerSecond the desired updates per second.
 	 */
 	public void setUpdatesPerSecond(int updatesPerSecond)
 	{
@@ -83,6 +87,7 @@ public abstract class Ticker
 	
 	/**
 	 * Gets the updates per second of the Ticker.
+	 * @return the desired updates per second set on this ticker.
 	 */
 	public int getUpdatesPerSecond()
 	{
@@ -131,6 +136,7 @@ public abstract class Ticker
 	 * Tickers do NOT start suspended unless this was set before it was started.
 	 * It is less expensive, and probably more desirable to supend and resume
 	 * the Ticker than to start and stop it.
+	 * @param value if true, suspend. if false, don't suspend.
 	 */
 	public void setSuspended(boolean value)
 	{
@@ -139,6 +145,7 @@ public abstract class Ticker
 	
 	/**
 	 * Is this ticker suspended?
+	 * @return true if so, false if not.
 	 */
 	public boolean isSuspended()
 	{
@@ -147,6 +154,7 @@ public abstract class Ticker
 	
 	/**
 	 * Is the ticker active?
+	 * @return true if so, false if not.
 	 */
 	public boolean isActive()
 	{
@@ -162,7 +170,6 @@ public abstract class Ticker
 
 	/**
 	 * The ticker Thread.
-	 * @author Matthew Tropiano
 	 */
 	private class TickerThread extends Thread
 	{
@@ -176,6 +183,7 @@ public abstract class Ticker
 			killswitch = false;
 		}
 		
+		@Override
 		public void run()
 		{
 			long nanoCount = 0;

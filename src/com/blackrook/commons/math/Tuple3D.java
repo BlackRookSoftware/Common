@@ -1,13 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  ******************************************************************************/
 package com.blackrook.commons.math;
-
-import com.blackrook.commons.math.geometry.Point3D;
 
 /**
  * Abstract, three-dimensional set of coordinates.
@@ -20,6 +18,7 @@ public abstract class Tuple3D extends Tuple2D
 
 	/**
 	 * Creates a copy of another Vect3D.
+	 * @param t the source tuple.
 	 */
 	public Tuple3D(Tuple3D t)
 	{
@@ -29,6 +28,7 @@ public abstract class Tuple3D extends Tuple2D
 	/**
 	 * Creates a new three-dimensional tuple, from a Tuple2D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param t the source tuple.
 	 */
 	public Tuple3D(Tuple2D t)
 	{
@@ -38,6 +38,7 @@ public abstract class Tuple3D extends Tuple2D
 	/**
 	 * Creates a new three-dimensional tuple, from a Tuple1D.
 	 * The missing dimensions are filled with zeroes.
+	 * @param t the source tuple.
 	 */
 	public Tuple3D(Tuple1D t)
 	{
@@ -80,6 +81,7 @@ public abstract class Tuple3D extends Tuple2D
 
 	/**
 	 * Sets the values of this tuple.
+	 * @param t the source tuple.
 	 */
 	public void set(Tuple3D t)
 	{
@@ -88,18 +90,13 @@ public abstract class Tuple3D extends Tuple2D
 		z = t.z;
 	}
 
-	/**
-	 * Returns the length of this tuple.
-	 */
+	@Override
 	public double length()
 	{
 		return RMath.getVectorLength(x, y, z);
 	}
 
-	/**
-	 * Returns the squared length of this tuple
-	 * (no square root step at the end).
-	 */
+	@Override
 	public double squareLength()
 	{
 		return RMath.getVectorLengthSquared(x, y, z);
@@ -107,16 +104,15 @@ public abstract class Tuple3D extends Tuple2D
 
 	/**
 	 * Yields the dot product of a Tuple3D with this one.
-	 * @param v		the tuple to use with this one.
+	 * @param v the tuple to use with this one.
+	 * @return the dot product.
 	 */
 	public double dot(Tuple3D v)
 	{
 		return RMath.getVectorDotProduct(x, y, z, v.x, v.y, v.z);
 	}
 
-	/**
-	 * Returns true if this tuple is a zero tuple, false otherwise.
-	 */
+	@Override
 	public boolean isZero()
 	{
 		return x == 0 && y == 0 && z == 0;
@@ -133,42 +129,32 @@ public abstract class Tuple3D extends Tuple2D
 
 	/**
 	 * Adds another Tuple2D to this one. This tuple's data is replaced by the result.
-	 * @param v		the tuple to add to this one.
+	 * @param v the tuple to add to this one.
 	 */
 	public void add(Tuple3D v)
 	{
 		add(this,v,this);
 	}
 
-	/**
-	 * Scales this tuple to a certain length.
-	 * @param len	the new length of the tuple.
-	 */
+	@Override
 	public void setLength(double len)
 	{
 		setLength(this,len,this);
 	}
 
-	/**
-	 * Negates this tuple.
-	 */
+	@Override
 	public void negate()
 	{
 		negate(this,this);
 	}
 
-	/**
-	 * Turns this tuple into a unit tuple of length 1, while keeping direction intact.
-	 */
+	@Override
 	public void normalize()
 	{
 		normalize(this,this);
 	}
 
-	/**
-	 * Scales this tuple on all axes.
-	 * @param s	scalar factor. 
-	 */
+	@Override
 	public void scale(double s)
 	{
 		scale(s,this,this);
@@ -194,9 +180,9 @@ public abstract class Tuple3D extends Tuple2D
 
 	/**
 	 * Scales this tuple.
-	 * @param sx	scalar factor for x-axis. 
-	 * @param sy	scalar factor for y-axis. 
-	 * @param sz	scalar factor for z-axis. 
+	 * @param sx scalar factor for x-axis. 
+	 * @param sy scalar factor for y-axis. 
+	 * @param sz scalar factor for z-axis. 
 	 */
 	public void scale(double sx, double sy, double sz)
 	{
@@ -205,20 +191,23 @@ public abstract class Tuple3D extends Tuple2D
 
 	/**
 	 * Crosses this tuple with another (cross product).
-	 * @param v		the input tuple.
+	 * @param v the input tuple.
 	 */
 	public void cross(Tuple3D v)
 	{
 		cross(this,v,this);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "["+x+", "+y+", "+z+"]";
 	}
 
 	/**
-	 * Returns true if the target tuple has the same X-, Y-, and Z-component value as this one. 
+	 * Returns true if the target has the same component values as this one. 
+	 * @param v the other tuple.
+	 * @return true if so, false if not.
 	 */
 	public boolean equals(Tuple3D v)
 	{
@@ -226,18 +215,21 @@ public abstract class Tuple3D extends Tuple2D
 	}
 
 	/**
-	 * Returns the distance in units from this tuple to another.
+	 * Gets the distance in units from this tuple to another.
+	 * @param point the other tuple.
+	 * @return the distance.
 	 */
-	public double getDistanceTo(Point3D point)
+	public double getDistanceTo(Tuple3D point)
 	{
 		return Math.sqrt(getSquareDistanceTo(point));
 	}
 
 	/**
-	 * Returns the square distance in units from this tuple to another
-	 * (no square root step at the end).
+	 * Gets the square distance in units from this tuple to another (no square root step at the end).
+	 * @param point the other tuple.
+	 * @return the squared distance.
 	 */
-	public double getSquareDistanceTo(Point3D point)
+	public double getSquareDistanceTo(Tuple3D point)
 	{
 		double dx = point.x - x;
 		double dy = point.y - y;
@@ -367,8 +359,8 @@ public abstract class Tuple3D extends Tuple2D
 	 */
 	public static void rotateX(double radians, Tuple3D in, Tuple3D out)
 	{
-		double newy = (double)(in.y*Math.cos(radians)-in.z*Math.sin(radians));
-		double newz = (double)(in.y*Math.sin(radians)+in.z*Math.cos(radians));
+		double newy = in.y*Math.cos(radians)-in.z*Math.sin(radians);
+		double newz = in.y*Math.sin(radians)+in.z*Math.cos(radians);
 		out.x = in.x;
 		out.y = newy;
 		out.z = newz;
@@ -382,8 +374,8 @@ public abstract class Tuple3D extends Tuple2D
 	 */
 	public static void rotateY(double radians, Tuple3D in, Tuple3D out)
 	{
-		double newx = (double)(in.x*Math.cos(radians)+in.z*Math.sin(radians));
-		double newz = (double)(-in.x*Math.sin(radians)+in.z*Math.cos(radians));
+		double newx = in.x*Math.cos(radians)+in.z*Math.sin(radians);
+		double newz = -in.x*Math.sin(radians)+in.z*Math.cos(radians);
 		out.x = newx;
 		out.y = in.y;
 		out.z = newz;
@@ -397,8 +389,8 @@ public abstract class Tuple3D extends Tuple2D
 	 */
 	public static void rotateZ(double radians, Tuple3D in, Tuple3D out)
 	{
-		double newx = (double)(in.x*Math.cos(radians)-in.y*Math.sin(radians));
-		double newy = (double)(in.x*Math.sin(radians)+in.y*Math.cos(radians));
+		double newx = in.x*Math.cos(radians)-in.y*Math.sin(radians);
+		double newy = in.x*Math.sin(radians)+in.y*Math.cos(radians);
 		out.x = newx;
 		out.y = newy;
 		out.z = in.z;

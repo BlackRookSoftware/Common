@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -13,14 +13,14 @@ import com.blackrook.commons.ObjectPair;
 import com.blackrook.commons.AbstractVector;
 
 /**
- * Maintains an expandable list of paired objects, but is always sorted.
+ * Maintains an expandable list of paired objects, but is always sorted by key.
  * @author Matthew Tropiano
  * @param <T> any Object.
  */
 public class SortedMap<T extends Comparable<T>, U extends Object> extends AbstractVector<ObjectPair<T, U>>
 {
 	/**
-	 * Constructs a new SortedMap with capacity DEFAULT_CAPACITY.
+	 * Constructs a new SortedMap with capacity DEFAULT_CAPACITY that doubles every resize.
 	 */
 	public SortedMap()
 	{
@@ -28,27 +28,29 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	}
 	
 	/**
-	 * Constructs a new SortedMap with defined capacity.
-	 * Capacity incrementor = capacity.
-	 * @param capacity	the initial capacity of the vector.
+	 * Constructs a new SortedMap with defined capacity that doubles every resize.
+	 * @param capacity the initial capacity of the vector.
 	 */
 	public SortedMap(int capacity)
 	{
-		this(capacity,capacity);
+		this(capacity, 0);
 	}
 	
 	/**
 	 * Constructs a new SortedMap with defined capacity and capacity increment.
-	 * @param capacity	the initial capacity of the vector.
-	 * @param inc		the capacity incrementor.
+	 * @param capacity the initial capacity of the vector. If 0 or less, it is 1.
+	 * @param capacityIncrement what to increase the capacity of this vector by 
+	 * if this reaches the max. if 0 or less, it will double.
 	 */
-	public SortedMap(int capacity, int inc)
+	public SortedMap(int capacity, int capacityIncrement)
 	{
-		super(capacity, inc);
+		super(capacity, capacityIncrement);
 	}
 	
 	/**
 	 * Adds an object to the list and sorts it insertion-style.
+	 * @param key the reference key.
+	 * @param value the corresponding value.
 	 */
 	public void add(T key, U value)
 	{
@@ -61,6 +63,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	/**
 	 * Replaces the value of a node in this structure.
 	 * If it doesn't exist, it will be added.
+	 * @param key the reference key.
+	 * @param value the corresponding value.
 	 */
 	public void replace(T key, U value)
 	{
@@ -73,6 +77,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	
 	/**
 	 * Checks if an object exists in this map via comparison binary-search style.
+	 * @param key the reference key.
+	 * @return true if this contains the key, false if not.
 	 */
 	public boolean contains(T key)
 	{
@@ -81,6 +87,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	
 	/**
 	 * Checks if an object exists in this map via comparison binary-search style.
+	 * @param key the reference key.
 	 * @return the index of the desired key or -1 if it does not exist.
 	 */
 	public int getIndexOf(T key)
@@ -111,6 +118,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 
 	/**
 	 * Checks if an object exists in this map via comparison linear-search style.
+	 * @param value the desired value.
 	 * @return the index of the desired value or -1 if it does not exist.
 	 */
 	public int getIndexOfValue(U value)
@@ -123,6 +131,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 
 	/**
 	 * Gets the value at a particular index and returns the value.
+	 * @param index the desired index.
+	 * @return the corresponding value, or null if the index is outside the map bounds.
 	 */
 	public U getValueAtIndex(int index)
 	{
@@ -131,7 +141,9 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	}
 
 	/**
-	 * Returns the object using this key.
+	 * Returns a value using a key.
+	 * @param key the requested key.
+	 * @return the corresponding value, or null of the key is not found.
 	 */
 	public U get(T key)
 	{
@@ -142,8 +154,9 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	}
 
 	/**
-	 * Removes an object from this Map.
-	 * @return the removed object or null it wasn't in the Map.
+	 * Removes a value from this Map.
+	 * @param key the requested key.
+	 * @return the removed corresponding value or null it wasn't in the Map.
 	 */
 	public U remove(T key)
 	{
@@ -155,7 +168,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	
 	/**
 	 * Removes a value from the map.
-	 * @return the removed object or null it wasn't in the Map.
+	 * @param value the value to search for and remove. 
+	 * @return true if removed, false if not.
 	 */
 	public boolean removeByValue(U value)
 	{
@@ -183,8 +197,9 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	
 
 	/**
-	 * Removes the key, value pair at a particular index and returns
-	 * the value.
+	 * Removes the key, value pair at a particular index and returns the value.
+	 * @param index the desired index.
+	 * @return the removed object or null the Map is empty.
 	 */
 	public U removeValueAtIndex(int index)
 	{
@@ -195,7 +210,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	}
 
 	/**
-	 * Returns an iterator of this map's values.
+	 * @return an iterator of this map's values.
 	 */
 	public Iterator<U> getValueIterator()
 	{
@@ -214,6 +229,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 
 	/** 
 	 * Swaps the object at this index with the one before it (used in sort).
+	 * @param index	the index.
 	 */
 	protected final void swap(int index)
 	{
@@ -222,6 +238,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 		setByIndex(index-1, tmp);
 	}
 
+	/** This map's value iterator. */
 	public class ValueIterator implements Iterator<U> 
 	{
 		SortedMap<T,U> mapRef;
@@ -249,35 +266,6 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 		public void remove()
 		{
 			mapRef.removeIndex(currIndex);
-		}
-
-	}
-	
-	public class NodeIterator implements Iterator<ObjectPair<T,U>>
-	{
-		int currIndex;
-		
-		NodeIterator(SortedMap<T,U> sm)
-		{
-			currIndex = -1;
-		}
-		
-		@Override
-		public boolean hasNext()
-		{
-			return currIndex < size-1;
-		}
-
-		@Override
-		public ObjectPair<T,U> next()
-		{
-			return getByIndex(++currIndex);
-		}
-
-		@Override
-		public void remove()
-		{
-			removeIndex(currIndex--);
 		}
 
 	}

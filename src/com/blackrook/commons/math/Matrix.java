@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -24,8 +24,8 @@ public class Matrix
 	
 	/**
 	 * Creates a new Matrix of arbitrary width and height.
-	 * @param width		the width of the Matrix in cells.
-	 * @param height	the height of the Matrix in cells.
+	 * @param width the width of the Matrix in cells.
+	 * @param height the height of the Matrix in cells.
 	 * @throws IllegalArgumentException if width or height is less than 1.
 	 */
 	public Matrix(int width, int height)
@@ -55,7 +55,7 @@ public class Matrix
 	}
 
 	/**
-	 * Returns the width of this Matrix in cells.
+	 * @return the width of this Matrix in cells.
 	 */
 	public final int getWidth()
 	{
@@ -63,7 +63,7 @@ public class Matrix
 	}
 
 	/**
-	 * Returns the height of this Matrix in cells.
+	 * @return the height of this Matrix in cells.
 	 */
 	public final int getHeight()
 	{
@@ -72,8 +72,8 @@ public class Matrix
 	
 	/**
 	 * Returns the value of cell in a particular place in the Matrix.
-	 * @param row	the row (0 is first).
-	 * @param col	the column (0 is first).
+	 * @param row the row (0 is first).
+	 * @param col the column (0 is first).
 	 * @return the value in the desired Matrix cell.
 	 * @throws ArrayIndexOutOfBoundsException if (x + height*y) lies outside the bounds of the Matrix.
 	 */
@@ -84,9 +84,9 @@ public class Matrix
 	
 	/**
 	 * Sets the value of cell in a particular place in the Matrix.
-	 * @param row	the row (0 is first).
-	 * @param col	the column (0 is first).
-	 * @param val	the value to set. 
+	 * @param row the row (0 is first).
+	 * @param col the column (0 is first).
+	 * @param val the value to set. 
 	 */
 	public void set(int row, int col, double val)
 	{
@@ -95,8 +95,8 @@ public class Matrix
 
 	/**
 	 * Returns the index of the cell in a particular place in a Matrix.
-	 * @param row	the row (0 is first).
-	 * @param col	the column (0 is first).
+	 * @param row the row (0 is first).
+	 * @param col the column (0 is first).
 	 * @return the correct index of the data.
 	 */
 	protected int getDataIndex(int row, int col)
@@ -105,7 +105,7 @@ public class Matrix
 	}
 	
 	/**
-	 * Returns true if the dimensions of this Matrix are equal, false otherwise.
+	 * @return true if the dimensions of this Matrix are equal, false otherwise.
 	 */
 	public boolean isSquare()
 	{
@@ -113,7 +113,7 @@ public class Matrix
 	}
 
 	/**
-	 * Returns a copy of this Matrix.
+	 * @return a new copy of this Matrix.
 	 */
 	public Matrix copy()
 	{

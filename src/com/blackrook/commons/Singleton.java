@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ package com.blackrook.commons;
  * @since 2.17.0
  * @deprecated 2.20.0 You should be using/instantiating {@link SingletonManager}s.
  */
+@Deprecated
 public final class Singleton
 {
 	/** Singleton context for beans not attached to the application context. */
@@ -28,6 +29,7 @@ public final class Singleton
 	 * Gets and auto-casts an object instance.
 	 * The instance is created and stored if it doesn't exist.
 	 * The name used is the fully-qualified class name prefixed with "$$".
+	 * @param <T> the return object type.
 	 * @param clazz the class type of the object that should be returned.
 	 * @return a typecast object connected to the class.
 	 * @throws RuntimeException if instantiation cannot happen, either due to
@@ -41,6 +43,7 @@ public final class Singleton
 	/**
 	 * Gets and auto-casts an object instance.
 	 * The instance is created and stored if it doesn't exist.
+	 * @param <T> the return object type.
 	 * @param clazz the class type of the object that should be returned.
 	 * @param name the key name mapped, or to map to the instance.
 	 * @return a typecast object connected to the class and name.
@@ -54,6 +57,7 @@ public final class Singleton
 
 	/**
 	 * Gets and auto-casts an object instance.
+	 * @param <T> the return object type.
 	 * @param clazz the class type of the object that should be returned.
 	 * @param name the key name mapped, or to map to the instance.
 	 * @param create if true, instantiate this class (via {@link Reflect#create(Class)}) if it doesn't exist.

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -48,6 +48,7 @@ public class CountMap<T extends Object> extends HashMap<T, Integer>
 	/**
 	 * Returns the count of an object.
 	 * If this does not contain the object, then this returns 0.
+	 * @param object the object.
 	 * @return the current count of the object, or 0 if the object was not added.
 	 */
 	public int getCount(T object)
@@ -100,6 +101,7 @@ public class CountMap<T extends Object> extends HashMap<T, Integer>
 	 * Subtracts an amount from the count of an object.
 	 * If the count is 0 after this runs, the object instance is removed.
 	 * @param object the object to remove.
+	 * @param amount the amount to remove.
 	 * @return the actual amount taken, doesn't always equal amount.
 	 */
 	public int take(T object, int amount)

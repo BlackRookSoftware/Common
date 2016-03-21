@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -282,6 +282,10 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 
 	/**
 	 * Search using a key.
+	 * @param key the key to search for.
+	 * @param includeEncountered if true, include all visited nodes in the result.
+	 * @param includeDescendants if true, include all descendants after the ending node in the result.
+	 * @return the result of the search.
 	 */
 	protected Result<ObjectPair<K, V>, S> searchByKey(K key, boolean includeEncountered, boolean includeDescendants)
 	{
@@ -302,7 +306,7 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 	}
 
 	@Override
-	public final boolean equalityMethod(ObjectPair<K, V> object1, ObjectPair<K, V> object2)
+	protected final boolean equalityMethod(ObjectPair<K, V> object1, ObjectPair<K, V> object2)
 	{
 		if (object1 == null && object2 != null)
 			return false;
@@ -313,8 +317,14 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 		return equalityMethodForKey(object1.getKey(), object2.getKey());
 	}
 
-	@Override
-	public boolean equalityMethodForKey(K key1, K key2)
+	/**
+	 * Determines if two keys are equal. This can be implemented differently
+	 * in case a map has a different concept of what keys are considered equal.
+	 * @param key1 the first key.
+	 * @param key2 the second key.
+	 * @return true if the keys are considered equal, false otherwise.
+	 */
+	protected boolean equalityMethodForKey(K key1, K key2)
 	{
 		if (key1 == null && key2 != null)
 			return false;

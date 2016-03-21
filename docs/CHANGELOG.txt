@@ -3,17 +3,21 @@ Commons (C) Black Rook Software, All rights reserved.
 Slated for 2.21.0
 =================
 
-- Updated: Copyright clauses for 2015.
+NOTE: Next version will be removing deprecated packages and classes!
+
+- Changed: Major javadoc fixes.
+- Updated: Copyright clauses for 2016.
 - Added: com.blackrook.commons.index package for indexing.
 - Deprecated: The entire com.blackrook.commons.spatialhash package in favor of
   a Model-View approach, in com.blackrook.commons.index.
+- Deprecated: AbstractGrid and com.blackrook.commons.grid.
 - Added: Addt'l methods to Vect2D, Vect2F for setting vector components.
 - Added: Addt'l convenience methods to LoggingFactory.
 - Added: a series of vector/line calculations. The Tuple* classes point to 
   these methods now for relevant calculations.
 - Added: Reflect.getPublicFields(Object, boolean) for excluding static members.
 - Changed: Reflect.getEnumInstance() is now public.
-- Changed: Reflect.createForType(...) can now handing converting Enums to other 
+- Changed: Reflect.createForType(...) can now handle converting Enums to other 
   types.
 - Added: AbstractTrie.clear().
 - Added: HashedHashMap.containsValue(K, V).
@@ -27,6 +31,8 @@ Slated for 2.21.0
 - Added: Common.isNull(Object, Object).
 - Added: Sorting/searching functions in AbstractVector. Changed functions in
   ComparatorList to use them.
+- Changed: Internalized equality methods (reduced visibility) for hashing-type
+  data structures. There really was no purpose for making them "public".
 
 Changed in 2.20.2
 =================

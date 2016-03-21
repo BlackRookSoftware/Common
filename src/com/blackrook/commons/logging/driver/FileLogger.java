@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ public class FileLogger implements LoggingDriver
 	/**
 	 * Creates a new file logger the writes to a specific file.
 	 * @param logFile the file to write to.
+	 * @throws IOException if the file could not be opened.
 	 */
 	public FileLogger(File logFile) throws IOException
 	{
@@ -44,6 +45,7 @@ public class FileLogger implements LoggingDriver
 	 * Sets the log file to a new file.
 	 * The previous file is closed.
 	 * @param logFile the file to write to.
+	 * @throws IOException if the file could not be opened.
 	 */
 	protected void setFile(File logFile) throws IOException
 	{
@@ -66,8 +68,9 @@ public class FileLogger implements LoggingDriver
 	 * Called after the writer to the previous file is closed
 	 * on a file switch via {@link #setFile(File)}
 	 * @param closeFile the file that was closed.
+	 * @throws IOException if the file could not be closed cleanly.
 	 */
-	protected void closeFile(File closeFile)
+	protected void closeFile(File closeFile) throws IOException
 	{
 		// Does nothing by default.
 	}

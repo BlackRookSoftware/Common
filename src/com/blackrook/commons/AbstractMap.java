@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -19,15 +19,13 @@ public interface AbstractMap<K extends Object, V extends Object> extends Abstrac
 	/**
 	 * Associates a key to a value in this map.
 	 * The policy of "put" is that if it an object already in the set, its value is replaced with the new value. 
-	 * Uses {@link #equalityMethodForKey(Object, Object)} to determine key equality.
 	 * @param key the map key.
 	 * @param value the corresponding value.
 	 */
 	public void put(K key, V value);
 
 	/**
-	 * Checks if an object (by equality) is present in the structure, according to
-	 * {@link #equalityMethod(Object, Object)}.
+	 * Checks if an object (by equality) is present in the structure.
 	 * @param key the object to use for checking presence.
 	 * @return true if it is in the map, false otherwise.
 	 */
@@ -47,14 +45,5 @@ public interface AbstractMap<K extends Object, V extends Object> extends Abstrac
 	 * @return the corresponding value if it was removed from the map, null otherwise.
 	 */
 	public V removeUsingKey(K key);
-	
-	/**
-	 * Determines if two keys are equal. This can be implemented differently
-	 * in case a map has a different concept of what keys are considered equal.
-	 * @param key1 the first key.
-	 * @param key2 the second key.
-	 * @return true if the keys are considered equal, false otherwise.
-	 */
-	public boolean equalityMethodForKey(K key1, K key2);
 	
 }

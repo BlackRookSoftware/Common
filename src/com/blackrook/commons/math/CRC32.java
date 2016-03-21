@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public class CRC32
 	/**
 	 * Creates a new CRC32 calculator using a
 	 * specific CRC32 polynomial.
-	 * @param polynomial	the polynomial to use.
+	 * @param polynomial the polynomial to use.
 	 */
 	public CRC32(int polynomial)
 	{
@@ -64,9 +64,9 @@ public class CRC32
 	/**
 	 * Generates a CRC32 checksum for a set of bytes.
 	 * This will generate a checksum for all of the bytes in the array.
-	 * @param startCRC	the starting checksum value.
-	 * @param buf		the bytes to generate the checksum for.
-	 * @return			a CRC32 checksum of the desired bytes.
+	 * @param startCRC the starting checksum value.
+	 * @param buf the bytes to generate the checksum for.
+	 * @return a CRC32 checksum of the desired bytes.
 	 */
 	public int createCRC32(int startCRC, byte[] buf)
 	{
@@ -77,8 +77,8 @@ public class CRC32
 	 * Generates a CRC32 checksum for a set of bytes.
 	 * Uses a starting checksum value of -1 (0xffffffff).
 	 * This will generate a checksum for all of the bytes in the array.
-	 * @param buf	the bytes to generate the checksum for.
-	 * @return		a CRC32 checksum of the desired bytes.
+	 * @param buf the bytes to generate the checksum for.
+	 * @return a CRC32 checksum of the desired bytes.
 	 */
 	public int createCRC32(byte[] buf)
 	{
@@ -88,9 +88,9 @@ public class CRC32
 	/**
 	 * Generates a CRC32 checksum for a set of bytes.
 	 * Uses a starting checksum value of -1 (0xffffffff).
-	 * @param buf	the bytes to generate the checksum for.
-	 * @param len	the amount of bytes in the array to use.
-	 * @return		a CRC32 checksum of the desired bytes.
+	 * @param buf the bytes to generate the checksum for.
+	 * @param len the amount of bytes in the array to use.
+	 * @return a CRC32 checksum of the desired bytes.
 	 */
 	public int createCRC32(byte[] buf, int len)
 	{
@@ -99,10 +99,10 @@ public class CRC32
 
 	/**
 	 * Generates a CRC32 checksum for a set of bytes.
-	 * @param startCRC	the starting checksum value.
-	 * @param buf		the bytes to generate the checksum for.
-	 * @param len		the amount of bytes in the array to use.
-	 * @return			a CRC32 checksum of the desired bytes.
+	 * @param startCRC the starting checksum value.
+	 * @param buf the bytes to generate the checksum for.
+	 * @param len the amount of bytes in the array to use.
+	 * @return a CRC32 checksum of the desired bytes.
 	 */
 	public int createCRC32(int startCRC, byte[] buf, int len)
 	{
@@ -119,7 +119,7 @@ public class CRC32
 	}
 
 	/**
-	 * Returns the polynomial used for this CRC object.
+	 * @return the polynomial used for this CRC object.
 	 */
 	public int getPolynomial()
 	{

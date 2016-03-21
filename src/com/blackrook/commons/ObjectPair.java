@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -31,19 +31,22 @@ public class ObjectPair<K extends Object, V extends Object>
 		this.value = value;
 	}
 	
-	/** Returns the key. */
+	/** @return the key. */
 	public K getKey()
 	{
 		return key;
 	}
 
-	/** Returns the value. */
+	/** @return the value. */
 	public V getValue()
 	{
 		return value;
 	}
 
-	/** Sets the value to a new value. */
+	/** 
+	 * Sets the value to a new value.
+	 * @param value the value of the new value.
+	 */
 	public void setValue(V value)
 	{
 		this.value = value;

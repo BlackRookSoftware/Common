@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ public class CaseInsensitiveComparator implements Comparator<String>
 	/** The class instance. */
 	private static CaseInsensitiveComparator INSTANCE = new CaseInsensitiveComparator();
 	
-	/** Returns the only instance of this class. */
+	/** @return the only instance of this class. */
 	public static CaseInsensitiveComparator getInstance()
 	{
 		return INSTANCE;

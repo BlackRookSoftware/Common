@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -78,8 +78,7 @@ public class SparseGridMap<T extends Object> extends AbstractGrid<T> implements 
 	}
 
 	/**
-	 * Returns the full width of the grid or SIZE_UNSPECIFIED
-	 * if the width is not specified or valid.
+	 * @return the full width of the grid or SIZE_UNSPECIFIED if the width is not specified or valid.
 	 */
 	public int getWidth()
 	{
@@ -87,8 +86,7 @@ public class SparseGridMap<T extends Object> extends AbstractGrid<T> implements 
 	}
 
 	/**
-	 * Returns the full height of the grid or SIZE_UNSPECIFIED
-	 * if the height is not specified or valid.
+	 * @return the full height of the grid or SIZE_UNSPECIFIED if the height is not specified or valid.
 	 */
 	public int getHeight()
 	{
@@ -96,7 +94,7 @@ public class SparseGridMap<T extends Object> extends AbstractGrid<T> implements 
 	}
 
 	/**
-	 * Returns 1.
+	 * @return 1.
 	 */
 	public int getDepth()
 	{
@@ -105,6 +103,8 @@ public class SparseGridMap<T extends Object> extends AbstractGrid<T> implements 
 
 	/**
 	 * Tests if a certain point is in the grid.
+	 * @param x the grid position x.
+	 * @param y the grid position y.
 	 * @return true if so, false if not.
 	 */
 	public boolean isInGrid(int x, int y)
@@ -114,9 +114,9 @@ public class SparseGridMap<T extends Object> extends AbstractGrid<T> implements 
 
 	/**
 	 * Sets an object at a particular part of the grid.
-	 * @param x		the grid position x to set info.
-	 * @param y		the grid position y to set info.
-	 * @param object	the object to set.
+	 * @param x the grid position x to set info.
+	 * @param y the grid position y to set info.
+	 * @param object the object to set.
 	 */
 	public void set(int x, int y, T object)
 	{
@@ -130,8 +130,9 @@ public class SparseGridMap<T extends Object> extends AbstractGrid<T> implements 
 
 	/**
 	 * Gets the object at a particular part of the grid.
-	 * @param x	the grid position x to set info.
-	 * @param y	the grid position y to set info.
+	 * @param x	the grid position x to get info.
+	 * @param y	the grid position y to get info.
+	 * @return the object at (x, y) or null if no object.
 	 */
 	public T get(int x, int y)
 	{

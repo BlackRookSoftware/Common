@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -100,7 +100,7 @@ public abstract class AbstractChainedHash<P extends Object> extends AbstractArra
 	}
 
 	/**
-	 * Returns true if the table needs to be rehashed.
+	 * @return true if the table needs to be rehashed, false otherwise.
 	 */
 	protected boolean rehashCheck()
 	{
@@ -117,8 +117,14 @@ public abstract class AbstractChainedHash<P extends Object> extends AbstractArra
 		return object.hashCode();
 	}
 
-	@Override
-	public boolean equalityMethod(P object1, P object2)
+	/**
+	 * Determines if the objects are equal. This can be implemented differently
+	 * in case a data structure has a different concept of what is considered equal.
+	 * @param object1 the first object.
+	 * @param object2 the second object.
+	 * @return true if the keys are considered equal, false otherwise.
+	 */
+	protected boolean equalityMethod(P object1, P object2)
 	{
 		if (object1 == null && object2 != null)
 			return false;
@@ -130,8 +136,9 @@ public abstract class AbstractChainedHash<P extends Object> extends AbstractArra
 	}
 	
 	/**
-	 * Returns the index at which an object will be added
-	 * to the hash table.
+	 * Finds the appropriate slot index for an object.
+	 * @param object the object to use. 
+	 * @return the index at which an object will be added/searched for in the hash.
 	 */
 	protected int getTableIndexFor(P object)
 	{

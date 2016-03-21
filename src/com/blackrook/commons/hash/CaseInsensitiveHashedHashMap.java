@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -77,7 +77,8 @@ public class CaseInsensitiveHashedHashMap<V extends Object> extends CaseInsensit
 	 * @param rehashRatio the ratio of capacity/tablesize. if this ratio is exceeded, 
 	 * the table's capacity is expanded, and the table is rehashed.
 	 * @param hashCapacity initial capacity of the new hashes in this map.
-	 * @param hashRehashRatio
+	 * @param hashRehashRatio the ratio of capacity/tablesize of the new hashes in this map. if this ratio is exceeded, 
+	 * the table's capacity is expanded, and the table is rehashed.
 	 * @throws IllegalArgumentException if capacity is negative or ratio is 0 or less.
 	 */
 	public CaseInsensitiveHashedHashMap(int capacity, float rehashRatio, int hashCapacity, float hashRehashRatio)

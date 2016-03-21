@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import com.blackrook.commons.hash.HashMap;
  * an index. Changes to the indices of the stored objects trigger re-mappings
  * of the objects that shift positions.
  * <p>
- * Map lookups are by hash, so they are O(c), c = longest chain in map. O(c) < O(n);
+ * Map lookups are by hash, so they are O(c), c = longest chain in map. O(c) &lt; O(n);
  * @author Matthew Tropiano
  * @param <T> the type of Object that this vector contains.
  * @param <K> the mapped key type that this vector uses to map one object to an index.

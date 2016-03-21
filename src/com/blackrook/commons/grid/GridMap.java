@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ public class GridMap<T extends Object> extends AbstractGrid<T>
 	}
 	
 	/**
-	 * Returns the full width of the grid.
+	 * @return the full width of the grid.
 	 */
 	public int getWidth()
 	{
@@ -51,7 +51,7 @@ public class GridMap<T extends Object> extends AbstractGrid<T>
 	}
 
 	/**
-	 * Returns the full height of the grid.
+	 * @return the full height of the grid.
 	 */
 	public int getHeight()
 	{
@@ -59,7 +59,7 @@ public class GridMap<T extends Object> extends AbstractGrid<T>
 	}
 
 	/**
-	 * Returns 1.
+	 * @return <code>1</code>.
 	 */
 	public int getDepth()
 	{
@@ -69,6 +69,8 @@ public class GridMap<T extends Object> extends AbstractGrid<T>
 	/**
 	 * Tests if a certain point is in the grid.
 	 * Takes grid wrapping/clamping into consideration.
+	 * @param x the grid position x.
+	 * @param y the grid position y.
 	 * @return true if so, false if not.
 	 */
 	public boolean isInGrid(int x, int y)
@@ -81,9 +83,9 @@ public class GridMap<T extends Object> extends AbstractGrid<T>
 	/**
 	 * Sets an object at a particular part of the grid.
 	 * Takes grid wrapping/clamping into consideration.
-	 * @param x		the grid position x to set info.
-	 * @param y		the grid position y to set info.
-	 * @param object	the object to set.
+	 * @param x the grid position x to set info.
+	 * @param y the grid position y to set info.
+	 * @param object the object to set.
 	 */
 	public void set(int x, int y, T object)
 	{
@@ -92,8 +94,8 @@ public class GridMap<T extends Object> extends AbstractGrid<T>
 
 	/**
 	 * Gets the object at a particular part of the grid.
-	 * @param x	the grid position x to set info.
-	 * @param y	the grid position y to set info.
+	 * @param x	the grid position x to get info.
+	 * @param y	the grid position y to get info.
 	 * @return the object or null if no object is at that position or off the grid.
 	 */
 	@SuppressWarnings("unchecked")

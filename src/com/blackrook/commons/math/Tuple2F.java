@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -17,34 +17,36 @@ public abstract class Tuple2F extends Tuple1F
 	public float y;
 
 	/**
-	 * Creates a new two-dimensional point, with (0,0) as its value. 
+	 * Creates a new two-dimensional point, with (0, 0) as its value. 
 	 */
 	public Tuple2F()
 	{
-		this(0,0);
+		this(0, 0);
 	}
 
 	/**
-	 * Creates a copy of another Tuple2D.
+	 * Creates a copy of another Tuple2F.
+	 * @param v the source tuple.
 	 */
 	public Tuple2F(Tuple2F v)
 	{
-		this(v.x,v.y);
+		this(v.x, v.y);
 	}
 
 	/**
-	 * Creates a new two-dimensional point, from a Tuple1D.
+	 * Creates a new two-dimensional point, from a Tuple1F.
 	 * The missing dimensions are filled with zeroes.
+	 * @param v the source tuple.
 	 */
 	public Tuple2F(Tuple1F v)
 	{
-		this(v.x,0);
+		this(v.x, 0);
 	}
 
 	/**
 	 * Creates a new two-dimensional tuple. 
-	 * @param x		the initial x-coordinate value of this tuple.
-	 * @param y		the initial y-coordinate value of this tuple.
+	 * @param x the initial x-coordinate value of this tuple.
+	 * @param y the initial y-coordinate value of this tuple.
 	 */
 	public Tuple2F(float x, float y)
 	{
@@ -54,8 +56,8 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Sets the values of this tuple.
-	 * @param x		the x value.
-	 * @param y		the y value.
+	 * @param x the x value.
+	 * @param y the y value.
 	 */
 	public void set(float x, float y)
 	{
@@ -65,6 +67,7 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Sets the values of this tuple.
+	 * @param t the source tuple.
 	 */
 	public void set(Tuple2F t)
 	{
@@ -72,17 +75,14 @@ public abstract class Tuple2F extends Tuple1F
 		y = t.y;
 	}
 
-	/**
-	 * Returns the length of this tuple.
-	 */
+	@Override
 	public float length()
 	{
 		return (float)RMath.getVectorLength(x, y);
 	}
 
 	/**
-	 * Returns the squared length of this tuple
-	 * (no square root step at the end).
+	 * @return the squared length of this tuple (no square root step at the end).
 	 */
 	public float squareLength()
 	{
@@ -91,16 +91,15 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Yields the dot product of a Tuple2D with this one.
-	 * @param v		the tuple to use with this one.
+	 * @param v the tuple to use with this one.
+	 * @return the dot product.
 	 */
-	public float dot(Tuple2D v)
+	public float dot(Tuple2F v)
 	{
 		return (float)RMath.getVectorDotProduct(x, y, v.x, v.y);
 	}
 
-	/**
-	 * Returns true if this tuple is a zero tuple, false otherwise.
-	 */
+	@Override
 	public boolean isZero()
 	{
 		return x == 0 && y == 0;
@@ -117,42 +116,32 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Adds another Tuple2D to this one. This tuple's data is replaced by the result.
-	 * @param v		the tuple to add to this one.
+	 * @param v	the tuple to add to this one.
 	 */
 	public void add(Tuple2F v)
 	{
 		add(this,v,this);
 	}
 
-	/**
-	 * Scales this tuple to a certain length.
-	 * @param len	the new length of the tuple.
-	 */
+	@Override
 	public void setLength(float len)
 	{
 		setLength(this,len,this);
 	}
 
-	/**
-	 * Negates this tuple.
-	 */
+	@Override
 	public void negate()
 	{
 		negate(this,this);
 	}
 
-	/**
-	 * Turns this tuple into a unit tuple of length 1, while keeping direction intact.
-	 */
+	@Override
 	public void normalize()
 	{
 		normalize(this,this);
 	}
 
-	/**
-	 * Scales this tuple on all axes.
-	 * @param s	scalar factor. 
-	 */
+	@Override
 	public void scale(float s)
 	{
 		scale(s,this,this);
@@ -160,8 +149,8 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Scales this tuple.
-	 * @param sx	scalar factor for x-axis. 
-	 * @param sy	scalar factor for y-axis. 
+	 * @param sx scalar factor for x-axis. 
+	 * @param sy scalar factor for y-axis. 
 	 */
 	public void scale(float sx, float sy)
 	{
@@ -209,7 +198,9 @@ public abstract class Tuple2F extends Tuple1F
 	}
 
 	/**
-	 * Returns positive if greater, negative if less, zero if equal.
+	 * Compares tuple components.
+	 * @param p the other tuple.
+	 * @return a positive number if greater, negative if less, zero if equal.
 	 */
 	public float compareTo(Tuple2F p)
 	{
@@ -217,7 +208,9 @@ public abstract class Tuple2F extends Tuple1F
 	}
 
 	/**
-	 * Returns true if the target tuple has the same X- and Y-component value as this one. 
+	 * Returns true if the target has the same component values as this one. 
+	 * @param v the other tuple.
+	 * @return true if so, false if not.
 	 */
 	public boolean equals(Tuple2F v)
 	{
@@ -225,55 +218,32 @@ public abstract class Tuple2F extends Tuple1F
 	}
 
 	/**
-	 * Returns the distance in units from this tuple to another.
+	 * Gets the distance in units from this tuple to another.
+	 * @param tuple the other tuple.
+	 * @return the distance.
 	 */
-	public float getDistanceTo(Tuple2F point)
+	public float getDistanceTo(Tuple2F tuple)
 	{
-		return (float)Math.sqrt(getSquareDistanceTo(point));
+		return (float)Math.sqrt(getSquareDistanceTo(tuple));
 	}
 
 	/**
-	 * Returns the square distance in units from this tuple to another
-	 * (no square root step at the end).
+	 * Gets the square distance in units from this tuple to another (no square root step at the end).
+	 * @param tuple the other tuple.
+	 * @return the squared distance.
 	 */
-	public float getSquareDistanceTo(Tuple2F point)
+	public float getSquareDistanceTo(Tuple2F tuple)
 	{
-		float dx = point.x - x;
-		float dy = point.y - y;
+		float dx = tuple.x - x;
+		float dy = tuple.y - y;
 		return dx*dx + dy*dy;
 	}
 
 	/**
-	 * Gets the left-hand normal of this tuple.
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
-	 */
-	public static void leftNormal(Tuple2F in, Tuple2F out)
-	{
-		float newx = -in.y;
-		float newy = in.x;
-		out.x = newx;
-		out.y = newy;
-	}
-
-	/**
-	 * Gets the right-hand normal of this tuple.
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
-	 */
-	public static void rightNormal(Tuple2F in, Tuple2F out)
-	{
-		float newx = in.y;
-		float newy = -in.x;
-		out.x = newx;
-		out.y = newy;
-	}
-
-	/**
-	 * Projects this tuple onto another tuple.
-	 * @param source	the source tuple.
-	 * @param target	the target tuple.
-	 * @param out		the output tuple.
+	 * Projects a tuple onto another tuple.
+	 * @param source the source tuple.
+	 * @param target the target tuple.
+	 * @param out the output tuple.
 	 */
 	public static void projectOnto(Tuple2F source, Tuple2F target, Tuple2F out)
 	{
@@ -288,9 +258,9 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Adds two tuples and puts the result into a third.
-	 * @param v1	the first tuple.
-	 * @param v2	the second tuple.
-	 * @param out	the output tuple.
+	 * @param v1 the first tuple.
+	 * @param v2 the second tuple.
+	 * @param out the output tuple.
 	 */
 	public static void add(Tuple2F v1, Tuple2F v2, Tuple2F out)
 	{
@@ -300,9 +270,9 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Scales a tuple to a certain length.
-	 * @param in	the input tuple.
-	 * @param len	the new length of the tuple.
-	 * @param out	the output tuple.
+	 * @param in the input tuple.
+	 * @param len the new length of the tuple.
+	 * @param out the output tuple.
 	 */
 	public static void setLength(Tuple2F in, float len, Tuple2F out)
 	{
@@ -315,8 +285,8 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Negates a tuple. Puts result in the output tuple.
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
+	 * @param in the input tuple.
+	 * @param out the output tuple.
 	 */
 	public static void negate(Tuple2F in, Tuple2F out)
 	{
@@ -326,8 +296,8 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Turns this tuple into a unit tuple of length 1, while keeping direction intact.
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
+	 * @param in the input tuple.
+	 * @param out the output tuple.
 	 */
 	public static void normalize(Tuple2F in, Tuple2F out)
 	{
@@ -338,9 +308,9 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Scales this tuple on all axes.
-	 * @param s		scalar factor. 
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
+	 * @param s scalar factor. 
+	 * @param in the input tuple.
+	 * @param out the output tuple.
 	 */
 	public static void scale(float s, Tuple2F in, Tuple2F out)
 	{
@@ -350,10 +320,10 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**	
 	 * Scales this tuple.
-	 * @param sx	scalar factor for x-axis. 
-	 * @param sy	scalar factor for y-axis. 
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
+	 * @param sx scalar factor for x-axis. 
+	 * @param sy scalar factor for y-axis. 
+	 * @param in the input tuple.
+	 * @param out the output tuple.
 	 */
 	public static void scale(float sx, float sy, Tuple2F in, Tuple2F out)
 	{
@@ -362,10 +332,36 @@ public abstract class Tuple2F extends Tuple1F
 	}
 
 	/**
+	 * Gets the left-hand normal of this tuple.
+	 * @param in the input tuple.
+	 * @param out the output tuple.
+	 */
+	public static void leftNormal(Tuple2F in, Tuple2F out)
+	{
+		float newx = -in.y;
+		float newy = in.x;
+		out.x = newx;
+		out.y = newy;
+	}
+
+	/**
+	 * Gets the right-hand normal of this tuple.
+	 * @param in the input tuple.
+	 * @param out the output tuple.
+	 */
+	public static void rightNormal(Tuple2F in, Tuple2F out)
+	{
+		float newx = in.y;
+		float newy = -in.x;
+		out.x = newx;
+		out.y = newy;
+	}
+
+	/**
 	 * Rotates this tuple around the X axis.
-	 * @param radians	 the angle in radians to rotate.
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
+	 * @param radians the angle in radians to rotate.
+	 * @param in the input tuple.
+	 * @param out the output tuple.
 	 */
 	public static void rotateX(float radians, Tuple2F in, Tuple2F out)
 	{
@@ -375,9 +371,9 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Rotates this tuple around the Y axis. 
-	 * @param radians	 the angle in radians to rotate.
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
+	 * @param radians the angle in radians to rotate.
+	 * @param in the input tuple.
+	 * @param out the output tuple.
 	 */
 	public static void rotateY(float radians, Tuple2F in, Tuple2F out)
 	{
@@ -387,9 +383,9 @@ public abstract class Tuple2F extends Tuple1F
 
 	/**
 	 * Rotates this tuple around the Z axis. 
-	 * @param radians	 the angle in radians to rotate.
-	 * @param in	the input tuple.
-	 * @param out	the output tuple.
+	 * @param radians the angle in radians to rotate.
+	 * @param in the input tuple.
+	 * @param out the output tuple.
 	 */
 	public static void rotateZ(float radians, Tuple2F in, Tuple2F out)
 	{
@@ -398,7 +394,5 @@ public abstract class Tuple2F extends Tuple1F
 		out.x = newx;
 		out.y = newy;
 	}
-	
-	
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 	 * Checks if an object is present in the list via testing
 	 * if it is equal to the others. If c is null, this returns false.
 	 * Runs at O(n) time.
+	 * @param object the object reference.
 	 * @return true if it is in the list, false otherwise.
 	 */
 	public boolean contains(T object)
@@ -64,22 +65,23 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 	/**
      * Adds an object to the list.
      * Time is O(1).
-     * If o is null, nothing happens.
+     * If object is null, nothing happens.
+	 * @param object the object to add.
      */
-    public void add(T o)
+    public void add(T object)
     {
-    	if (o == null)
+    	if (object == null)
     		return;
     	
         if (head == null)
         {
-        	Node<T> n = new Node<T>(o,null);
+        	Node<T> n = new Node<T>(object,null);
         	head = n;
             tail = n;
         }
         else
         {
-        	tail.next = new Node<T>(o, null);
+        	tail.next = new Node<T>(object, null);
             tail = tail.next;
         }
         
@@ -89,17 +91,20 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
     /**
      * Adds an object at a specific place (index) in the list.
      * If n is greater or equal to the size, it is added to the end.
+     * If object is null, nothing happens.
      * Runs at O(n) time, where n is the minimum of the index. and the list size.
+     * @param index the target index.
+	 * @param object the object to add.
      */
-    public void addAt(int n, T object)
+    public void addAt(int index, T object)
     {
-    	if (object == null || n < 0)
+    	if (object == null || index < 0)
     		return;
         
         int i = 0;
         Node<T> curr = head;
         Node<T> prev = null;
-        while (curr != null && i < n)
+        while (curr != null && i < index)
         {
         	prev = curr;
             curr = curr.next;
@@ -122,26 +127,30 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
     /**
      * Adds a series of objects to the list in the order that they are listed.
      * Does not add null objects.
+	 * @param objects the objects to add.
+	 * @see #add(Object)
      */
     @SuppressWarnings("unchecked")
-	public void addAll(T ... object)
+	public void addAll(T ... objects)
     {
-    	for (int i = 0; i < object.length; i++)
-    		add(object[i]);
+    	for (int i = 0; i < objects.length; i++)
+    		add(objects[i]);
     }
 
 	/**
      * Replaces an object at a place in the list with another.
      * Does nothing if n refers to an index outside of list bounds.
-     * Runs at O(n) time. If o is null, nothing happens.
+     * Runs at O(n) time. If object is null, nothing happens.
+     * @param index the desired index.
+	 * @param object the object to add.
      */
-    public void set(int n, T object)
+    public void set(int index, T object)
     {
-        if (n < 0 || n >=size || object == null) return;
+        if (index < 0 || index >=size || object == null) return;
         
         int i = 0;
         Node<T> curr = head;
-        while (curr != null && i < n)
+        while (curr != null && i < index)
         {
             curr = curr.next;
             i++;
@@ -153,15 +162,16 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
     /**
      * Retrieves an object at a specific index in the list.
      * Runs in O(n) time.
-     * @return null if n refers to an index outside of list bounds, or the object otherwise.
+     * @param index the desired index.
+     * @return null if index refers to an index outside of list bounds, or the object at that index.
      */
-    public T get(int n)
+    public T get(int index)
     {
-        if (n < 0 || n >= size) return null;
+        if (index < 0 || index >= size) return null;
         
         int i = 0;
         Node<T> curr = head;
-        while (curr != null && i < n)
+        while (curr != null && i < index)
         {
             curr = curr.next;
             i++;
@@ -174,7 +184,9 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
      * Checks if an object is present in the list via testing
      * if it is equal to the obj1.
 	 * Runs at O(n) time. If obj1 or obj2 is null, nothing happens, and this returns false.
-     * @return true if the switch was made, false if obj1 wasn't in the list.
+	 * @param object1 the first object.
+	 * @param object2 the second object.
+     * @return true if the switch was made, false if object1 wasn't in the list.
      */
     public boolean change(T object1, T object2)
     {
@@ -196,7 +208,8 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
     /**
      * Removes an object in the list at a specific index.
      * Runs in O(n) time.
-     * @return the object, or null if n refers to an index outside of list bounds.
+     * @param index the desired index.
+     * @return the object, or null if index refers to an index outside of list bounds.
      */
     public T removeIndex(int index)
     {
@@ -226,7 +239,7 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
      * Removes a specific object in the list.
      * Runs in O(n) time. If c is null, this returns false.
      * @param object the object to search for.
-     * @return	true if removed, false otherwise.
+     * @return true if removed, false otherwise.
      */
     public boolean remove(T object)
     {
@@ -254,7 +267,10 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
     }
 
     /**
-     * Returns the top of the list.
+     * Gets the object at the beginning of the list.
+     * If empty, this returns null.
+     * Runs in O(1) time.
+     * @return the object at the beginning of the list, or null if the list is empty.
      */
     public T head()
     {
@@ -262,24 +278,23 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
     }
     
     /**
-     * Returns the end of the list.
+     * Gets the object at the end of the list.
+     * If empty, this returns null.
+     * Runs in O(1) time.
+     * @return the object at the end of the list, or null if the list is empty.
      */
     public T tail()
     {
     	return tail != null ? tail.data : null;
     }
-    
-    /**
-	 * Returns true if this list has no objects in it.
-	 */
+
+    @Override
 	public boolean isEmpty()
 	{
 		return size == 0;
 	}
 
-	/**
-     * Returns the amount of objects in the list.
-     */
+    @Override
     public int size()
     {
         return size;
@@ -287,8 +302,8 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
     
     /**
 	 * Returns all of the objects in this list into an array.
-	 * If the target array is smaller than the size of the list, 
-	 * an ArrayIndexOutOfBoundsException will occur.
+	 * @param out the output array.
+	 * @throws ArrayIndexOutOfBoundsException if the target array is smaller than the size of the list.
 	 */
 	public void toArray(T[] out)
 	{
@@ -301,9 +316,7 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 	    }
 	}
 
-	/**
-	 * Returns this list as a String.
-	 */
+	@Override
 	public String toString()
 	{
 	    StringBuilder out = new StringBuilder();
@@ -356,6 +369,8 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 	    
 	    /**
 	     * Creates a new node.
+	     * @param data the data object.
+	     * @param next the reference to the next node.
 	     */
 	    public Node(T data, Node<T> next)
 	    {
@@ -364,7 +379,7 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 	    }
 	
 	    /**
-	     * Returns the encapsulated data at this node.
+	     * @return the encapsulated data at this node.
 	     */
 	    public T getData()
 	    {
@@ -372,16 +387,14 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 		}
 
 	    /**
-	     * Returns the reference to the next node.
+	     * @return the reference to the next node.
 	     */
 		public Node<T> getNext()
 		{
 			return next;
 		}
-		
-		/**
-		 * Returns this list as a String.
-		 */
+
+		@Override
 		public String toString()
 		{
 			return data.toString();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -7,8 +7,10 @@
  ******************************************************************************/
 package com.blackrook.commons.math;
 
+import com.blackrook.commons.Common;
+
 /**
- * This is a 4x4 Matrix object.
+ * This is a 4x4 Matrix object that stores doubles.
  * 
  * Indices are in column-major order.
  * 
@@ -23,14 +25,9 @@ public class Matrix4D
 {
 	/** Identity Matrix in column-major form. */
 	protected static double[] IDENTITY = {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
-	/** Matrix for rotation work so that memory does not need to be reallocated. */
-	protected Matrix4D rotwork = new Matrix4D();
-	
-	private double[] SCRATCH_A = new double[16];
-	private double[] SCRATCH_B = new double[16];
-	
-	/** Matrix coordinate */
-	double[] mCoord;
+
+	/** Matrix coordinates. */
+	private double[] mCoord;
 	
 	/**
 	 * Constructs a new, blank 4x4 matrix.
@@ -41,7 +38,7 @@ public class Matrix4D
 	}
 	
 	/**
-	 * Returns a new 4x4 Identity Matrix.
+	 * @return a new 4x4 Identity Matrix.
 	 */
 	public static Matrix4D newIdentity()
 	{
@@ -60,6 +57,9 @@ public class Matrix4D
 	
 	/**
 	 * Sets this matrix to a translation matrix.
+	 * @param x the x-axis translation.
+	 * @param y the y-axis translation.
+	 * @param z the z-axis translation.
 	 */
 	public void setTranslation(double x, double y, double z)
 	{
@@ -71,10 +71,11 @@ public class Matrix4D
 
 	/**
 	 * Sets this matrix to a x-rotation matrix.
+	 * @param degrees degrees to rotate.
 	 */
-	public void setRotateX(double deg_x)
+	public void setRotateX(double degrees)
 	{
-		double angle = (deg_x*Math.PI)/180;
+		double angle = (degrees*Math.PI)/180;
 		setIdentity();
 		mCoord[5] = mCoord[10] = Math.cos(angle);
 		mCoord[6] = Math.sin(angle);
@@ -83,10 +84,11 @@ public class Matrix4D
 
 	/**
 	 * Sets this matrix to a y-rotation matrix.
+	 * @param degrees degrees to rotate.
 	 */
-	public void setRotateY(double deg_y)
+	public void setRotateY(double degrees)
 	{
-		double angle = (deg_y*Math.PI)/180;
+		double angle = (degrees*Math.PI)/180;
 		setIdentity();
 		mCoord[0] = mCoord[10] = Math.cos(angle);
 		mCoord[8] = Math.sin(angle);
@@ -95,10 +97,11 @@ public class Matrix4D
 	
 	/**
 	 * Sets this matrix to a z-rotation matrix.
+	 * @param degrees degrees to rotate.
 	 */
-	public void setRotateZ(double deg_z)
+	public void setRotateZ(double degrees)
 	{
-		double angle = (deg_z*Math.PI)/180;
+		double angle = (degrees*Math.PI)/180;
 		setIdentity();
 		mCoord[0] = mCoord[5] = Math.cos(angle);
 		mCoord[1] = Math.sin(angle);
@@ -107,39 +110,48 @@ public class Matrix4D
 	
 	/**
 	 * Sets this matrix to a rotation matrix.
+	 * @param degX degrees to rotate around the X axis.
+	 * @param degY degrees to rotate around the Y axis.
+	 * @param degZ degrees to rotate around the Z axis.
 	 */
-	public void setRotation(double deg_x, double deg_y, double deg_z)
+	public void setRotation(double degX, double degY, double degZ)
 	{
+		Cache c = Common.getLocal(Cache.class);
 		setIdentity();
-		rotwork.setRotateX(deg_x);
-		multiplyRight(rotwork);
-		rotwork.setRotateY(deg_y);
-		multiplyRight(rotwork);
-		rotwork.setRotateZ(deg_z);
-		multiplyRight(rotwork);
+		c.rotwork.setRotateX(degX);
+		multiplyRight(c.rotwork);
+		c.rotwork.setRotateY(degY);
+		multiplyRight(c.rotwork);
+		c.rotwork.setRotateZ(degZ);
+		multiplyRight(c.rotwork);
 	}
 
 	/**
 	 * Sets this matrix to a scaling matrix.
+	 * @param scaleX amount to scale along the X axis.
+	 * @param scaleY amount to scale along the Y axis.
+	 * @param scaleZ amount to scale along the Z axis.
 	 */
-	public void setScale(double scale_x, double scale_y, double scale_z)
+	public void setScale(double scaleX, double scaleY, double scaleZ)
 	{
 		setIdentity();
-		mCoord[0] = scale_x;
-		mCoord[5] = scale_y;
-		mCoord[10] = scale_z;
+		mCoord[0] = scaleX;
+		mCoord[5] = scaleY;
+		mCoord[10] = scaleZ;
 	}
 
 	/**
 	 * Sets this matrix to a scaling matrix, scaling all axes equally.
+	 * @param scalar amount to scale along the all axes.
 	 */
 	public void setScale(double scalar)
 	{
-		setScale(scalar,scalar,scalar);
+		setScale(scalar, scalar, scalar);
 	}
 
 	/**
 	 * Sets this matrix to a shearing matrix.
+	 * @param shear amount to shear.
 	 */
 	public void setShear(double shear)
 	{
@@ -149,9 +161,9 @@ public class Matrix4D
 
 	/**
 	 * Sets a position in this matrix to a value.
-	 * @param row	matrix row
-	 * @param col	matrix column
-	 * @param val	new value
+	 * @param row the desired matrix row.
+	 * @param col the desired matrix column.
+	 * @param val the new value to set.
 	 */
 	public void set(int row, int col, double val)
 	{
@@ -161,7 +173,8 @@ public class Matrix4D
 	/**
 	 * Sets all positions in this matrix to a set of values.
 	 * Please note that the values must be in column-major order.
-	 * @param values	new array of values.
+	 * The amount of values copied is values.length or 16, whichever's smaller.
+	 * @param values new array of values.
 	 */
 	public void set(double[] values)
 	{
@@ -170,51 +183,55 @@ public class Matrix4D
 	
 	/**
 	 * Sets a matrix index (column major index) to a value.
-	 * @param index		the column major wise index.
-	 * @param val		 new value
+	 * @param index the column-major-wise index.
+	 * @param value the value to set.
 	 */
-	public void set(int index, double val)
+	public void set(int index, double value)
 	{
-		mCoord[index] = val;
+		mCoord[index] = value;
 	}
 
 	/**
 	 * Multiplies this matrix with another.
 	 * <pre>this x m</pre>
+	 * @param matrix the multiplicand matrix.
 	 */
-	public void multiplyRight(Matrix4D m)
+	public void multiplyRight(Matrix4D matrix)
 	{
-		getDoubles(SCRATCH_A);
-		m.getDoubles(SCRATCH_B);
-		multMatrices(SCRATCH_A,SCRATCH_B,mCoord);
+		Cache c = Common.getLocal(Cache.class);
+		getDoubles(c.SCRATCH_A);
+		matrix.getDoubles(c.SCRATCH_B);
+		multMatrices(c.SCRATCH_A, c.SCRATCH_B, mCoord);
 	}
 	
 	/**
 	 * Multiplies this matrix with another.
 	 * <pre>m x this</pre>
+	 * @param matrix the multiplicand matrix.
 	 */
-	public void multiplyLeft(Matrix4D m)
+	public void multiplyLeft(Matrix4D matrix)
 	{
-		m.getDoubles(SCRATCH_A);
-		getDoubles(SCRATCH_B);
-		multMatrices(SCRATCH_A,SCRATCH_B,mCoord);
+		Cache c = Common.getLocal(Cache.class);
+		matrix.getDoubles(c.SCRATCH_A);
+		getDoubles(c.SCRATCH_B);
+		multMatrices(c.SCRATCH_A, c.SCRATCH_B, mCoord);
 	}
 	
 	/**
 	 * Sets this matrix's values up as a projection matrix, perspective arguments.
-	 * @param deg_fov		front of view angle in degrees.
-	 * @param aspectRatio	the aspect ratio, usually view width over view height.
-	 * @param zNear			the near clipping plane on the Z-Axis.
-	 * @param zFar			the far clipping plane on the Z-Axis.
+	 * @param degFOV front of view angle in degrees.
+	 * @param aspectRatio the aspect ratio, usually view width over view height.
+	 * @param zNear the near clipping plane on the Z-Axis.
+	 * @param zFar the far clipping plane on the Z-Axis.
 	 */
-	public void setPerspective(double deg_fov, double aspectRatio, double zNear, double zFar)
+	public void setPerspective(double degFOV, double aspectRatio, double zNear, double zFar)
 	{
-		double halfangle = ((deg_fov*Math.PI)/180)/2;
+		double halfangle = ((degFOV*Math.PI)/180)/2;
 		double fpn = zFar+zNear;
 		double nmf = zNear-zFar;
 		double cothalffov = Math.cos(halfangle)/Math.sin(halfangle);
+		
 		setIdentity();
-
 		mCoord[0] = cothalffov / aspectRatio;
 		mCoord[5] = cothalffov;
 		mCoord[10] = fpn / nmf;
@@ -225,12 +242,12 @@ public class Matrix4D
 	
 	/**
 	 * Sets this matrix's values up as a projection matrix, frustum projection.
-	 * @param left			the left clipping plane on the X-Axis.
-	 * @param right			the right clipping plane on the X-Axis.
-	 * @param bottom		the bottom clipping plane on the Y-Axis.
-	 * @param top			the upper clipping plane on the Y-Axis.
-	 * @param zNear			the near clipping plane on the Z-Axis.
-	 * @param zFar			the far clipping plane on the Z-Axis.
+	 * @param left the left clipping plane on the X axis.
+	 * @param right	 the right clipping plane on the X axis.
+	 * @param bottom the bottom clipping plane on the Y axis.
+	 * @param top the upper clipping plane on the Y axis.
+	 * @param zNear	the near clipping plane on the Z axis.
+	 * @param zFar the far clipping plane on the Z axis.
 	 */
 	public void setFrustum(double left, double right, double bottom, double top, double zNear, double zFar)
 	{
@@ -252,12 +269,12 @@ public class Matrix4D
 	
 	/**
 	 * Sets this matrix's values up as a projection matrix, orthographic projection.
-	 * @param left			the left clipping plane on the X-Axis.
-	 * @param right			the right clipping plane on the X-Axis.
-	 * @param bottom		the bottom clipping plane on the Y-Axis.
-	 * @param top			the upper clipping plane on the Y-Axis.
-	 * @param zNear			the near clipping plane on the Z-Axis.
-	 * @param zFar			the far clipping plane on the Z-Axis.
+	 * @param left the left clipping plane on the X axis.
+	 * @param right	 the right clipping plane on the X axis.
+	 * @param bottom the bottom clipping plane on the Y axis.
+	 * @param top the upper clipping plane on the Y axis.
+	 * @param zNear	the near clipping plane on the Z axis.
+	 * @param zFar the far clipping plane on the Z axis.
 	 */
 	public void setOrtho(double left, double right, double bottom, double top, double zNear, double zFar)
 	{
@@ -286,7 +303,7 @@ public class Matrix4D
 	}
 	
 	/**
-	 * Returns a reference to the double array that makes up this matrix.
+	 * @return a reference to the double array that makes up this matrix.
 	 * @since 2.0.1
 	 */
 	public double[] getArray()
@@ -295,18 +312,9 @@ public class Matrix4D
 	}
 	
 	/**
-	 * Returns a reference to the double array that makes up this matrix.
-	 * @deprecated As of 2.0.1, this has been deprecated, as the internals of this
-	 * class are now doubles, in keeping with the naming scheme.
-	 */
-	@Deprecated
-	public double[] getFloatRef()
-	{
-		return mCoord;
-	}
-	
-	/**
 	 * Returns the doubles that make up this matrix into a double array.
+	 * If the output array is shorter than 16, up to that amount of values are copied. 
+	 * @param out the output array.
 	 */
 	public void getDoubles(double[] out)
 	{
@@ -314,7 +322,7 @@ public class Matrix4D
 	}
 	
 	/**
-	 * Returns a copy of this Matrix.
+	 * @return a copy of this Matrix.
 	 */
 	public Matrix4D copy()
 	{
@@ -325,10 +333,26 @@ public class Matrix4D
 	
 	/**
 	 * Copies this Matrix into another.
+	 * @param target the target matrix to copy into.
 	 */
 	public void copyTo(Matrix4D target)
 	{
 		System.arraycopy(mCoord,0,target.mCoord,0,16);
+	}
+	
+	public static final class Cache
+	{
+		private Matrix4D rotwork;
+		private double[] SCRATCH_A;
+		private double[] SCRATCH_B;
+
+		public Cache()
+		{
+			rotwork = new Matrix4D();
+			SCRATCH_A = new double[16];
+			SCRATCH_B = new double[16];
+		}
+		
 	}
 	
 }

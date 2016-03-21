@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -21,7 +21,9 @@ public class SingletonManager
 	/** Singleton instance map. */
 	private HashMap<String, Object> instanceMap;
 
-	// Can't instantiate.
+	/**
+	 * Creates a single singleton manager.
+	 */
 	public SingletonManager() 
 	{
 		instanceMap = new HashMap<String, Object>();
@@ -31,24 +33,24 @@ public class SingletonManager
 	 * Gets and auto-casts an object instance.
 	 * The instance is created and stored if it doesn't exist.
 	 * The name used is the fully-qualified class name prefixed with "$$".
+	 * @param <T> the return object type.
 	 * @param clazz the class type of the object that should be returned.
 	 * @return a typecast object connected to the class.
-	 * @throws RuntimeException if instantiation cannot happen, either due to
-	 * a non-existent constructor or a non-visible constructor.
+	 * @throws RuntimeException if instantiation cannot happen, either due to a non-existent constructor or a non-visible constructor.
 	 */
 	public <T> T get(Class<T> clazz)
 	{
-		return get(clazz, "$$"+clazz.getName(), true);
+		return get(clazz, "$$"+clazz.getCanonicalName(), true);
 	}
 
 	/**
 	 * Gets and auto-casts an object instance.
 	 * The instance is created and stored if it doesn't exist.
+	 * @param <T> the return object type.
 	 * @param clazz the class type of the object that should be returned.
 	 * @param name the key name mapped, or to map to the instance.
 	 * @return a typecast object connected to the class and name.
-	 * @throws RuntimeException if instantiation cannot happen, either due to
-	 * a non-existent constructor or a non-visible constructor.
+	 * @throws RuntimeException if instantiation cannot happen, either due to a non-existent constructor or a non-visible constructor.
 	 */
 	public <T> T get(Class<T> clazz, String name)
 	{
@@ -57,12 +59,12 @@ public class SingletonManager
 
 	/**
 	 * Gets and auto-casts an object instance.
+	 * @param <T> the return object type.
 	 * @param clazz the class type of the object that should be returned.
 	 * @param name the key name mapped, or to map to the instance.
 	 * @param create if true, instantiate this class (via {@link Reflect#create(Class)}) if it doesn't exist.
 	 * @return a typecast object connected to the class and name, or null if it doesn't exist and wasn't created.
-	 * @throws RuntimeException if instantiation cannot happen, either due to
-	 * a non-existent constructor or a non-visible constructor.
+	 * @throws RuntimeException if instantiation cannot happen, either due to a non-existent constructor or a non-visible constructor.
 	 */
 	public <T> T get(Class<T> clazz, String name, boolean create)
 	{
@@ -85,7 +87,5 @@ public class SingletonManager
 		else
 			return clazz.cast(obj);
 	}
-
-	
 	
 }

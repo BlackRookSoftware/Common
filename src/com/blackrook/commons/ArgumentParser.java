@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -122,12 +122,13 @@ public final class ArgumentParser
 	}
 
 	/**
-	 * Returns the list of switch arguments associated with this switch.
+	 * Gets the list of switch arguments associated with this switch.
 	 * For example, if the command line was:
 	 * <pre>-get /home/gelatin +map 47 92</pre>
 	 * ...<code>getSwitchArgs("map")</code> would return <code>[47, 92]</code>.
 	 * <p>Do not enter in the name of the switch along with the prefix (use "help" instead of "--help");
 	 * @param switchName the name of the switch.
+	 * @return the array of switch arguments associated with this switch.
 	 */
 	public String[] getSwitchArgs(String switchName)
 	{
@@ -139,7 +140,7 @@ public final class ArgumentParser
 	}
 	
 	/**
-	 * Gets all arguments entered in without an associated switch.
+	 * @return the array of arguments entered in without an associated switch.
 	 */
 	public String[] getBaseArgs()
 	{
@@ -147,8 +148,9 @@ public final class ArgumentParser
 	}
 	
 	/**
-	 * Returns the table that stores all arguments that start with a specific prefix.
-	 * Returns null if the prefix is invalid.
+	 * Gets a reference to the table that stores all arguments that start with a specific prefix.
+	 * @param prefix the requested prefix.
+	 * @return a valid reference or null if the prefix is invalid.
 	 */
 	public CaseInsensitiveHashMap<String[]> getTableForPrefix(String prefix)
 	{

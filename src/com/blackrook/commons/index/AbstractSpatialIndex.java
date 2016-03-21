@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@ package com.blackrook.commons.index;
 import com.blackrook.commons.AbstractVector;
 import com.blackrook.commons.ResettableIterable;
 import com.blackrook.commons.ResettableIterator;
+import com.blackrook.commons.Sizable;
 import com.blackrook.commons.hash.Hash;
 
 /**
@@ -17,7 +18,7 @@ import com.blackrook.commons.hash.Hash;
  * @author Matthew Tropiano
  * @since 2.21.0
  */
-abstract class AbstractSpatialIndex<T extends Object> implements ResettableIterable<T>
+abstract class AbstractSpatialIndex<T extends Object> implements ResettableIterable<T>, Sizable
 {
 	/** List of all objects. */
 	private Hash<T> allObjects;
@@ -32,6 +33,10 @@ abstract class AbstractSpatialIndex<T extends Object> implements ResettableItera
 		this(1);
 	}
 
+	/**
+	 * Creates a spatial index with a set spatial resolution.
+	 * @param resolution the resoultion in arbitrary units.
+	 */
 	protected AbstractSpatialIndex(int resolution)
 	{
 		if (resolution <= 0)
@@ -48,7 +53,7 @@ abstract class AbstractSpatialIndex<T extends Object> implements ResettableItera
 	}
 
 	/**
-	 * Returns the spatial resolution of this grid. 
+	 * @return the spatial resolution of this grid. 
 	 */
 	public int getResolution()
 	{
@@ -108,12 +113,16 @@ abstract class AbstractSpatialIndex<T extends Object> implements ResettableItera
 		allObjects.clear();
 	}
 
-	/**
-	 * Returns the number of objects in this hash.
-	 */
+	@Override
 	public int size()
 	{
 		return allObjects.size();
+	}
+	
+	@Override
+	public boolean isEmpty() 
+	{
+		return size() == 0;
 	}
 
 	/**
@@ -128,7 +137,7 @@ abstract class AbstractSpatialIndex<T extends Object> implements ResettableItera
 	public abstract int getIntersections(T object, AbstractVector<? super T> output, int offset);
 
 	/**
-	 * Gets the start grid coordinate for the center, sweep, and width of an object's dimensions.
+	 * Gets the start grid coordinate for the center and width of an object's dimensions.
 	 * @param center the center of the object on an axis. 
 	 * @param halfbreadth the breadth of the object on an axis.
 	 * @param resolution the resolution of the grid.
@@ -141,7 +150,7 @@ abstract class AbstractSpatialIndex<T extends Object> implements ResettableItera
 	}
 
 	/**
-	 * Gets the end grid coordinate for the center, sweep, and width of an object's dimensions.
+	 * Gets the end grid coordinate for the center and width of an object's dimensions.
 	 * @param center the center of the object on an axis. 
 	 * @param halfbreadth the breadth of the object on an axis.
 	 * @param resolution the resolution of the grid.

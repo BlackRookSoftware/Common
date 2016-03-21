@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -48,8 +48,11 @@ public class Hash<T extends Object> extends AbstractChainedHash<T>
 	/**
 	 * Returns a new Hash that is the union of the objects in two hashes,
 	 * i.e. a set with all objects from both sets.
+	 * @param <T> the object type in the provided hash.
+	 * @param <H> the hash table that contains type T. 
 	 * @param set1 the first hash.
 	 * @param set2 the second hash.
+	 * @return a new hash set.
 	 * @since 2.20.0
 	 */
 	@SuppressWarnings("unchecked")
@@ -66,8 +69,11 @@ public class Hash<T extends Object> extends AbstractChainedHash<T>
 	/**
 	 * Returns a new Hash that is the intersection of the objects in two hashes,
 	 * i.e. the objects that are present in both sets.
+	 * @param <T> the object type in the provided hash.
+	 * @param <H> the hash table that contains type T. 
 	 * @param set1 the first hash.
 	 * @param set2 the second hash.
+	 * @return a new hash set.
 	 * @since 2.20.0
 	 */
 	@SuppressWarnings("unchecked")
@@ -89,8 +95,11 @@ public class Hash<T extends Object> extends AbstractChainedHash<T>
 	/**
 	 * Returns a new Hash that is the difference of the objects in two hashes,
 	 * i.e. the objects in the first set minus the objects in the second.
+	 * @param <T> the object type in the provided hash.
+	 * @param <H> the hash table that contains type T. 
 	 * @param set1 the first hash.
 	 * @param set2 the second hash.
+	 * @return a new hash set.
 	 * @since 2.20.0
 	 */
 	@SuppressWarnings("unchecked")
@@ -107,8 +116,11 @@ public class Hash<T extends Object> extends AbstractChainedHash<T>
 
 	/**
 	 * Returns a new Hash that is the union minus the intersection of the objects in two hashes.
+	 * @param <T> the object type in the provided hash.
+	 * @param <H> the hash table that contains type T. 
 	 * @param set1 the first hash.
 	 * @param set2 the second hash.
+	 * @return a new hash set.
 	 * @since 2.20.0
 	 */
 	@SuppressWarnings("unchecked")

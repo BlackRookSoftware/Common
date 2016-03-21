@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -59,7 +59,7 @@ public class IntGrid implements Grid
 	}
 	
 	/**
-	 * Returns the full width of the grid.
+	 * @return the full width of the grid.
 	 */
 	public int getWidth()
 	{
@@ -67,7 +67,7 @@ public class IntGrid implements Grid
 	}
 
 	/**
-	 * Returns the full height of the grid.
+	 * @return the full height of the grid.
 	 */
 	public int getHeight()
 	{
@@ -83,6 +83,7 @@ public class IntGrid implements Grid
 	/**
 	 * Sets one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the width axis.
+	 * @param type the wrapping type.
 	 */
 	public void setWidthWrapType(WrapType type)
 	{
@@ -92,6 +93,7 @@ public class IntGrid implements Grid
 	/**
 	 * Sets one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the height axis.
+	 * @param type the wrapping type.
 	 */
 	public void setHeightWrapType(WrapType type)
 	{
@@ -101,6 +103,7 @@ public class IntGrid implements Grid
 	/**
 	 * Sets one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the depth axis.
+	 * @param type the wrapping type.
 	 */
 	public void setDepthWrapType(WrapType type)
 	{
@@ -127,6 +130,8 @@ public class IntGrid implements Grid
 
 	/**
 	 * Tests if a certain point is in the defined grid.
+	 * @param x the grid position x.
+	 * @param y the grid position y.
 	 * @return true if so, false if not.
 	 */
 	public boolean isInGrid(int x, int y)
@@ -136,9 +141,9 @@ public class IntGrid implements Grid
 
 	/**
 	 * Sets a code at a particular part of the grid.
-	 * @param x		the grid position x to set info.
-	 * @param y		the grid position y to set info.
-	 * @param code	the code to set.
+	 * @param x the grid position x to set info.
+	 * @param y the grid position y to set info.
+	 * @param code the code to set.
 	 */
 	public void setCode(int x, int y, int code)
 	{
@@ -146,9 +151,10 @@ public class IntGrid implements Grid
 	}
 
 	/**
-	 * Sets the code at a particular part of the grid.
-	 * @param x	the grid position x to set info.
-	 * @param y	the grid position y to set info.
+	 * Gets the code at a particular part of the grid.
+	 * @param x	the grid position x to get info.
+	 * @param y	the grid position y to get info.
+	 * @return the value at that position.
 	 */
 	public int getCode(int x, int y)
 	{
@@ -157,6 +163,8 @@ public class IntGrid implements Grid
 	
 	/**
 	 * "Corrects" the input for the X axis.
+	 * @param x the input coordinate.
+	 * @return the corrected coordinate.
 	 */
 	protected int correctX(int x)
 	{
@@ -174,6 +182,8 @@ public class IntGrid implements Grid
 
 	/**
 	 * "Corrects" the input for the Y axis.
+	 * @param y the input coordinate.
+	 * @return the corrected coordinate.
 	 */
 	protected int correctY(int y)
 	{
@@ -234,6 +244,7 @@ public class IntGrid implements Grid
 
 	/**
 	 * Sets the character at the current cursor position.
+	 * @param c the char to set.
 	 */
 	public void setChar(char c)
 	{

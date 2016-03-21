@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ public abstract class Tuple3F extends Tuple2F
 
 	/**
 	 * Creates a copy of another Vect3D.
+	 * @param t the source tuple.
 	 */
 	public Tuple3F(Tuple3F t)
 	{
@@ -25,8 +26,9 @@ public abstract class Tuple3F extends Tuple2F
 	}
 
 	/**
-	 * Creates a new three-dimensional tuple, from a Tuple2D.
+	 * Creates a new three-dimensional tuple, from a Tuple2F.
 	 * The missing dimensions are filled with zeroes.
+	 * @param t the source tuple.
 	 */
 	public Tuple3F(Tuple2F t)
 	{
@@ -34,8 +36,9 @@ public abstract class Tuple3F extends Tuple2F
 	}
 
 	/**
-	 * Creates a new three-dimensional tuple, from a Tuple1D.
+	 * Creates a new three-dimensional tuple, from a Tuple1F.
 	 * The missing dimensions are filled with zeroes.
+	 * @param t the source tuple.
 	 */
 	public Tuple3F(Tuple1F t)
 	{
@@ -78,6 +81,7 @@ public abstract class Tuple3F extends Tuple2F
 
 	/**
 	 * Sets the values of this tuple.
+	 * @param t the source tuple.
 	 */
 	public void set(Tuple3F t)
 	{
@@ -86,18 +90,13 @@ public abstract class Tuple3F extends Tuple2F
 		z = t.z;
 	}
 
-	/**
-	 * Returns the length of this tuple.
-	 */
+	@Override
 	public float length()
 	{
 		return (float)RMath.getVectorLength(x, y, z);
 	}
 
-	/**
-	 * Returns the squared length of this tuple
-	 * (no square root step at the end).
-	 */
+	@Override
 	public float squareLength()
 	{
 		return (float)RMath.getVectorLengthSquared(x, y, z);
@@ -105,16 +104,15 @@ public abstract class Tuple3F extends Tuple2F
 
 	/**
 	 * Yields the dot product of a Tuple3D with this one.
-	 * @param v		the tuple to use with this one.
+	 * @param v the tuple to use with this one.
+	 * @return the dot product.
 	 */
-	public float dot(Tuple3D v)
+	public float dot(Tuple3F v)
 	{
 		return (float)RMath.getVectorDotProduct(x, y, z, v.x, v.y, v.z);
 	}
 
-	/**
-	 * Returns true if this tuple is a zero tuple, false otherwise.
-	 */
+	@Override
 	public boolean isZero()
 	{
 		return x == 0 && y == 0 && z == 0;
@@ -131,42 +129,32 @@ public abstract class Tuple3F extends Tuple2F
 
 	/**
 	 * Adds another Tuple2D to this one. This tuple's data is replaced by the result.
-	 * @param v		the tuple to add to this one.
+	 * @param v the tuple to add to this one.
 	 */
 	public void add(Tuple3F v)
 	{
 		add(this,v,this);
 	}
 
-	/**
-	 * Scales this tuple to a certain length.
-	 * @param len	the new length of the tuple.
-	 */
+	@Override
 	public void setLength(float len)
 	{
 		setLength(this,len,this);
 	}
 
-	/**
-	 * Negates this tuple.
-	 */
+	@Override
 	public void negate()
 	{
 		negate(this,this);
 	}
 
-	/**
-	 * Turns this tuple into a unit tuple of length 1, while keeping direction intact.
-	 */
+	@Override
 	public void normalize()
 	{
 		normalize(this,this);
 	}
 
-	/**
-	 * Scales this tuple on all axes.
-	 * @param s	scalar factor. 
-	 */
+	@Override
 	public void scale(float s)
 	{
 		scale(s,this,this);
@@ -192,9 +180,9 @@ public abstract class Tuple3F extends Tuple2F
 
 	/**
 	 * Scales this tuple.
-	 * @param sx	scalar factor for x-axis. 
-	 * @param sy	scalar factor for y-axis. 
-	 * @param sz	scalar factor for z-axis. 
+	 * @param sx scalar factor for x-axis. 
+	 * @param sy scalar factor for y-axis. 
+	 * @param sz scalar factor for z-axis. 
 	 */
 	public void scale(float sx, float sy, float sz)
 	{
@@ -203,20 +191,23 @@ public abstract class Tuple3F extends Tuple2F
 
 	/**
 	 * Crosses this tuple with another (cross product).
-	 * @param v		the input tuple.
+	 * @param v the input tuple.
 	 */
 	public void cross(Tuple3F v)
 	{
 		cross(this,v,this);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "["+x+", "+y+", "+z+"]";
 	}
 
 	/**
-	 * Returns true if the target tuple has the same X-, Y-, and Z-component value as this one. 
+	 * Returns true if the target has the same component values as this one. 
+	 * @param v the other tuple.
+	 * @return true if so, false if not.
 	 */
 	public boolean equals(Tuple3F v)
 	{
@@ -224,7 +215,9 @@ public abstract class Tuple3F extends Tuple2F
 	}
 
 	/**
-	 * Returns the distance in units from this tuple to another.
+	 * Gets the distance in units from this tuple to another.
+	 * @param point the other tuple.
+	 * @return the distance.
 	 */
 	public float getDistanceTo(Tuple3F point)
 	{
@@ -232,8 +225,9 @@ public abstract class Tuple3F extends Tuple2F
 	}
 
 	/**
-	 * Returns the square distance in units from this tuple to another
-	 * (no square root step at the end).
+	 * Gets the square distance in units from this tuple to another (no square root step at the end).
+	 * @param point the other tuple.
+	 * @return the squared distance.
 	 */
 	public float getSquareDistanceTo(Tuple3F point)
 	{

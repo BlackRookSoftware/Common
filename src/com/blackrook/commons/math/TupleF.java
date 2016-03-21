@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@ package com.blackrook.commons.math;
 
 /**
  * Common interface for tuples, or associated sets 
- * of numeric single-precision coordinates.
+ * of numeric double-precision coordinates.
  * @author Matthew Tropiano
  */
 public interface TupleF
@@ -17,11 +17,13 @@ public interface TupleF
 
 	/**
 	 * Returns the distance of this tuple from the origin.
+	 * @return the distance of this tuple from the origin.
 	 */
 	public float length();
 
 	/**
 	 * Returns true if this tuple is zero, false otherwise.
+	 * @return true if this tuple is zero, false otherwise.
 	 */
 	public boolean isZero();
 
@@ -37,25 +39,25 @@ public interface TupleF
 
 	/**
 	 * Scales this tuple.
-	 * @param s		scalar factor. 
+	 * @param s scalar factor. 
 	 */
 	public void scale(float s);
 
 	/**
 	 * Rotates this tuple around the zero origin's X axis.
-	 * @param radians	 the angle in radians to rotate.
+	 * @param radians the angle in radians to rotate.
 	 */
 	public void rotateX(float radians);
 
 	/**
 	 * Rotates this tuple around the zero origin's Y axis.
-	 * @param radians	 the angle in radians to rotate.
+	 * @param radians the angle in radians to rotate.
 	 */
 	public void rotateY(float radians);
 
 	/**
 	 * Rotates this tuple around the zero origin's Z axis.
-	 * @param radians	 the angle in radians to rotate.
+	 * @param radians the angle in radians to rotate.
 	 */
 	public void rotateZ(float radians);
 

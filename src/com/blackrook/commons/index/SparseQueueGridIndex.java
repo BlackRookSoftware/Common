@@ -5,19 +5,18 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  ******************************************************************************/
-package com.blackrook.commons.grid;
+package com.blackrook.commons.index;
 
 import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.linkedlist.Queue;
 
 /**
- * A sparse grid map that contains lists of objects.
+ * A sparse grid index that contains lists of objects.
  * Be advised that the {@link #get(int, int)} method may return null if no objects
  * are queued at that particular spot.
- * @since 2.2.0
  * @author Matthew Tropiano
  */
-public class SparseQueueGridMap<T extends Object> extends SparseGridMap<Queue<T>>
+public class SparseQueueGridIndex<T extends Object> extends SparseGridIndex<Queue<T>>
 {
 	/** Holds the true size of this grid map. */
 	private int trueSize;
@@ -26,20 +25,10 @@ public class SparseQueueGridMap<T extends Object> extends SparseGridMap<Queue<T>
 	 * Creates a new sparse queue grid of an unspecified width and height.
 	 * @throws IllegalArgumentException if capacity is negative or ratio is 0 or less.
 	 */
-	public SparseQueueGridMap()
+	public SparseQueueGridIndex()
 	{
-		this(SIZE_UNSPECIFIED, SIZE_UNSPECIFIED);
+		super();
 		trueSize = 0;
-	}
-	
-	/**
-	 * Creates a new sparse queue grid of a specified width and height.
-	 * @param width the width of the grid in data values.
-	 * @param height the height of the grid in data values.
-	 */
-	public SparseQueueGridMap(int width, int height)
-	{
-		super(width, height);
 	}
 	
 	/**
@@ -77,7 +66,6 @@ public class SparseQueueGridMap<T extends Object> extends SparseGridMap<Queue<T>
 	 * @param y the y-coordinate.
 	 * @param object the object to remove.
 	 * @return the first object added at the set of coordinates, null if no objects enqueued.
-	 * @since 2.21.0
 	 */
 	public boolean remove(int x, int y, T object)
 	{
@@ -100,9 +88,10 @@ public class SparseQueueGridMap<T extends Object> extends SparseGridMap<Queue<T>
 	
 	/**
 	 * Returns a queue for a set of coordinates. If no queue exists, it is created.
+	 * This should NEVER return null.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
-	 * @return the queue.
+	 * @return a reference to the queue using the provided coordinates.
 	 */
 	protected Queue<T> getQueue(int x, int y)
 	{
@@ -137,6 +126,12 @@ public class SparseQueueGridMap<T extends Object> extends SparseGridMap<Queue<T>
 	public int size()
 	{
 		return trueSize;
+	}
+	
+	@Override
+	public boolean isEmpty() 
+	{
+		return size() == 0;
 	}
 	
 }

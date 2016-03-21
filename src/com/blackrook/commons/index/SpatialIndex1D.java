@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 
 	/**
 	 * Creates a new IntervalHash.
+	 * @param model the model to use for determining object sizes.
 	 * @param resolution however many units is one grid space.
 	 */
 	public SpatialIndex1D(SpatialIndex1DModel<T> model, int resolution)
@@ -44,7 +45,6 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		this.objectMap = new HashedHashMap<Integer, T>();
 	}
 
-	
 	/**
 	 * Clears this hash of all of its object references.
 	 */
@@ -53,7 +53,6 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		super.clear();
 		objectMap.clear();
 	}
-
 
 	/**
 	 * Adds an object to the hash. 
@@ -64,7 +63,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		if (containsObject(object))
 			return;
 		
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -89,7 +88,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		if (!containsObject(object))
 			return false;
 		
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -108,7 +107,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	 * Gets the intersections straddling a given point.
 	 * @param x the point to test.
 	 * @param vector the output vector.
-	 * @param offset 
+	 * @param offset the starting offset into the vector.
 	 * @return the amount of objects added to the vector.
 	 */
 	public synchronized int getIntersections(double x, AbstractVector<? super T> vector, int offset)
@@ -122,6 +121,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	 * @param x0 the beginning of the interval to test.
 	 * @param x1 the ending of the interval to test.
 	 * @param vector the output vector.
+	 * @param offset the starting offset into the vector.
 	 * @return the amount of objects added to the vector.
 	 */
 	public synchronized int getIntersections(double x0, double x1, AbstractVector<? super T> vector, int offset)
@@ -135,6 +135,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	 * This is not a comprehensive check - just a check of bounding volumes.
 	 * @param object the object to test with.
 	 * @param vector the output vector.
+	 * @param offset the starting offset into the vector.
 	 * @return the amount of objects added to the vector.
 	 */
 	public synchronized int getIntersections(T object, AbstractVector<? super T> vector, int offset)
@@ -147,10 +148,11 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	 * Tests if a point intersects with an object.
 	 * @param x	the point, x-coordinate.
 	 * @param object the object.
+	 * @return true if it does, false if it doesn't.
 	 */
 	protected boolean pointIntersects(double x, T object)
 	{
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -163,6 +165,9 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	 * Checks if an object intersects another bounding area.
 	 * This is NOT a comprehensive collision test, as two object's
 	 * BOUNDING volumes may intersect, but NOT their ACTUAL boundaries.
+	 * @param x0 the first bound, x-axis. 
+	 * @param x1 the second bound, x-axis. 
+	 * @param object the object to test.
 	 * @return true if their bounding areas overlap, false otherwise.
 	 */
 	protected boolean lineIntersects(double x0, double x1, T object)
@@ -170,7 +175,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		double min = x0 < x1 ? x0 : x1;
 		double max = x0 < x1 ? x1 : x0;
 
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -185,11 +190,11 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	 * BOUNDING volumes may intersect, but NOT their ACTUAL boundaries.
 	 * @param object first object.
 	 * @param object2 another object.
-	 * @return	true if their bounding areas overlap, false otherwise.
+	 * @return true if their bounding areas overlap, false otherwise.
 	 */
 	protected boolean objectIntersects(T object, T object2)
 	{
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -203,25 +208,10 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		return centerX - halfWidth < centerX2 + halfWidth2 && centerX + halfWidth > centerX2 - halfWidth2; 
 	}
 
-	// Returns threadlocal cache.
-	private Cache getCache()
-	{
-		String key = getClass().getCanonicalName()+".Cache";
-		Cache cache = (Cache)Common.getLocal(key);
-		if (cache != null)
-			return cache;
-		
-		cache = new Cache();
-		Common.setLocal(key, cache);
-		return cache;
-	}
-	
-	/**
-	 * Throws all object intersections into the accumulation hash.
-	 */
+	// Throws all object intersections into the accumulation hash.
 	private void accumObjectIntersections(T object)
 	{
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -246,9 +236,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	}
 
 
-	/**
-	 * Throws all line intersections into the accumulation hash.
-	 */
+	// Throws all line intersections into the accumulation hash.
 	private void accumLineIntersections(double x0, double x1)
 	{
 		if (x0 == x1)
@@ -260,7 +248,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		double halfWidth = (x0 + x1) / 2.0;
 		double centerX = x0 + halfWidth;
 		
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		cache.intersectionAccum.clear();
 		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
 		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
@@ -280,12 +268,11 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	}
 
 
-	/**
-	 * Throws all point intersections into the accumulation hash.
-	 */
+
+	// Throws all point intersections into the accumulation hash.
 	private void accumPointIntersections(double x)
 	{
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		cache.intersectionAccum.clear();
 
 		int mapX = (int)(x / getResolution());
@@ -301,13 +288,11 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		}
 	}
 
-	/**
-	 * Dumps the contents of the accum hash to a vector.
-	 */
+	// Dumps the contents of the accum hash to a vector.
 	@SuppressWarnings("unchecked")
 	private int accumToVector(AbstractVector<? super T> vector)
 	{
-		Cache cache = getCache();
+		Cache cache = Common.getLocal(Cache.class);
 		cache.intersectionAccumIterator.reset();
 		int i = 0;
 		while (cache.intersectionAccumIterator.hasNext())
@@ -319,8 +304,8 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		return i;
 	}
 	
-	/** Cache. */
-	private static final class Cache
+	/** Index cache. Used internally. */
+	public static final class Cache
 	{
 		/** Temporary point. */
 		private Point1D tempPoint;

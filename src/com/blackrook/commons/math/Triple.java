@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -26,6 +26,9 @@ public class Triple extends Pair
 	
 	/**
 	 * Creates a new Triple.
+	 * @param x the x-coordinate value.
+	 * @param y the y-coordinate value.
+	 * @param z the z-coordinate value.
 	 */
 	public Triple(int x, int y, int z)
 	{
@@ -34,7 +37,7 @@ public class Triple extends Pair
 		this.z = z;
 	}
 	
-@Override
+	@Override
 	public int hashCode()
 	{
 		final int p = CRC32.POLYNOMIAL_IEEE;
@@ -54,6 +57,8 @@ public class Triple extends Pair
 	
 	/**
 	 * Checks if this triple equals another.
+	 * @param t the other triple.
+	 * @return true if so, false if not.
 	 */
 	public boolean equals(Triple t)
 	{

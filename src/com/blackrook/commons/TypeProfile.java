@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -52,9 +52,12 @@ public class TypeProfile<T extends Object>
 	 * Gets a type profile for a type.
 	 * This method creates a profile if it hasn't already been made, and returns
 	 * what is created.
+	 * @param <E> the return type object.
+	 * @param clazz the class type to create a profile for.
+	 * @return the corresponding type profile.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <E extends Object> TypeProfile<E> getTypeProfile(Class<E> clazz)
+	public static <E> TypeProfile<E> getTypeProfile(Class<E> clazz)
 	{
 		TypeProfile<E> out = null;
 		if ((out = (TypeProfile<E>)REGISTERED_TYPES.get(clazz)) == null)
@@ -64,7 +67,7 @@ public class TypeProfile<T extends Object>
 				if ((out = (TypeProfile<E>)REGISTERED_TYPES.get(clazz)) == null)
 				{
 					out = new TypeProfile<E>(clazz);
-					setTypeProfile(clazz, out);
+					REGISTERED_TYPES.put(clazz, out);
 				}
 			}
 		}
@@ -74,15 +77,7 @@ public class TypeProfile<T extends Object>
 		return out;
 	}
 	
-	/**
-	 * Sets a type profile for a type.
-	 */
-	private static <E extends Object> void setTypeProfile(Class<E> clazz, TypeProfile<E> profile)
-	{
-		REGISTERED_TYPES.put(clazz, profile);
-	}
-	
-	/** Creates a profile from a class. */
+	// Creates a profile from a class. 
 	private TypeProfile(Class<? extends T> inputClass)
 	{
 		publicFields = new HashMap<String, Field>(4);
@@ -121,7 +116,8 @@ public class TypeProfile<T extends Object>
 	
 	/** 
 	 * Returns a reference to the map that contains this profile's public fields.
-	 * Maps "field name" to {@link Field} object. 
+	 * Maps "field name" to {@link Field} object.
+	 * @return the map of field name to field.  
 	 */
 	public HashMap<String, Field> getPublicFields()
 	{
@@ -132,6 +128,7 @@ public class TypeProfile<T extends Object>
 	 * Returns a reference to the map that contains this profile's getter methods.
 	 * Maps "field name" to {@link MethodSignature} object, which contains the {@link Class} type
 	 * and the {@link Method} itself.
+	 * @return the map of getter name to method.  
 	 * @since 2.20.0 
 	 */
 	public HashMap<String, MethodSignature> getGetterMethods()
@@ -143,6 +140,7 @@ public class TypeProfile<T extends Object>
 	 * Returns a reference to the map that contains this profile's setter methods.
 	 * Maps "field name" to {@link MethodSignature} object, which contains the {@link Class} type
 	 * and the {@link Method} itself. 
+	 * @return the map of setter name to method.  
 	 */
 	public HashMap<String, MethodSignature> getSetterMethods()
 	{
@@ -152,6 +150,7 @@ public class TypeProfile<T extends Object>
 	/**
 	 * Returns an array of public fields on this type that contain a certain annotation class type.
 	 * @param annotation the annotation type to search for.
+	 * @return an array of fields with the annotation (will not be null).  
 	 * @since 2.20.0 
 	 */
 	public Field[] getAnnotatedPublicFields(Class<? extends Annotation> annotation)
@@ -168,6 +167,7 @@ public class TypeProfile<T extends Object>
 	/**
 	 * Returns an array of getter method signatures on this type that contain a certain annotation class type.
 	 * @param annotation the annotation type to search for.
+	 * @return an array of MethodSignatures with the annotation (will not be null).  
 	 * @since 2.20.0 
 	 */
 	public MethodSignature[] getAnnotatedGetters(Class<? extends Annotation> annotation)
@@ -184,6 +184,7 @@ public class TypeProfile<T extends Object>
 	/**
 	 * Returns an array of setter method signatures on this type that contain a certain annotation class type.
 	 * @param annotation the annotation type to search for.
+	 * @return an array of MethodSignatures with the annotation (will not be null).  
 	 * @since 2.20.0 
 	 */
 	public MethodSignature[] getAnnotatedSetters(Class<? extends Annotation> annotation)
@@ -199,6 +200,7 @@ public class TypeProfile<T extends Object>
 
 	/**
 	 * Method signature.
+	 * Contains the relevant type and getter/setter method.
 	 */
 	public static class MethodSignature
 	{
@@ -214,7 +216,7 @@ public class TypeProfile<T extends Object>
 		}
 
 		/**
-		 * Returns the type that this setter takes as an argument, or this getter returns.
+		 * @return the type that this setter takes as an argument, or this getter returns.
 		 */
 		public Class<?> getType()
 		{
@@ -222,7 +224,7 @@ public class TypeProfile<T extends Object>
 		}
 
 		/**
-		 * Returns the setter method itself.
+		 * @return the setter method itself.
 		 */
 		public Method getMethod()
 		{

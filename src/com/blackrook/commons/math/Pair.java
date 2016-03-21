@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -28,6 +28,8 @@ public class Pair
 	
 	/**
 	 * Creates a new Pair.
+	 * @param x the x-coordinate value.
+	 * @param y the y-coordinate value.
 	 */
 	public Pair(int x, int y)
 	{
@@ -53,8 +55,8 @@ public class Pair
 	
 	/**
 	 * Sets both components.
-	 * @param x the x-coordinate.
-	 * @param y the y-coordinate.
+	 * @param x the x-coordinate value.
+	 * @param y the y-coordinate value.
 	 * @since 2.21.0
 	 */
 	public void set(int x, int y)
@@ -76,6 +78,8 @@ public class Pair
 	
 	/**
 	 * Checks if this pair equals another.
+	 * @param p the other pair.
+	 * @return true if so, false if not.
 	 */
 	public boolean equals(Pair p)
 	{

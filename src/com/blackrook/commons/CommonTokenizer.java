@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -20,14 +20,14 @@ import com.blackrook.commons.linkedlist.Queue;
  * @author Matthew Tropiano
  * @since 2.17.0
  */
-public class CommonTokenizer implements Iterable<String>
+public class CommonTokenizer implements Iterable<String>, Sizable
 {
 	/** Internal token list. */
 	protected Queue<String> tokenList;
 	
 	/**
 	 * Creates a new CTokenizer from a string.
-	 * @param s		the string to tokenize.
+	 * @param s the string to tokenize.
 	 */
 	public CommonTokenizer(String s)
 	{
@@ -36,8 +36,8 @@ public class CommonTokenizer implements Iterable<String>
 	
 	/**
 	 * Tokenizes a string, returns it as a linked list of Strings.
-	 * @param s		the string to tokenize.
-	 * @return		a linked list of the resulting strings.
+	 * @param s the string to tokenize.
+	 * @return a linked list of the resulting strings.
 	 */
 	public static Queue<String> parse(String s)
 	{
@@ -201,40 +201,38 @@ public class CommonTokenizer implements Iterable<String>
 	}
 	
 	/**
-	 * Returns true if there are any tokens left. False if not.
+	 * @return true if there are any tokens left, false if not.
 	 */
 	public boolean hasMoreTokens()
 	{
-		return !tokenList.isEmpty();
+		return !isEmpty();
 	}
 
 	/**
-	 * Add any ol' String to the tokenizer.
+	 * @return how many tokens are left in the tokenizer.
 	 */
-	public void add(String s)
-	{
-		tokenList.add(s);
-	}
-
-	/**
-	 * Returns how many tokens are left in the tokenizer.
-	 */
+	@Override
 	public int size()
 	{
 		return tokenList.size();
 	}
 	
+	@Override
+	public boolean isEmpty() 
+	{
+		return tokenList.isEmpty();
+	}
+
 	/**
-	 * Peek at the topmost token (but don't remove it).
+	 * Returns at the topmost token (but doesn't remove it).
+	 * @return the next token.
 	 */
 	public String peek()
 	{
 		return tokenList.head();
 	}
-	
-	/**
-	 * Returns a new Iterator<String> for the rest of the tokens in the list.
-	 */
+
+	@Override
 	public Iterator<String> iterator()
 	{
 		return tokenList.iterator();

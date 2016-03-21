@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -9,17 +9,19 @@ package com.blackrook.commons.list;
 
 import java.util.Arrays;
 
+import com.blackrook.commons.Sizable;
+
 /**
  * A mutable buffer of data. 
  * @author Matthew Tropiano
  */
-public class DataList
+public class DataList implements Sizable
 {
 	/** Default capacity for a new list. */
 	public static final int DEFAULT_CAPACITY = 10;
 	
 	/** Capacity increment. */
-	private int capInc;
+	private int capacityIncrement;
 	/** Amount of bytes in the buffer. */
 	private int size;
 	/** Byte array. */
@@ -35,7 +37,7 @@ public class DataList
 	
 	/**
 	 * Makes a new buffer that doubles every resize.
-	 * @param capacity		the initial capacity of this list. If 0 or less, it is 1. 
+	 * @param capacity the initial capacity of this list. If 0 or less, it is 1. 
 	 */
 	public DataList(int capacity)
 	{
@@ -44,9 +46,8 @@ public class DataList
 	
 	/**
 	 * Makes a new buffer.
-	 * @param capacity		the initial capacity of this list.
-	 * @param capacityInc	what to increase the capacity of this list by 
-	 * 						if this reaches the max. if 0 or less, it will double.
+	 * @param capacity the initial capacity of this list.
+	 * @param capacityInc what to increase the capacity of this list by if this reaches the max. if 0 or less, it will double.
 	 */
 	public DataList(int capacity, int capacityInc)
 	{
@@ -58,6 +59,7 @@ public class DataList
 	 * Gets a subset of data from this buffer.
 	 * @param offset the offset into the vector.
 	 * @param length the length of data in bytes to copy.
+	 * @return a byte array of the requested data.
 	 * @throws IndexOutOfBoundsException if offset plus length exceeds size.
 	 * @since 2.1.0
 	 */
@@ -86,6 +88,7 @@ public class DataList
 	
 	/**
 	 * Gets the capacity of this buffer.
+	 * @return the current capacity in bytes.
 	 */
 	public int getCapacity()
 	{
@@ -96,7 +99,7 @@ public class DataList
 	 * Sets this buffer's capacity to some value. If this buffer is set to a capacity
 	 * that is less than the current one, it will cut the buffer short. If the
 	 * capacity argument is 0 or less, it is set to 1.
-	 * @param capacity		the new capacity of this buffer.
+	 * @param capacity the new capacity of this buffer.
 	 */
 	public void setCapacity(int capacity)
 	{
@@ -116,34 +119,41 @@ public class DataList
 	
 	/**
 	 * Returns the capacity increment value.
+	 * @return the current capacity increment.
 	 */
 	public int getCapacityIncrement()
 	{
-		return capInc;
+		return capacityIncrement;
 	}
 	
 	/**
 	 * Sets the capacity increment value.
-	 * @param capacityInc	what to increase the capacity of this list by 
-	 * 						if this reaches the max. if 0 or less, it will double.
+	 * @param capacityInc what to increase the capacity of this list by if this reaches the max. if 0 or less, it will double.
 	 */
 	public void setCapacityIncrement(int capacityInc)
 	{
-		capInc = capacityInc;
+		capacityIncrement = capacityInc;
 	}
 	
 	/**
 	 * Returns the amount of bytes in the buffer.
 	 */
+	@Override
 	public int size()
 	{
 		return size;
 	}
 	
+	@Override
+	public boolean isEmpty() 
+	{
+		return size() == 0;
+	}
+	
 	/**
 	 * Appends a byte to the end of this buffer.
 	 * @param b	the byte to add.
-	 * @return	this buffer, so that these commands can be chained.
+	 * @return this buffer, so that these commands can be chained.
 	 */
 	public DataList append(byte b)
 	{
@@ -155,7 +165,7 @@ public class DataList
 	/**
 	 * Appends a series of bytes to the end of this buffer.
 	 * @param b	the bytes to add.
-	 * @return	this buffer, so that these commands can be chained.
+	 * @return this buffer, so that these commands can be chained.
 	 */
 	public DataList append(byte[] b)
 	{
@@ -164,10 +174,10 @@ public class DataList
 	
 	/**
 	 * Appends a series of bytes to the end of this buffer.
-	 * @param b			the bytes to add.
-	 * @param offset	the offset into the array to start the copy.
-	 * @param length	the amount of bytes to copy from the source array into the buffer.
-	 * @return	this buffer, so that these commands can be chained.
+	 * @param b	the bytes to add.
+	 * @param offset the offset into the array to start the copy.
+	 * @param length the amount of bytes to copy from the source array into the buffer.
+	 * @return this buffer, so that these commands can be chained.
 	 */
 	public DataList append(byte[] b, int offset, int length)
 	{
@@ -179,9 +189,9 @@ public class DataList
 	
 	/**
 	 * Inserts a series of bytes into this buffer at a specific index.
-	 * @param b				the bytes to add.
-	 * @param startIndex	the starting index into the buffer for removing bytes.
-	 * @return	this buffer, so that these commands can be chained.
+	 * @param b	the bytes to add.
+	 * @param startIndex the starting index into the buffer for removing bytes.
+	 * @return this buffer, so that these commands can be chained.
 	 */
 	public DataList insertAt(byte[] b, int startIndex)
 	{
@@ -196,9 +206,9 @@ public class DataList
 	
 	/**
 	 * Deletes a series of bytes from this buffer.
-	 * @param startIndex	the starting index into the buffer for removing bytes.
-	 * @param length		the amount of bytes to copy from the source array into the buffer.
-	 * @return	this buffer, so that these commands can be chained.
+	 * @param startIndex the starting index into the buffer for removing bytes.
+	 * @param length the amount of bytes to copy from the source array into the buffer.
+	 * @return this buffer, so that these commands can be chained.
 	 */
 	public DataList delete(int startIndex, int length)
 	{
@@ -209,7 +219,7 @@ public class DataList
 	
 	/**
 	 * Deletes all bytes from this buffer.
-	 * @return	this buffer, so that these commands can be chained.
+	 * @return this buffer, so that these commands can be chained.
 	 */
 	public DataList clear()
 	{
@@ -218,15 +228,17 @@ public class DataList
 	
 	/**
 	 * Increases the size of the internal buffer if necessary.
+	 * @param requiredLength the required length that the buffer needs to be.
 	 */
 	protected void capacityCheck(int requiredLength)
 	{
 		while (size + requiredLength > buffer.length)
-			setCapacity(buffer.length + (capInc == 0 ? buffer.length : capInc));
+			setCapacity(buffer.length + (capacityIncrement == 0 ? buffer.length : capacityIncrement));
 	}
 	
 	/**
 	 * Returns the bytes in this vector into an array.
+	 * @return a new array with this list's data.
 	 */
 	public byte[] toByteArray()
 	{
@@ -235,9 +247,7 @@ public class DataList
 		return out;
 	}
 	
-	/**
-	 * Returns this buffer as a string.
-	 */
+	@Override
 	public String toString()
 	{
 		return Arrays.toString(buffer);

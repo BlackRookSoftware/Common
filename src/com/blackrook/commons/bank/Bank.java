@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@ package com.blackrook.commons.bank;
 import java.util.List;
 
 import com.blackrook.commons.ObjectPair;
+import com.blackrook.commons.Sizable;
 import com.blackrook.commons.hash.HashMap;
 import com.blackrook.commons.linkedlist.Queue;
 
@@ -19,7 +20,7 @@ import com.blackrook.commons.linkedlist.Queue;
  * that correspond to a hashed list of integer keys.
  * @author Matthew Tropiano
  */
-public class Bank<T extends Object, U extends Object>
+public class Bank<T extends Object, U extends Object> implements Sizable
 {
 	/** Last id to use for added objects. */
 	private int lastId; 
@@ -70,6 +71,7 @@ public class Bank<T extends Object, U extends Object>
 	
 	/**
 	 * Removes all of the records in the list that are flagged.
+	 * @param removed the list to put the removed objects into.
 	 */
 	public void removeAllFlagged(List<U> removed)
 	{
@@ -85,8 +87,8 @@ public class Bank<T extends Object, U extends Object>
 	/**
 	 * Adds an object to the list using a name.
 	 * If the object is already in this structure (by name), its flag is cleared.
-	 * @param name 	the name of the resource.
-	 * @param obj 	the resource itself.
+	 * @param name the name of the resource.
+	 * @param obj the resource itself.
 	 */
 	public void add(T name, U obj)
 	{
@@ -112,8 +114,8 @@ public class Bank<T extends Object, U extends Object>
 	
 	/**
 	 * Removes an object from the bank by name.
-	 * @param name	the name of the object.
-	 * @return null if it is not in the Bank, or the object removed.
+	 * @param name the name of the object.
+	 * @return the object removed, or null if it is not in the Bank.
 	 */
 	public U removeByKey(T name)
 	{
@@ -125,8 +127,8 @@ public class Bank<T extends Object, U extends Object>
 	
 	/**
 	 * Removes an object from the bank by id.
-	 * @param id	the id of the object.
-	 * @return null if it is not in the Bank, or the object removed.
+	 * @param id the id of the object.
+	 * @return the object removed, or null if it is not in the Bank.
 	 */
 	public U removeById(int id)
 	{
@@ -140,8 +142,7 @@ public class Bank<T extends Object, U extends Object>
 	}
 	
 	/**
-	 * Clears all objects from this table and resets the current
-	 * id to 0.
+	 * Clears all objects from this table and resets the current id to 0.
 	 */
 	public void clear()
 	{
@@ -152,7 +153,8 @@ public class Bank<T extends Object, U extends Object>
 	
 	/**
 	 * Gets a resource from the list using an id number.
-	 * Returns null if not found.
+	 * @param id the id number.
+	 * @return the corresponding resource, or null if not found.
 	 */
 	public U getById(int id)
 	{
@@ -162,7 +164,8 @@ public class Bank<T extends Object, U extends Object>
 	
 	/**
 	 * Gets a resource's id by its name.
-	 * Returns -1 if not found.
+	 * @param name the provided name.
+	 * @return the corresponding resource, or -1 if not found.
 	 */
 	public int getIdByKey(T name)
 	{
@@ -171,8 +174,9 @@ public class Bank<T extends Object, U extends Object>
 	}
 
 	/**
-	 * Return true of an object by a certain name exists in this bank,
-	 * false otherwise.
+	 * Checks if an object by a certain name exists in this bank.
+	 * @param name the provided name.
+	 * @return true if so, false otherwise.
 	 */
 	public boolean containsKey(T name)
 	{
@@ -180,7 +184,9 @@ public class Bank<T extends Object, U extends Object>
 	}
 	
 	/**
-	 * Gets a resource from the list using a name, case-insensitive.
+	 * Gets a resource from the list using a name.
+	 * @param name the provided name.
+	 * @return the corresponding resource, or null if not found.
 	 */
 	public U getByKey(T name)
 	{
@@ -191,6 +197,8 @@ public class Bank<T extends Object, U extends Object>
 	
 	/**
 	 * Returns of all of the names associated with objects (all of them) in the bank.
+	 * @param out the target array.
+	 * @throws ArrayIndexOutOfBoundsException if the target array cannot fit the amount of keys.
 	 */
 	public void getAllKeys(T[] out)
 	{
@@ -200,26 +208,31 @@ public class Bank<T extends Object, U extends Object>
 	}
 	
 	/**
-	 * Returns of all of the flagged names associated with objects in the bank.
+	 * Returns of all of the flagged names associated with objects in the bank into a list.
+	 * @param out the output list.
 	 */
 	public void getAllFlaggedKeys(List<T> out)
 	{
 		for (ObjectPair<T,Integer> hp : keyHash)
 			out.add(hp.getKey());
 	}
-	
-	/**
-	 * Returns the amount of objects in the bank.
-	 */
+
+	@Override
 	public int size()
 	{
 		return idHash.size();
 	}
 	
+	@Override
+	public boolean isEmpty() 
+	{
+		return size() == 0;
+	}
+	
 	/**
 	 * The pair that is stored in the bank. 
 	 */
-	public static class BankPair<T extends Object, U extends Object>
+	private static class BankPair<T extends Object, U extends Object>
 	{
 		/** Is this flagged for any reason? */
 		boolean flagged;
@@ -228,10 +241,7 @@ public class Bank<T extends Object, U extends Object>
 		/** The object. */
 		U data;
 		
-		/**
-		 * Makes a new bank pair.
-		 */
-		public BankPair(T name, U data)
+		private BankPair(T name, U data)
 		{
 			this.flagged = false;
 			this.name = name;

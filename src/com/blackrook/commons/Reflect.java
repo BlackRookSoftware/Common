@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -131,6 +131,7 @@ public final class Reflect
 	
 	/**
 	 * Tests if an object is actually an array type.
+	 * @param object the object to test.
 	 * @return true if so, false if not. 
 	 * @since 2.14.0
 	 */
@@ -141,6 +142,7 @@ public final class Reflect
 	
 	/**
 	 * Tests if a class is actually an array type.
+	 * @param clazz the class to test.
 	 * @return true if so, false if not. 
 	 * @since 2.14.0
 	 */
@@ -323,6 +325,7 @@ public final class Reflect
 	 * For example, the field name "color" will return "setColor" 
 	 * (note the change in camel case).
 	 * @param name the field name.
+	 * @return the setter name.
 	 * @throws StringIndexOutOfBoundsException if name is the empty string.
 	 * @throws NullPointerException if name is null.
 	 */
@@ -337,6 +340,7 @@ public final class Reflect
 	 * For example, the field name "color" will return "getColor" 
 	 * (note the change in camel case).
 	 * @param name the field name.
+	 * @return the getter name.
 	 * @throws StringIndexOutOfBoundsException if name is the empty string.
 	 * @throws NullPointerException if name is null.
 	 */
@@ -398,10 +402,9 @@ public final class Reflect
 	}
 
 	/**
-	 * Returns a getter method for a field name, if it exists on the
-	 * given class.
+	 * Returns a getter method for a field name, if it exists on the given class.
 	 * @param clazz the class to search.
-	 * @param fieldName 
+	 * @param fieldName the field name.
 	 * @return the getter method. 
 	 */
 	public static Method getGetter(Class<?> clazz, String fieldName)
@@ -420,6 +423,7 @@ public final class Reflect
 	 * Creates a new instance of a class from a class type.
 	 * This essentially calls {@link Class#newInstance()}, but wraps the call
 	 * in a try/catch block that only throws an exception if something goes wrong.
+	 * @param <T> the return object type.
 	 * @param clazz the class type to instantiate.
 	 * @return a new instance of an object.
 	 * @throws RuntimeException if instantiation cannot happen, either due to
@@ -444,6 +448,7 @@ public final class Reflect
 	 * Creates a new instance of a class from a class type.
 	 * This essentially calls {@link Class#newInstance()}, but wraps the call
 	 * in a try/catch block that only throws an exception if something goes wrong.
+	 * @param <T> the return object type.
 	 * @param constructor the constructor to call.
 	 * @param params the constructor parameters.
 	 * @return a new instance of an object created via the provided constructor.
@@ -828,8 +833,10 @@ public final class Reflect
 	 * Takes the contents of an AbstractMap and applies it to a newly-created POJO 
 	 * (Plain Old Java Object) via its public fields and/or getters and setters.
 	 * The values in the map applied to the object may be converted.
+	 * @param <T> the return object type.
 	 * @param map the source map.
 	 * @param clazz the class to instantiate (must have a default public constructor).
+	 * @return a new object.
 	 * @since 2.20.0
 	 */
 	public static <T> T mapToNewObject(AbstractMap<String, ?> map, Class<T> clazz)
@@ -843,8 +850,10 @@ public final class Reflect
 	 * Takes the contents of a Map and applies it to a newly-created POJO 
 	 * (Plain Old Java Object) via its public fields and/or getters and setters.
 	 * The values in the map applied to the object may be converted.
+	 * @param <T> the return object type.
 	 * @param map the source map.
 	 * @param clazz the class to instantiate (must have a default public constructor).
+	 * @return a new object.
 	 * @since 2.20.0
 	 */
 	public static <T> T mapToNewObject(Map<String, ?> map, Class<T> clazz)
@@ -858,6 +867,7 @@ public final class Reflect
 	 * Takes the contents of an AbstractMap and applies it to a POJO 
 	 * (Plain Old Java Object) via its public fields and/or getters and setters.
 	 * The values in the map applied to the object may be converted.
+	 * @param <T> the return object type.
 	 * @param map the source map.
 	 * @param object the object to apply the field map to.
 	 * @since 2.20.0
@@ -872,6 +882,7 @@ public final class Reflect
 	 * Takes the contents of a Map and applies it to a POJO 
 	 * (Plain Old Java Object) via its public fields and/or getters and setters.
 	 * The values in the map applied to the object may be converted.
+	 * @param <T> the return object type.
 	 * @param map the source map.
 	 * @param object the object to apply the field map to.
 	 * @since 2.20.0
@@ -884,7 +895,7 @@ public final class Reflect
 	
 	/**
 	 * Creates a new instance of an object for placement in a POJO or elsewhere.
-	 * <p>
+	 * @param <T> the return object type.
 	 * @param object the object to convert to another object
 	 * @param targetType the target class type to convert to, if the types differ.
 	 * @return a suitable object of type <code>targetType</code>. 
@@ -898,7 +909,7 @@ public final class Reflect
 	
 	/**
 	 * Creates a new instance of an object for placement in a POJO or elsewhere.
-	 * <p>
+	 * @param <T> the return object type.
 	 * @param memberName the name of the member that is being converted (for reporting). 
 	 * @param object the object to convert to another object
 	 * @param targetType the target class type to convert to, if the types differ.
@@ -977,6 +988,10 @@ public final class Reflect
 	/**
 	 * Returns the enum instance of a class given class and name, or null if not a valid name.
 	 * If value is null, this returns null.
+	 * @param <T> the Enum object type.
+	 * @param value the value to search for.
+	 * @param enumClass the Enum class to inspect.
+	 * @return the enum value or null if the target does not exist.
 	 * @since 2.21.0
 	 */
 	public static <T extends Enum<T>> T getEnumInstance(String value, Class<T> enumClass)

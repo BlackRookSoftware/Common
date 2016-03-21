@@ -30,7 +30,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.zip.ZipFile;
 
 import com.blackrook.commons.hash.HashMap;
 import com.blackrook.commons.linkedlist.Queue;
@@ -191,92 +190,92 @@ public final class Common
 	
 	private Common() {}
 	
-	/** Are we using a Linux distro? */
+	/** @return true if we using a Linux distro. */
 	public static boolean isLinux()
 	{
 		return IS_LINUX;
 	}
 
-	/** Are we using Mac OS X? */
+	/** @return true if we using Mac OS X. */
 	public static boolean isOSX()
 	{
 		return IS_OSX;
 	}
 
-	/** Are we using 64-bit Mac OS X? */
+	/** @return true if we using 64-bit Mac OS X. */
 	public static boolean isOSX64()
 	{
 		return IS_OSX64;
 	}
 
-	/** Are we using x86 Mac OS X? */
+	/** @return true if we using x86 Mac OS X. */
 	public static boolean isOSX86()
 	{
 		return IS_OSX86;
 	}
 
-	/** Are we using Power PC Mac OS X? */
+	/** @return true if we using Power PC Mac OS X. */
 	public static boolean isOSXPPC()
 	{
 		return IS_OSXPPC;
 	}
 
-	/** Is this running on an Power PC architecture? */
+	/** @return true if this is running on an Power PC architecture. */
 	public static boolean isPPC()
 	{
 		return IS_PPC;
 	}
 
-	/** Are we using 32-bit Windows? */
+	/** @return true if we using 32-bit Windows. */
 	public static boolean isWin32()
 	{
 		return IS_WIN32;
 	}
 
-	/** Are we using 64-bit Windows? */
+	/** @return true if we using 64-bit Windows. */
 	public static boolean isWin64() 
 	{
 		return IS_WIN64;
 	}
 
-	/** Are we using Windows? */
+	/** @return true if we using Windows. */
 	public static boolean isWindows()
 	{
 		return IS_WINDOWS;
 	}
 
-	/** Are we using Windows 2000? */
+	/** @return true if we using Windows 2000. */
 	public static boolean isWindows2000()
 	{
 		return IS_WINDOWS_2000;
 	}
 
-	/** Are we using Windows 2003? */
+	/** @return true if we using Windows 2003. */
 	public static boolean isWindows2003()
 	{
 		return IS_WINDOWS_2003;
 	}
 
-	/** Are we using Windows 2008? */
+	/** @return true if we using Windows 2008. */
 	public static boolean isWindows2008()
 	{
 		return IS_WINDOWS_2008;
 	}
 
-	/** Are we using Windows Vista? */
+	/** @return true if we using Windows Vista. */
 	public static boolean isWindowsVista()
 	{
 		return IS_WINDOWS_VISTA;
 	}
 
-	/** Are we using Windows 7? */
+	/** @return true if we using Windows 7. */
 	public static boolean isWindows7()
 	{
 		return IS_WINDOWS_7;
 	}
 
 	/** 
-	 * Are we using Windows 8?
+	 * @return true if we using Windows 8.
 	 * @since 2.13.0 
 	 */
 	public static boolean isWindows8()
@@ -285,7 +284,7 @@ public final class Common
 	}
 
 	/** 
-	 * Are we using Windows 10? 
+	 * @return true if we using Windows 10. 
 	 * @since 2.21.0 
 	 */
 	public static boolean isWindows10()
@@ -293,43 +292,43 @@ public final class Common
 		return IS_WINDOWS_10;
 	}
 
-	/** Are we using Windows 95/98? */
+	/** @return true if we using Windows 95/98. */
 	public static boolean isWindows9X()
 	{
 		return IS_WINDOWS_9X;
 	}
 
-	/** Are we using Windows Me? Or better yet, should we just kill the program now? */
+	/** @return true if we are using Windows ME, or better yet, if we should just kill the program now. */
 	public static boolean isWindowsME()
 	{
 		return IS_WINDOWS_ME;
 	}
 
-	/** Are we using Windows NT? */
+	/** @return true if we using Windows NT. */
 	public static boolean isWindowsNT()
 	{
 		return IS_WINDOWS_NT;
 	}
 
-	/** Are we using Windows XP? */
+	/** @return true if we using Windows XP. */
 	public static boolean isWindowsXP()
 	{
 		return IS_WINDOWS_XP;
 	}
 
-	/** Is this running on an x64 architecture? */
+	/** @return true if this is running on an x64 architecture. */
 	public static boolean isX64()
 	{
 		return IS_X64;
 	}
 
-	/** Is this running on an x86 architecture? */
+	/** @return true if this is running on an x86 architecture. */
 	public static boolean isX86()
 	{
 		return IS_X86;
 	}
 
-	/** Is this running on Sun Solaris? */
+	/** @return true if this is running on Sun Solaris. */
 	public static boolean isSolaris()
 	{
 		return IS_SOLARIS;
@@ -337,6 +336,7 @@ public final class Common
 
 	/**
 	 * Returns the first object if it is not null, otherwise returns the second. 
+	 * @param <T> class that extends Object.
 	 * @param testObject the first ("tested") object.
 	 * @param nullReturn the object to return if testObject is null.
 	 * @return testObject if not null, nullReturn otherwise.
@@ -349,6 +349,7 @@ public final class Common
 	
 	/**
 	 * Returns the first object in the supplied list of objects that isn't null. 
+	 * @param <T> class that extends Object.
 	 * @param objects the list of objects.
 	 * @return the first object that isn't null in the list, 
 	 * or null if all of the objects are null.
@@ -366,6 +367,7 @@ public final class Common
 	 * Returns a valid index of an element in an array if an object is contained in an array. 
 	 * Sequentially searches for first match via {@link #equals(Object)}.
 	 * Can search for null. 
+	 * @param <T> class that extends Object.
 	 * @param object the object to search for. Can be null.
 	 * @param searchArray the list of objects to search.
 	 * @return the index of the object, or -1 if it cannot be found.
@@ -388,6 +390,8 @@ public final class Common
 	 * to avoid catching InterruptedException. Convenience
 	 * method for making the current thread sleep when you don't
 	 * care if it's interrupted or not and want to keep code neat.
+	 * @param millis the amount of milliseconds to sleep.
+	 * @see #sleep(long)
 	 */
 	public static void sleep(long millis)
 	{
@@ -399,6 +403,9 @@ public final class Common
 	 * to avoid catching InterruptedException. Convenience
 	 * method for making the current thread sleep when you don't
 	 * care if it's interrupted or not and want to keep code neat.
+	 * @param millis the amount of milliseconds to sleep.
+	 * @param nanos the amount of additional nanoseconds to sleep.
+	 * @see #sleep(long, int)
 	 */
 	public static void sleep(long millis, int nanos)
 	{
@@ -408,6 +415,7 @@ public final class Common
 	/**
 	 * Gets the package path for a particular class (for classpath resources).
 	 * @param cls the class for which to get to get the path.
+	 * @return the equivalent path for finding a class.
 	 */
 	public static String getPackagePathForClass(Class<?> cls)
 	{
@@ -444,6 +452,7 @@ public final class Common
 	 * files, so that no directories remain. Because of this,
 	 * the output list of URLs may be longer than the input file list!
 	 * @param files	the list of files to convert.
+	 * @return an array of URLs that point to individual files.
 	 * @since 2.16.0
 	 */
 	public static URL[] getURLsForFiles(File ... files)
@@ -509,8 +518,10 @@ public final class Common
 	}
 	
 	/**
-	 * Gets a String representation of a Throwable type,
+	 * Gets a full String representation of a Throwable type,
 	 * including a line-by-line breakdown of the stack trace.
+	 * @param t the throwable to render into a string.
+	 * @return a multi-line string of the exception, similar to the stack dump.
 	 */
 	public static String getExceptionString(Throwable t)
 	{
@@ -528,6 +539,22 @@ public final class Common
 			sb.append(getExceptionString(t.getCause()));
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Gets a full String representation of an exception as the JVM dumps it.
+	 * @param t the throwable to render into a string.
+	 * @return a multi-line string of the exception, similar to the stack dump.
+	 * @see #getExceptionString(Throwable)
+	 * @since 2.21.0
+	 */
+	public static String getJREExceptionString(Throwable t)
+	{
+		StringWriter sw;
+		PrintWriter pw = new PrintWriter(sw = new StringWriter(), true);
+		t.printStackTrace(pw);
+		pw.flush();
+		return sw.toString();
 	}
 	
 	/**
@@ -913,8 +940,10 @@ public final class Common
 	/**
 	 * Returns a hash of a set of bytes digested by an encryption algorithm.
 	 * Can return null if this Java implementation cannot perform this.
+	 * Do not use this if you care if the algorithm is provided or not.
 	 * @param bytes the bytes to encode.
 	 * @param algorithmName the name to the algorithm to use.
+	 * @return the resultant byte digest, or null if the algorithm is not supported.
 	 * @since 2.10.0
 	 */
 	public static byte[] digest(byte[] bytes, String algorithmName)
@@ -929,8 +958,11 @@ public final class Common
 	/**
 	 * Returns a 20-byte SHA-1 hash of a set of bytes.
 	 * Can return null if this Java implementation cannot perform this,
-	 * but it shouldn't, since SHA-1 is mandatorily implemented for all
+	 * but it shouldn't, since SHA-1 is mandatorily implemented for all implementations.
+	 * @param bytes the input bytes.
+	 * @return the resultant 20-byte digest.
 	 * @since 2.9.0
+	 * @see #digest(byte[], String)
 	 */
 	public static byte[] sha1(byte[] bytes)
 	{
@@ -939,8 +971,12 @@ public final class Common
 	
 	/**
 	 * Returns a 16-byte MD5 hash of a set of bytes.
-	 * Can return null if this Java implementation cannot perform this.
+	 * Can return null if this Java implementation cannot perform this,
+	 * but it shouldn't, since MD5 is mandatorily implemented for all implementations.
+	 * @param bytes the input bytes.
+	 * @return the resultant 16-byte digest.
 	 * @since 2.9.0
+	 * @see #digest(byte[], String)
 	 */
 	public static byte[] md5(byte[] bytes)
 	{
@@ -953,6 +989,7 @@ public final class Common
 	 * @param in the input stream to read to convert to Base64.
 	 * @return a String of encoded bytes, or null if the message could not be encoded.
 	 * @since 2.9.0
+	 * @throws IOException if the input stream cannot be read.
 	 */
 	public static String asBase64(InputStream in) throws IOException
 	{
@@ -966,6 +1003,7 @@ public final class Common
 	 * @param sixtyThree the character to use for character 63 in the Base64 index.
 	 * @return a String of encoded bytes, or null if the message could not be encoded.
 	 * @since 2.9.0
+	 * @throws IOException if the input stream cannot be read.
 	 */
 	public static String asBase64(InputStream in, char sixtyTwo, char sixtyThree) throws IOException
 	{
@@ -1020,7 +1058,7 @@ public final class Common
 	 * Creates a blank file or updates its last modified date.
 	 * @param filePath	the abstract path to use.
 	 * @return true if the file was made/updated, false otherwise.
-	 * @throws IOException	if creating/modifying the file violates something.
+	 * @throws IOException if creating/modifying the file violates something.
 	 */
 	public static boolean touch(String filePath) throws IOException
 	{
@@ -1111,6 +1149,7 @@ public final class Common
 	 * Creates a file filled with random data with the specified length.
 	 * If <code>file</code> refers to an existing file, it will be OVERWRITTEN.
 	 * @param file the file to write.
+	 * @param length the length of the file in bytes.
 	 * @throws IOException if an I/O error occurs.
 	 * @since 2.9.0
 	 */
@@ -1134,8 +1173,8 @@ public final class Common
 	
 	/**
 	 * Makes a new String with escape sequences in it.
-	 * @param s		the original string.
-	 * @return		the new one with escape sequences in it.
+	 * @param s	the original string.
+	 * @return the new one with escape sequences in it.
 	 */
 	public static String withEscChars(String s)
     {
@@ -1180,6 +1219,8 @@ public final class Common
 
 	/**
 	 * Escapes a string so that it can be input safely into a URL string.
+	 * @param inString the input string.
+	 * @return the escaped string.
 	 */
 	public static String urlEscape(String inString)
 	{
@@ -1200,6 +1241,8 @@ public final class Common
 	
 	/**
 	 * Decodes a URL-encoded string.
+	 * @param inString the input string.
+	 * @return the unescaped string.
 	 * @since 2.19.0
 	 */
 	public static String urlUnescape(String inString)
@@ -1301,8 +1344,10 @@ public final class Common
 	
 	/**
 	 * Gets the relative path to a file path.
-	 * @param sourcePath	source file path.
-	 * @param targetPath	target file path to create the path to.
+	 * @param sourcePath source file path.
+	 * @param targetPath target file path to create the path to.
+	 * @return a path string to the target path relative to the source path.
+	 * @throws IOException if the canonical file paths cannot be resolved for either file.
 	 */
 	public static String getRelativePath(String sourcePath, String targetPath) throws IOException
 	{
@@ -1311,8 +1356,10 @@ public final class Common
 	
 	/**
 	 * Gets the relative path to a file path.
-	 * @param source	source file.
-	 * @param target	target file to create the path to.
+	 * @param source source file.
+	 * @param target target file to create the path to.
+	 * @return a path string to the target file relative to the source file.
+	 * @throws IOException if the canonical file paths cannot be resolved for either file.
 	 */
 	public static String getRelativePath(File source, File target) throws IOException
 	{
@@ -1696,7 +1743,8 @@ public final class Common
 	 * Converts a series of boolean values to bits,
 	 * going from least-significant to most-significant.
 	 * TRUE booleans set the bit, FALSE ones do not.
-	 * @param bool	list of booleans. cannot exceed 32.
+	 * @param bool list of booleans. cannot exceed 32.
+	 * @return the resultant bitstring in an integer.
 	 */
 	public static int booleansToInt(boolean ... bool)
 	{
@@ -1711,7 +1759,8 @@ public final class Common
 	 * Converts a series of boolean values to bits,
 	 * going from least-significant to most-significant.
 	 * TRUE booleans set the bit, FALSE ones do not.
-	 * @param bool	list of booleans. cannot exceed 64.
+	 * @param bool list of booleans. cannot exceed 64.
+	 * @return the resultant bitstring in a long integer.
 	 */
 	public static long booleansToLong(boolean ... bool)
 	{
@@ -1727,6 +1776,8 @@ public final class Common
 	 * <p>After the first byte, the change in value from the last byte is stored.
 	 * <br>For example, a byte sequence <code>[64,92,-23,33]</code> would be returned
 	 * as: <code>[64,28,-115,56]</code>.
+	 * @param b the input bytestring.
+	 * @return the output bytestring.
 	 */
 	public static byte[] deltaEncode(byte[] b)
 	{
@@ -1743,6 +1794,8 @@ public final class Common
 	 * <p>After the first byte, the change in value from the last byte is used to get the original value.
 	 * <br>For example, a byte sequence <code>[64,28,-115,56]</code> would be returned
 	 * as: <code>[64,92,-23,33]</code>.
+	 * @param b the input bytestring.
+	 * @return the output bytestring.
 	 */
 	public static byte[] deltaDecode(byte[] b)
 	{
@@ -1760,6 +1813,8 @@ public final class Common
 	 * Returns a new byte array, Carmacized.
 	 * Named after John D. Carmack, this will compress a sequence
 	 * of bytes known to be alike in contiguous sequences.
+	 * @param b the input bytestring.
+	 * @return the output bytestring.
 	 */
 	public static byte[] carmacize(byte[] b)
 	{
@@ -1811,6 +1866,8 @@ public final class Common
 	 * Returns a Camacized byte array, de-Carmacized.
 	 * Named after John D. Carmack, this will decompress a series of
 	 * bytes encoded in the Carmacizing algorithm.
+	 * @param b the input bytestring.
+	 * @return the output bytestring.
 	 */
 	public static byte[] decarmacize(byte[] b)
 	{
@@ -1939,9 +1996,10 @@ public final class Common
 	 * Note that this may block if the input stream is a type of stream
 	 * that will block if the input stream blocks for additional input.
 	 * This method is thread-safe.
-	 * @param in	the input stream to grab data from.
-	 * @param out	the output stream to write the data to.
-	 * @return		the total amount of bytes relayed.
+	 * @param in the input stream to grab data from.
+	 * @param out the output stream to write the data to.
+	 * @return the total amount of bytes relayed.
+	 * @throws IOException if a read or write error occurs.
 	 */
 	public static int relay(InputStream in, OutputStream out) throws IOException
 	{
@@ -1958,8 +2016,9 @@ public final class Common
 	 * This method is thread-safe.
 	 * @param in the input stream to grab data from.
 	 * @param out the output stream to write the data to.
-	 * @param bufferSize the buffer size for the I/O. Must be > 0.
+	 * @param bufferSize the buffer size for the I/O. Must be &gt; 0.
 	 * @return the total amount of bytes relayed.
+	 * @throws IOException if a read or write error occurs.
 	 * @since 2.14.0
 	 */
 	public static int relay(InputStream in, OutputStream out, int bufferSize) throws IOException
@@ -1977,9 +2036,10 @@ public final class Common
 	 * This method is thread-safe.
 	 * @param in the input stream to grab data from.
 	 * @param out the output stream to write the data to.
-	 * @param bufferSize the buffer size for the I/O. Must be > 0.
-	 * @param maxLength the maximum amount of bytes to relay, or a value < 0 for no max.
+	 * @param bufferSize the buffer size for the I/O. Must be &gt; 0.
+	 * @param maxLength the maximum amount of bytes to relay, or a value &lt; 0 for no max.
 	 * @return the total amount of bytes relayed.
+	 * @throws IOException if a read or write error occurs.
 	 * @since 2.14.0
 	 */
 	public static int relay(InputStream in, OutputStream out, int bufferSize, int maxLength) throws IOException
@@ -2001,18 +2061,19 @@ public final class Common
 	
 	/**
 	 * Sets the size of the buffer in bytes for {@link Common#relay(InputStream, OutputStream)}.
-	 * It would be unwise to set this during a call to relay().
+	 * Although you may not encounter this problem, it would be unwise to set this during a call to relay().
 	 * Size cannot be 0 or less.
+	 * @param size the size of the relay buffer. 
 	 */
 	public static void setRelayBufferSize(int size)
 	{
 		if (size <= 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("size is 0 or less.");
 		RELAY_BUFFER_SIZE = size;
 	}
 	
 	/**
-	 * Returns the size of the relay buffer for {@link Common#relay(InputStream, OutputStream)} in bytes.
+	 * @return the size of the relay buffer for {@link Common#relay(InputStream, OutputStream)} in bytes.
 	 */
 	public static int getRelayBufferSize()
 	{
@@ -2023,6 +2084,9 @@ public final class Common
 	 * Reads a line from standard in; throws a RuntimeException
 	 * if something absolutely serious happens. Should be used
 	 * just for convenience.
+	 * @return a single line read from Standard In.
+	 * @see #openSystemIn()
+	 * @see BufferedReader#readLine()
 	 */
 	public static String getLine()
 	{
@@ -2278,6 +2342,8 @@ public final class Common
 	
 	/**
 	 * Converts an ARGB 32-bit color value to a color.
+	 * @param argb an 0xAARRGGBB integer that represents a 32-bit color.
+	 * @return a Color object representing the color.
 	 */
 	public static Color argbToColor(int argb)
 	{
@@ -2291,6 +2357,8 @@ public final class Common
 
 	/**
 	 * Converts a color to an ARGB 32-bit color value.
+	 * @param c a Color object representing the color.
+	 * @return an 0xAARRGGBB integer that represents a 32-bit color.
 	 */
 	public static int colorToARGB(Color c)
 	{
@@ -2346,6 +2414,7 @@ public final class Common
 	 * If the string is null, this returns false.
 	 * If the string does not equal "true" (case ignored), this returns false.
 	 * @param s the input string.
+	 * @return the interpreted boolean.
 	 */
 	public static boolean parseBoolean(String s)
 	{
@@ -2359,6 +2428,7 @@ public final class Common
 	 * Attempts to parse a byte from a string.
 	 * If the string is null or the empty string, this returns 0.
 	 * @param s the input string.
+	 * @return the interpreted byte.
 	 */
 	public static byte parseByte(String s)
 	{
@@ -2375,6 +2445,7 @@ public final class Common
 	 * Attempts to parse a short from a string.
 	 * If the string is null or the empty string, this returns 0.
 	 * @param s the input string.
+	 * @return the interpreted short.
 	 */
 	public static short parseShort(String s)
 	{
@@ -2405,6 +2476,7 @@ public final class Common
 	 * Attempts to parse an int from a string.
 	 * If the string is null or the empty string, this returns 0.
 	 * @param s the input string.
+	 * @return the interpreted integer.
 	 */
 	public static int parseInt(String s)
 	{
@@ -2421,6 +2493,7 @@ public final class Common
 	 * Attempts to parse a long from a string.
 	 * If the string is null or the empty string, this returns 0.
 	 * @param s the input string.
+	 * @return the interpreted long integer.
 	 */
 	public static long parseLong(String s)
 	{
@@ -2437,6 +2510,7 @@ public final class Common
 	 * Attempts to parse a float from a string.
 	 * If the string is null or the empty string, this returns 0.0f.
 	 * @param s the input string.
+	 * @return the interpreted float.
 	 */
 	public static float parseFloat(String s)
 	{
@@ -2453,6 +2527,7 @@ public final class Common
 	 * Attempts to parse a double from a string.
 	 * If the string is null or the empty string, this returns 0.0.
 	 * @param s the input string.
+	 * @return the interpreted double.
 	 */
 	public static double parseDouble(String s)
 	{
@@ -2470,6 +2545,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * If the string does not equal "true," this returns false.
 	 * @param s the input string.
+	 * @param def the fallback value to return.
+	 * @return the interpreted boolean or def if the input string is blank.
 	 */
 	public static boolean parseBoolean(String s, boolean def)
 	{
@@ -2485,6 +2562,8 @@ public final class Common
 	 * Attempts to parse a byte from a string.
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
+	 * @param def the fallback value to return.
+	 * @return the interpreted byte or def if the input string is blank.
 	 */
 	public static byte parseByte(String s, byte def)
 	{
@@ -2501,6 +2580,8 @@ public final class Common
 	 * Attempts to parse a short from a string.
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
+	 * @param def the fallback value to return.
+	 * @return the interpreted short or def if the input string is blank.
 	 */
 	public static short parseShort(String s, short def)
 	{
@@ -2517,7 +2598,8 @@ public final class Common
 	 * Attempts to parse a byte from a string.
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
-	 * @return the first character in the string.
+	 * @param def the fallback value to return.
+	 * @return the first character in the string or def if the input string is blank.
 	 */
 	public static char parseChar(String s, char def)
 	{
@@ -2531,6 +2613,8 @@ public final class Common
 	 * Attempts to parse an int from a string.
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
+	 * @param def the fallback value to return.
+	 * @return the interpreted integer or def if the input string is blank.
 	 */
 	public static int parseInt(String s, int def)
 	{
@@ -2547,6 +2631,8 @@ public final class Common
 	 * Attempts to parse a long from a string.
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
+	 * @param def the fallback value to return.
+	 * @return the interpreted long integer or def if the input string is blank.
 	 */
 	public static long parseLong(String s, long def)
 	{
@@ -2563,6 +2649,8 @@ public final class Common
 	 * Attempts to parse a float from a string.
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
+	 * @param def the fallback value to return.
+	 * @return the interpreted float or def if the input string is blank.
 	 */
 	public static float parseFloat(String s, float def)
 	{
@@ -2579,6 +2667,8 @@ public final class Common
 	 * Attempts to parse a double from a string.
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
+	 * @param def the fallback value to return.
+	 * @return the interpreted double or def if the input string is blank.
 	 */
 	public static double parseDouble(String s, double def)
 	{
@@ -2596,9 +2686,10 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
 	 * <p>
-	 * Example: <code>"true, false, apple, false"</code> -> <code>[true, false, false, false]</code>
+	 * Example: <code>"true, false, apple, false"</code> becomes <code>[true, false, false, false]</code>
 	 * @param s the input string.
-	 * @throws NullPointerException if separatorRegex is null.
+	 * @param def the fallback value to return.
+	 * @return the array of booleans or def if the input string is blank.
 	 * @since 2.17.0
 	 * @see Common#parseBoolean(String)
 	 */
@@ -2612,9 +2703,10 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
 	 * <p>
-	 * Example: <code>"0, -5, 2, grape"</code> -> <code>[0, -5, 2, 0]</code>
+	 * Example: <code>"0, -5, 2, grape"</code> becomes <code>[0, -5, 2, 0]</code>
 	 * @param s the input string.
-	 * @throws NullPointerException if separatorRegex is null.
+	 * @param def the fallback value to return.
+	 * @return the array of bytes or def if the input string is blank.
 	 * @since 2.17.0
 	 * @see Common#parseByte(String)
 	 */
@@ -2628,9 +2720,10 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
 	 * <p>
-	 * Example: <code>"0, -5, 2, grape"</code> -> <code>[0, -5, 2, 0]</code>
+	 * Example: <code>"0, -5, 2, grape"</code> becomes <code>[0, -5, 2, 0]</code>
 	 * @param s the input string.
-	 * @throws NullPointerException if separatorRegex is null.
+	 * @param def the fallback value to return.
+	 * @return the array of shorts or def if the input string is blank.
 	 * @since 2.17.0
 	 * @see Common#parseShort(String)
 	 */
@@ -2644,9 +2737,10 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
 	 * <p>
-	 * Example: <code>"apple, pear, b, g"</code> -> <code>['a', 'p', 'b', 'g']</code>
+	 * Example: <code>"apple, pear, b, g"</code> becomes <code>['a', 'p', 'b', 'g']</code>
 	 * @param s the input string.
-	 * @throws NullPointerException if separatorRegex is null.
+	 * @param def the fallback value to return.
+	 * @return the array of characters or def if the input string is blank.
 	 * @since 2.17.0
 	 * @see Common#parseChar(String)
 	 */
@@ -2660,9 +2754,10 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
 	 * <p>
-	 * Example: <code>"0, -5, 2.1, grape"</code> -> <code>[0, -5, 2, 0]</code>
+	 * Example: <code>"0, -5, 2.1, grape"</code> becomes <code>[0, -5, 2, 0]</code>
 	 * @param s the input string.
-	 * @throws NullPointerException if separatorRegex is null.
+	 * @param def the fallback value to return.
+	 * @return the array of integers or def if the input string is blank.
 	 * @since 2.17.0
 	 * @see Common#parseInt(String)
 	 */
@@ -2676,9 +2771,10 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
 	 * <p>
-	 * Example: <code>"0.5, -5.4, 2, grape"</code> -> <code>[0.5f, -5.4f, 2.0f, 0f]</code>
+	 * Example: <code>"0.5, -5.4, 2, grape"</code> becomes <code>[0.5f, -5.4f, 2.0f, 0f]</code>
 	 * @param s the input string.
-	 * @throws NullPointerException if separatorRegex is null.
+	 * @param def the fallback value to return.
+	 * @return the array of floats or def if the input string is blank.
 	 * @since 2.17.0
 	 * @see Common#parseFloat(String)
 	 */
@@ -2692,9 +2788,10 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
 	 * <p>
-	 * Example: <code>"0, -5, 2, grape"</code> -> <code>[0, -5, 2, 0]</code>
+	 * Example: <code>"0, -5, 2, grape"</code> becomes <code>[0, -5, 2, 0]</code>
 	 * @param s the input string.
-	 * @throws NullPointerException if separatorRegex is null.
+	 * @param def the fallback value to return.
+	 * @return the array of long integers or def if the input string is blank.
 	 * @since 2.17.0
 	 * @see Common#parseLong(String)
 	 */
@@ -2708,9 +2805,10 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * This assumes that the elements of the array are separated by comma-or-whitespace characters.
 	 * <p>
-	 * Example: <code>"0.5, -5.4, 2, grape"</code> -> <code>[0.5, -5.4, 2.0, 0.0]</code>
+	 * Example: <code>"0.5, -5.4, 2, grape"</code> becomes <code>[0.5, -5.4, 2.0, 0.0]</code>
 	 * @param s the input string.
-	 * @throws NullPointerException if separatorRegex is null.
+	 * @param def the fallback value to return.
+	 * @return the array of doubles or def if the input string is blank.
 	 * @since 2.17.0
 	 * @see Common#parseDouble(String)
 	 */
@@ -2724,6 +2822,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
 	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @param def the fallback value to return.
+	 * @return the array of booleans or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
 	 * @see Common#parseBoolean(String)
@@ -2745,6 +2845,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
 	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @param def the fallback value to return.
+	 * @return the array of bytes or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
 	 * @see Common#parseByte(String)
@@ -2766,6 +2868,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
 	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @param def the fallback value to return.
+	 * @return the array of shorts or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
 	 * @see Common#parseShort(String)
@@ -2787,6 +2891,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
 	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @param def the fallback value to return.
+	 * @return the array of characters or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
 	 * @see Common#parseChar(String)
@@ -2808,6 +2914,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
 	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @param def the fallback value to return.
+	 * @return the array of integers or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
 	 * @see Common#parseInt(String)
@@ -2829,6 +2937,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
 	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @param def the fallback value to return.
+	 * @return the array of floats or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
 	 * @see Common#parseFloat(String)
@@ -2850,6 +2960,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
 	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @param def the fallback value to return.
+	 * @return the array of long integers or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
 	 * @see Common#parseLong(String)
@@ -2871,6 +2983,8 @@ public final class Common
 	 * If the string is null or the empty string, this returns <code>def</code>.
 	 * @param s the input string.
 	 * @param separatorRegex the regular expression to split the string into tokens.
+	 * @param def the fallback value to return.
+	 * @return the array of doubles or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
 	 * @see Common#parseDouble(String)
@@ -2889,6 +3003,7 @@ public final class Common
 
 	/**
 	 * Swaps the contents of two indices of an array.
+	 * @param <T> the object type stored in the array.
 	 * @param array the input array.
 	 * @param a the first index.
 	 * @param b the second index.
@@ -2904,6 +3019,7 @@ public final class Common
 	/**
 	 * Concatenates a set of arrays together, such that the contents of each
 	 * array are joined into one array. Null arrays are skipped.
+	 * @param <T> the object type stored in the arrays.
 	 * @param arrays the list of arrays.
 	 * @return a new array with all objects in each provided array added 
 	 * to the resultant one in the order in which they appear.
@@ -2934,11 +3050,12 @@ public final class Common
 	 * Adds an object to an array that presumably contains sorted elements.
 	 * An object is added at some point in the array, and the element is shifted down to an appropriate
 	 * position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param <T> the object type stored in the array that extends {@link Comparable}.
 	 * @param array the array to add an object to.
 	 * @param object the object to add.
 	 * @param start the index to add it to (the contents are replaced).
 	 * @return the final index in the array of the added object.
-	 * @throw {@link NullPointerException} if a comparison happens on a null object at some point.
+	 * @throws NullPointerException if a comparison happens on a null object at some point.
 	 * @see Comparable#compareTo(Object)
 	 * @see #sortFrom(Comparable[], int)
 	 * @since 2.21.0 
@@ -2953,14 +3070,15 @@ public final class Common
 	 * Adds an object to an array that presumably contains sorted elements.
 	 * An object is added at some point in the array, and the element is shifted down to an appropriate
 	 * position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param <T> the object type stored in the arrays.
 	 * @param array the array to add an object to.
 	 * @param object the object to add.
 	 * @param start the index to add it to (the contents are replaced).
 	 * @param comparator the comparator to use for comparisons.
 	 * @return the final index in the array of the added object.
-	 * @throw {@link NullPointerException} if a comparison happens on a null object at some point.
+	 * @throws NullPointerException if a comparison happens on a null object at some point.
 	 * @see Comparable#compareTo(Object)
-	 * @see #sortFrom(T[], int, Comparator)
+	 * @see #sortFrom(Object[], int, Comparator)
 	 * @since 2.21.0 
 	 */
 	public static <T> int addSorted(T[] array, T object, int start, Comparator<T> comparator)
@@ -2973,11 +3091,12 @@ public final class Common
 	 * Adds an object to an array that presumably contains sorted elements, but only if it isn't found via binary search.
 	 * An object is added at some point in the array, and the element is shifted down to an appropriate
 	 * position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param <T> the object type stored in the array that extends {@link Comparable}.
 	 * @param array the array to add an object to.
 	 * @param object the object to add.
 	 * @param start the index to add it to (the contents are replaced).
 	 * @return the final index in the array of the added object, or -1 if not added.
-	 * @throw {@link NullPointerException} if a comparison happens on a null object at some point.
+	 * @throws NullPointerException if a comparison happens on a null object at some point.
 	 * @see Comparable#compareTo(Object)
 	 * @see #addSorted(Comparable[], Comparable, int)
 	 * @since 2.21.0 
@@ -2994,12 +3113,13 @@ public final class Common
 	 * Adds an object to an array that presumably contains sorted elements, but only if it isn't found via binary search.
 	 * An object is added at some point in the array, and the element is shifted down to an appropriate
 	 * position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param <T> the object type stored in the arrays.
 	 * @param array the array to add an object to.
 	 * @param object the object to add.
 	 * @param start the index to add it to (the contents are replaced).
 	 * @param comparator the comparator to use for comparisons.
 	 * @return the final index in the array of the added object, or -1 if not added.
-	 * @throw {@link NullPointerException} if a comparison happens on a null object at some point.
+	 * @throws NullPointerException if a comparison happens on a null object at some point.
 	 * @see Comparable#compareTo(Object)
 	 * @see #addSorted(Object[], Object, int, Comparator)
 	 * @since 2.21.0 
@@ -3014,6 +3134,7 @@ public final class Common
 	
 	/**
 	 * Shifts an object to an appropriate position according to the object's {@link Comparable#compareTo(Object)} function.
+	 * @param <T> the object type stored in the array that extends {@link Comparable}.
 	 * @param array the array to shift the contents of.
 	 * @param index the index to add it to (the contents are replaced).
 	 * @return the final index in the array of the sorted object.
@@ -3031,6 +3152,7 @@ public final class Common
 	
 	/**
 	 * Shifts an object to an appropriate position according to the provided <code>comparator</code> function.
+	 * @param <T> the object type stored in the arrays.
 	 * @param array the array to shift the contents of.
 	 * @param index the index to add it to (the contents are replaced).
 	 * @param comparator the comparator to use.
@@ -3051,6 +3173,7 @@ public final class Common
 	 * Performs an in-place QuickSort on the provided array.
 	 * The array's contents will change upon completion.
 	 * Convenience method for <code>quicksort(array, 0, array.length - 1);</code>
+	 * @param <T> the object type stored in the array that extends {@link Comparable}.
 	 * @param array the input array.
 	 * @since 2.21.0
 	 */
@@ -3063,11 +3186,12 @@ public final class Common
 	 * Performs an in-place QuickSort on the provided array using a compatible Comparator.
 	 * The array's contents will change upon completion.
 	 * Convenience method for <code>quicksort(array, 0, array.length - 1, comparator);</code>
+	 * @param <T> the object type stored in the array.
 	 * @param array the input array.
 	 * @param comparator the comparator to use for comparing.
 	 * @since 2.21.0
 	 */
-	public static <T extends Comparable<T>> void quicksort(T[] array, Comparator<? super T> comparator)
+	public static <T> void quicksort(T[] array, Comparator<? super T> comparator)
 	{
 		quicksort(array, 0, array.length - 1, comparator);
 	}
@@ -3076,6 +3200,7 @@ public final class Common
 	 * Performs an in-place QuickSort on the provided array within an interval of indices.
 	 * The array's contents will change upon completion.
 	 * If <code>lo</code> is greater than <code>hi</code>, this does nothing. 
+	 * @param <T> the object type stored in the array that extends {@link Comparable}.
 	 * @param array the input array.
 	 * @param lo the low index to start the sort (inclusive).
 	 * @param hi the high index to start the sort (inclusive).
@@ -3094,9 +3219,11 @@ public final class Common
 	 * Performs an in-place QuickSort on the provided array within an interval of indices.
 	 * The array's contents will change upon completion.
 	 * If <code>lo</code> is greater than <code>hi</code>, this does nothing. 
+	 * @param <T> the object type stored in the array.
 	 * @param array the input array.
 	 * @param lo the low index to start the sort (inclusive).
 	 * @param hi the high index to start the sort (inclusive).
+	 * @param comparator the comparator to use for comparing.
 	 * @since 2.21.0
 	 */
 	public static <T> void quicksort(T[] array, int lo, int hi, Comparator<? super T> comparator)
@@ -3145,6 +3272,7 @@ public final class Common
 	/**
 	 * Copies references from one array to another until 
 	 * it hits a null sentinel reference or the end of the source array.
+	 * @param <T> the object type stored in the arrays.
 	 * @param source the source array.
 	 * @param sourceOffset the source offset.
 	 * @param destination the destination array.
@@ -3224,6 +3352,7 @@ public final class Common
 	/**
 	 * Attempts to close a {@link Closeable} object.
 	 * If the object is null, this does nothing.
+	 * @param c the reference to the closeable object.
 	 * @since 2.3.0
 	 */
 	public static void close(Closeable c)
@@ -3235,6 +3364,7 @@ public final class Common
 	/**
 	 * Attempts to close a {@link Connection} object.
 	 * If the object is null, this does nothing.
+	 * @param c the reference to the closeable object.
 	 * @since 2.15.0
 	 */
 	public static void close(Connection c)
@@ -3246,6 +3376,7 @@ public final class Common
 	/**
 	 * Attempts to close a {@link Statement} object.
 	 * If the object is null, this does nothing.
+	 * @param s the reference to the closeable object.
 	 * @since 2.15.0
 	 */
 	public static void close(Statement s)
@@ -3257,6 +3388,7 @@ public final class Common
 	/**
 	 * Attempts to close a {@link ResultSet} object.
 	 * If the object is null, this does nothing.
+	 * @param rs the reference to the closeable object.
 	 * @since 2.15.0
 	 */
 	public static void close(ResultSet rs)
@@ -3266,20 +3398,10 @@ public final class Common
 	}
 	
 	/**
-	 * Attempts to close a {@link ZipFile}.
-	 * If the object is null, this does nothing.
-	 * @since 2.13.1
-	 */
-	public static void close(ZipFile zf)
-	{
-		if (zf == null) return;
-		try { zf.close(); 	} catch (IOException e){}
-	}
-
-	/**
 	 * Gets an object local to the current thread via a String key that
 	 * was once set by {@link #setLocal(String, Object)}.
 	 * @param key the String key to use.
+	 * @return the stored object or null if no object was stored. 
 	 * @since 2.10.0
 	 */
 	public static Object getLocal(String key)
@@ -3287,20 +3409,6 @@ public final class Common
 		return THREADLOCAL_HASHMAP.get().get(key);
 	}
 
-	/**
-	 * Gets a singleton object local to the current thread.
-	 * Equivalent to <code>(T)getLocal(object.getClass().getCannonicalName())</code>
-	 * @param object the object key to use.
-	 * @since 2.21.0
-	 * @see #getLocal(String)
-	 * @throws NullPointerException if object.getClass().getCannonicalName() would return null or object is null.
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T getLocal(T object)
-	{
-		return (T)THREADLOCAL_HASHMAP.get().get(object.getClass().getCanonicalName());
-	}
-	
 	/**
 	 * Sets an object local to the current thread via a String key that
 	 * can be retrieved by {@link #getLocal(String)}. Objects set this way
@@ -3315,18 +3423,36 @@ public final class Common
 	}
 
 	/**
-	 * Sets an object local to the current thread that
-	 * can be retrieved by {@link #getLocal(Object)}. Objects set this way
-	 * are accessible ONLY to the thread in which they were set.
-	 * Equivalent to <code>(T)setLocal(object.getClass().getCannonicalName(), object)</code>
-	 * @param object the object to set.
+	 * Gets a singleton object local to the current thread.
+	 * This attempts to create a POJO object if it isn't set.
+	 * If the object does not have a default public constructor, it cannot be instantiated.
+	 * @param <T> returned object class.
+	 * @param clazz the class to instantiate/fetch.
+	 * @return the associated class.
 	 * @since 2.21.0
-	 * @see #setLocal(String, Object)
-	 * @throws NullPointerException if object.getClass().getCannonicalName() would return null or object is null.
+	 * @see #getLocal(String)
+	 * @see Reflect#create(Class)
+	 * @throws RuntimeException if instantiation cannot happen, either due to a non-existent constructor or a non-visible constructor.
+	 * @throws IllegalArgumentException if clazz.getCannonicalName() would return null.
+	 * @throws NullPointerException if clazz is null.
 	 */
-	public static <T> void setLocal(T object)
+	@SuppressWarnings("unchecked")
+	public static <T> T getLocal(Class<T> clazz)
 	{
-		THREADLOCAL_HASHMAP.get().put(object.getClass().getCanonicalName(), object);
+		String className = clazz.getCanonicalName();
+		if (className == null)
+			throw new IllegalArgumentException("Provided class must be anonymous, primitive, or has no cannonical name.");
+		
+		T out;
+		HashMap<String, Object> objectMap = THREADLOCAL_HASHMAP.get();
+		String classKey = "$$" + className;
+		
+		if (!objectMap.containsKey(classKey))
+			setLocal(classKey, out = Reflect.create(clazz));
+		else
+			out = (T)getLocal(classKey);
+		
+		return out;
 	}
 
 	/**
@@ -3339,7 +3465,5 @@ public final class Common
 	{
 		// Do nothing.
 	}
-	
-	
 	
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -47,7 +47,7 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 	}
 
 	@Override
-	public boolean equalityMethod(ObjectPair<K,V> object1, ObjectPair<K,V> object2)
+	protected boolean equalityMethod(ObjectPair<K,V> object1, ObjectPair<K,V> object2)
 	{
 		return equalityMethodForKey(object1.getKey(), object2.getKey());
 	}
@@ -59,7 +59,11 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 	}
 
 	/**
-	 * Returns the hashcode for a map key.
+	 * Calculates the hash code for an object key.
+	 * By default, this calls {@link Object#hashCode()}.
+	 * @param key the key object to use. 
+	 * @return the resultant code to use for table lookups.
+	 * @see Object#hashCode()
 	 */
 	protected int getHashcodeForKey(K key)
 	{
@@ -102,8 +106,9 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 	}
 
 	/**
-	 * Returns the index at which the pair will be added
-	 * to the hash table.
+	 * Finds the appropriate slot index for an object key.
+	 * @param key the key object to use. 
+	 * @return the index at which an object will be added/searched for in the hash map.
 	 */
 	protected int getTableIndexForKey(K key)
 	{
@@ -164,8 +169,7 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 	}
 
 	/**
-	 * Returns an iterator that iterates through each key
-	 * in the hash.
+	 * @return a resettable iterator that iterates through each key in the hash.
 	 */
 	public ResettableIterator<K> keyIterator()
 	{
@@ -173,8 +177,7 @@ public abstract class AbstractChainedHashMap<K extends Object, V extends Object>
 	}
 	
 	/**
-	 * Returns an iterator that iterates through each key
-	 * in the hash.
+	 * @return a resettable iterator that iterates through each key in the hash.
 	 */
 	public ResettableIterator<V> valueIterator()
 	{

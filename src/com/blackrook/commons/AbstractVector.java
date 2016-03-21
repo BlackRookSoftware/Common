@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ public abstract class AbstractVector<T extends Object>
 	 */
 	public AbstractVector(int capacity)
 	{
-		this(capacity,0);
+		this(capacity, 0);
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public abstract class AbstractVector<T extends Object>
 	/**
 	 * Clears the vector shallowly - removes no references and just sets the current size to 0.
 	 * This can be prone to holding references in memory longer than necessary, so know what
-	 * you are doing if you care about garbage collecting. 
+	 * you are doing if you need to care about garbage collecting. 
 	 * @since 2.21.0
 	 */
 	public void shallowClear()
@@ -87,6 +87,7 @@ public abstract class AbstractVector<T extends Object>
 
 	/**
 	 * Gets the capacity of this vector (size before it resizes itself).
+	 * @return the current capacity.
 	 */
 	public int getCapacity()
 	{
@@ -134,7 +135,8 @@ public abstract class AbstractVector<T extends Object>
 	}
 	
 	/**
-	 * Returns the capacity increment value.
+	 * @return the capacity increment value.
+	 * @see #setCapacityIncrement(int)
 	 */
 	public int getCapacityIncrement()
 	{
@@ -227,9 +229,10 @@ public abstract class AbstractVector<T extends Object>
 	}
 
 	/**
-	 * Removes an object from a spot in the vector and shifts 
+	 * Removes an object from an index in the vector and shifts 
 	 * everything after it down an index position.
-	 * @return	null if the index is out of bounds or the object at that index.
+	 * @param index the target index.
+	 * @return null if the index is out of bounds or the object at that index.
 	 */
 	@SuppressWarnings("unchecked")
 	public T removeIndex(int index)
@@ -246,10 +249,13 @@ public abstract class AbstractVector<T extends Object>
 
 	/**
 	 * Checks if an object exists in this vector via iterative comparison.
+	 * @param object the object to look for.
+	 * @return true if an equal object exists, or false if not.
+	 * @see #getIndexOf(Object)
 	 */
-	public boolean contains(T obj)
+	public boolean contains(T object)
 	{
-		return getIndexOf(obj) != -1;
+		return getIndexOf(object) != -1;
 	}
 	
 	/**
@@ -304,11 +310,12 @@ public abstract class AbstractVector<T extends Object>
 	/**
 	 * Sorts this vector using a comparator.
 	 * Calls {@link Arrays#sort(Object[], int, int, Comparator)} on the internal storage array, using the specified comparator.
+	 * @param comparator the comparator to use.
 	 */
 	@SuppressWarnings("unchecked")
-	public void sort(Comparator<? super T> comp)
+	public void sort(Comparator<? super T> comparator)
 	{
-		Arrays.sort((T[])storageArray, 0, size, comp);
+		Arrays.sort((T[])storageArray, 0, size, comparator);
 	}
 
 	/**
@@ -326,13 +333,14 @@ public abstract class AbstractVector<T extends Object>
 	/**
 	 * Sorts this vector using a comparator.
 	 * Calls {@link Arrays#sort(Object[], int, int, Comparator)} on the internal storage array, using the specified comparator.
+	 * @param comparator the comparator to use.
 	 * @param startIndex the starting index of the sort.
 	 * @param endIndex the ending index of the sort, exclusive.
 	 */
 	@SuppressWarnings("unchecked")
-	public void sort(Comparator<? super T> comp, int startIndex, int endIndex)
+	public void sort(Comparator<? super T> comparator, int startIndex, int endIndex)
 	{
-		Arrays.sort((T[])storageArray, startIndex, endIndex, comp);
+		Arrays.sort((T[])storageArray, startIndex, endIndex, comparator);
 	}
 
 	/**

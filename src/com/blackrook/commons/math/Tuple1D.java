@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ public abstract class Tuple1D implements TupleD
 	
 	/**
 	 * Creates a new one-dimensional tuple. 
-	 * @param x		the initial x-coordinate value of this tuple.
+	 * @param x	the initial x-coordinate value of this tuple.
 	 */
 	protected Tuple1D(double x)
 	{
@@ -34,7 +34,8 @@ public abstract class Tuple1D implements TupleD
 	}
 
 	/**
-	 * Sets the values of this tuple.
+	 * Sets the values of this tuple using another.
+	 * @param t the source tuple.
 	 */
 	public void set(Tuple1D t)
 	{
@@ -43,7 +44,7 @@ public abstract class Tuple1D implements TupleD
 
 	/**
 	 * Sets the values of this tuple.
-	 * @param x		the x value.
+	 * @param x the new x value.
 	 */
 	public void set(double x)
 	{
@@ -51,7 +52,9 @@ public abstract class Tuple1D implements TupleD
 	}
 
 	/**
-	 * Returns positive if greater, negative if less, zero if equal.
+	 * Compares tuple components.
+	 * @param t the other tuple.
+	 * @return a positive number if greater, negative if less, zero if equal.
 	 */
 	public double compareTo(Tuple1D t)
 	{
@@ -59,16 +62,16 @@ public abstract class Tuple1D implements TupleD
 	}
 
 	/**
-	 * Returns true if the target point occupies the same X-axis space as this one. 
+	 * Returns true if the target has the same component values as this one. 
+	 * @param t the other tuple.
+	 * @return true if so, false if not.
 	 */
 	public boolean equals(Tuple1D t)
 	{
 		return x == t.x;
 	}
 
-	/**
-	 * Returns the length of this tuple from the origin.
-	 */
+	@Override
 	public double length()
 	{
 		return x < 0 ? -x : x;
@@ -76,7 +79,8 @@ public abstract class Tuple1D implements TupleD
 
 	/**
 	 * Yields the dot product of a Vect1D with this one.
-	 * @param v		the vector to use with this one.
+	 * @param v the vector to use with this one.
+	 * @return the dot product.
 	 */
 	public double dot(Tuple1D v)
 	{
@@ -84,7 +88,7 @@ public abstract class Tuple1D implements TupleD
 	}
 
 	/**
-	 * Returns true if this tuple is zero, false otherwise.
+	 * @return true if this tuple is zero, false otherwise.
 	 */
 	public boolean isZero()
 	{
@@ -92,7 +96,9 @@ public abstract class Tuple1D implements TupleD
 	}
 
 	/**
-	 * Returns the distance in units from this tuple to another.
+	 * Gets the distance in units from this tuple to another.
+	 * @param tuple the other tuple.
+	 * @return the distance.
 	 */
 	public double getDistanceTo(Tuple1D tuple)
 	{
@@ -101,69 +107,50 @@ public abstract class Tuple1D implements TupleD
 
 	/**
 	 * Adds another Tuple1D to this one. This tuple's data is replaced by the result.
-	 * @param t		the tuple to add to this one.
+	 * @param t the tuple to add to this one.
 	 */
 	public void add(Tuple1D t)
 	{
 		add(this,t,this);
 	}
 
-	/**
-	 * Turns this tuple into a unit tuple of length 1, while keeping direction intact.
-	 */
+	@Override
 	public void normalize()
 	{
 		normalize(this,this);
 	}
 
-	/**
-	 * Scales this vector to a certain length.
-	 * @param len	the new length of the vector.
-	 */
+	@Override
 	public void setLength(double len)
 	{
 		setLength(this,len,this);
 	}
 
-	/**
-	 * Negates this vector.
-	 */
+	@Override
 	public void negate()
 	{
 		negate(this,this);
 	}
 
-	/**
-	 * Scales this tuple.
-	 * @param sx	scalar factor for x-axis. 
-	 */
+	@Override
 	public void scale(double sx)
 	{
 		scale(sx,this,this);
 	}
 
-	/**
-	 * Rotates this tuple around the zero origin's X axis.
-	 * @param radians	 the angle in radians to rotate.
-	 */
+	@Override
 	public void rotateX(double radians)
 	{
 		rotateX(radians,this,this);
 	}
 
-	/**
-	 * Rotates this tuple around the zero origin's Y axis.
-	 * @param radians	 the angle in radians to rotate.
-	 */
+	@Override
 	public void rotateY(double radians)
 	{
 		rotateY(radians,this,this);
 	}
 
-	/**
-	 * Rotates this tuple around the zero origin's Z axis.
-	 * @param radians	 the angle in radians to rotate.
-	 */
+	@Override
 	public void rotateZ(double radians)
 	{
 		rotateZ(radians,this,this);
@@ -250,7 +237,7 @@ public abstract class Tuple1D implements TupleD
 	 */
 	public static void rotateY(double radians, Tuple1D in, Tuple1D out)
 	{
-		out.x = (double)(in.x*Math.cos(radians));
+		out.x = (in.x*Math.cos(radians));
 	}
 
 	/**
@@ -261,7 +248,7 @@ public abstract class Tuple1D implements TupleD
 	 */
 	public static void rotateZ(double radians, Tuple1D in, Tuple1D out)
 	{
-		out.x = (double)(in.x*Math.cos(radians));
+		out.x = (in.x*Math.cos(radians));
 	}
 
 }

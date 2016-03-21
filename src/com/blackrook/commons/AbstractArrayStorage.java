@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ public abstract class AbstractArrayStorage<T extends Object>
 
 	/**
 	 * Initializes the array with a particular storage capacity.
+	 * @param capacity the desired capacity.
 	 */
 	protected AbstractArrayStorage(int capacity)
 	{
@@ -37,7 +38,10 @@ public abstract class AbstractArrayStorage<T extends Object>
 	}
 	
 	/**
-	 * Returns the data at a particular index in the array.
+	 * Gets data at a particular index in the array.
+	 * @param index the desired index.
+	 * @return the data at a particular index in the array.
+	 * @throws ArrayIndexOutOfBoundsException if the index falls outside of the array bounds.
 	 */
 	@SuppressWarnings("unchecked")
 	protected T getByIndex(int index)
@@ -47,6 +51,9 @@ public abstract class AbstractArrayStorage<T extends Object>
 	
 	/**
 	 * Sets the data at a particular index in the array.
+	 * @param index the desired index.
+	 * @param object the object to set.
+	 * @throws ArrayIndexOutOfBoundsException if the index falls outside of the array bounds.
 	 */
 	protected void setByIndex(int index, T object)
 	{

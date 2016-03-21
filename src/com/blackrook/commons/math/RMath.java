@@ -144,6 +144,8 @@ public final class RMath
 	
 	/**
 	 * Returns a random boolean.
+	 * @param rand the random number generator.
+	 * @return true or false.
 	 */
 	public static boolean randBoolean(Random rand)
 	{
@@ -152,6 +154,8 @@ public final class RMath
 
 	/**
 	 * Returns a random byte value.
+	 * @param rand the random number generator.
+	 * @return a value from 0 to 255.
 	 */
 	public static byte randByte(Random rand)
 	{
@@ -159,7 +163,8 @@ public final class RMath
 	}
 
 	/**
-	 * Returns a random integer.
+	 * @param rand the random number generator.
+	 * @return a random integer.
 	 */
 	public static int randInt(Random rand)
 	{
@@ -167,7 +172,8 @@ public final class RMath
 	}
 
 	/**
-	 * Returns a random long.
+	 * @param rand the random number generator.
+	 * @return a random long.
 	 */
 	public static long randLong(Random rand)
 	{
@@ -175,7 +181,8 @@ public final class RMath
 	}
 
 	/**
-	 * Returns a random float value from [0 to 1) (inclusive/exclusive).
+	 * @param rand the random number generator.
+	 * @return a random float value from [0 to 1) (inclusive/exclusive).
 	 */
 	public static float randFloat(Random rand)
 	{
@@ -183,7 +190,8 @@ public final class RMath
 	}
 
 	/**
-	 * Returns a random double value from [0 to 1) (inclusive/exclusive).
+	 * @param rand the random number generator.
+	 * @return a random double value from [0 to 1) (inclusive/exclusive).
 	 */
 	public static double randDouble(Random rand)
 	{
@@ -191,7 +199,8 @@ public final class RMath
 	}
 
 	/**
-	 * Returns a random Gaussian-distributed double value from -inf to +inf.
+	 * @param rand the random number generator.
+	 * @return a random Gaussian-distributed double value from -inf to +inf.
 	 */
 	public static double randGauss(Random rand)
 	{
@@ -200,6 +209,8 @@ public final class RMath
 
 	/**
 	 * Fills an array with random byte values.
+	 * @param rand the random number generator.
+	 * @param b the output array to fill with bytes.
 	 */
 	public static void randBytes(Random rand, byte[] b)
 	{
@@ -208,6 +219,9 @@ public final class RMath
 
 	/**
 	 * Returns a random integer from 0 (inclusive) to x (exclusive).
+	 * @param rand the random number generator.
+	 * @param x the upper bound.
+	 * @return the next integer.
 	 */
 	public static int rand(Random rand, int x)
 	{
@@ -216,6 +230,10 @@ public final class RMath
 
 	/**
 	 * Returns a random integer from base to base+range.
+	 * @param rand the random number generator.
+	 * @param base the lower bound.
+	 * @param range the upper bound (inclusive) of how much to add to the lower bound. 
+	 * @return the next integer.
 	 */
 	public static int rand(Random rand, int base, int range)
 	{
@@ -224,6 +242,10 @@ public final class RMath
 
 	/**
 	 * Returns a random float from lo to hi (inclusive).
+	 * @param rand the random number generator.
+	 * @param lo the lower bound.
+	 * @param hi the upper bound.
+	 * @return the next float.
 	 */
 	public static float randFloat(Random rand, float lo, float hi)
 	{
@@ -232,15 +254,22 @@ public final class RMath
 
 	/**
 	 * Returns a random Gaussian float from lo to hi (inclusive).
-	 * GAUSS WILL BE MOST PLEASED
+	 * @param rand the random number generator.
+	 * @param lo the lower bound.
+	 * @param hi the upper bound.
+	 * @return the next float.
 	 */
 	public static float randGaussFloat(Random rand, float lo, float hi)
 	{
-		return (hi - lo)*randGaussFloat(rand) + lo;
+		return clampValue((hi - lo)*randGaussFloat(rand) + lo, lo, hi);
 	}
 
 	/**
 	 * Returns a random integer from lo to hi (inclusive).
+	 * @param rand the random number generator.
+	 * @param lo the lower bound.
+	 * @param hi the upper bound.
+	 * @return the next float.
 	 */
 	public static int randInt(Random rand, int lo, int hi)
 	{
@@ -249,6 +278,8 @@ public final class RMath
 
 	/**
 	 * Returns a random float value from -1 to 1 (inclusive).
+	 * @param rand the random number generator.
+	 * @return the next float.
 	 */
 	public static float randFloatN(Random rand)
 	{
@@ -257,6 +288,10 @@ public final class RMath
 
 	/**
 	 * Returns a random double from lo to hi (inclusive).
+	 * @param rand the random number generator.
+	 * @param lo the lower bound.
+	 * @param hi the upper bound.
+	 * @return the next double.
 	 */
 	public static double randDouble(Random rand, double lo, double hi)
 	{
@@ -265,6 +300,8 @@ public final class RMath
 
 	/**
 	 * Returns a random double value from -1 to 1 (inclusive).
+	 * @param rand the random number generator.
+	 * @return the next double.
 	 */
 	public static double randDoubleN(Random rand)
 	{
@@ -273,6 +310,8 @@ public final class RMath
 
 	/**
 	 * Returns a random Gaussian-distributed float value from -inf to +inf.
+	 * @param rand the random number generator.
+	 * @return the next float.
 	 */
 	public static float randGaussFloat(Random rand)
 	{
@@ -281,6 +320,10 @@ public final class RMath
 
 	/**
 	 * Returns a random short from lo to hi (inclusive).
+	 * @param rand the random number generator.
+	 * @param lo the lower bound.
+	 * @param hi the upper bound.
+	 * @return the next short.
 	 */
 	public static short randShort(Random rand, int lo, int hi)
 	{
@@ -289,6 +332,10 @@ public final class RMath
 
 	/**
 	 * Returns a random short from lo to hi (inclusive).
+	 * @param rand the random number generator.
+	 * @param lo the lower bound.
+	 * @param hi the upper bound.
+	 * @return the next short.
 	 */
 	public static short randShort(Random rand, short lo, short hi)
 	{
@@ -296,7 +343,8 @@ public final class RMath
 	}
 
 	/**
-	 * Returns a random entry in an array/list.  
+	 * Returns a random entry in an array/list.
+	 * @param <T> the array object type.   
 	 * @param rand the Random instance to use. 
 	 * @param objects the array of objects to select from.
 	 * @return a random entry from the array.
@@ -309,8 +357,9 @@ public final class RMath
 	}
 	
 	/**
-	 * Calculates a percent chance of something occuring.
-	 * @param percent the chance
+	 * Calculates a percent chance of something occurring.
+	 * @param rand the random number generator.
+	 * @param percent the chance from 0 to 100.
 	 * @return true if happening, false otherwise.
 	 */
 	public static boolean percentChance(Random rand, int percent)
@@ -320,6 +369,7 @@ public final class RMath
 
 	/**
 	 * Rolls a die.
+	 * @param rand the random number generator.
 	 * @param die size of the die.
 	 * @return the outcome.
 	 */
@@ -331,6 +381,7 @@ public final class RMath
 
 	/**
 	 * Rolls a die many times. Example: 2d20 = roll(rand,2,20)
+	 * @param rand the random number generator.
 	 * @param n times to roll.
 	 * @param die size of the die.
 	 * @return the outcome total.
@@ -353,6 +404,7 @@ public final class RMath
 	 * <li>If x is 129, this returns 256.</li>
 	 * </ul>
 	 * @param x	the input value.
+	 * @return the closest power of two.
 	 */
 	public static int closestPowerOfTwo(int x)
 	{
@@ -373,6 +425,7 @@ public final class RMath
 	 * Returns the greatest common divisor of two integers.
 	 * @param a the first integer.
 	 * @param b the second integer.
+	 * @return the GCD.
 	 * @since 2.9.0
 	 */
 	public static int gcd(int a, int b)
@@ -384,6 +437,7 @@ public final class RMath
 	
 	/**
 	 * Checks if an integer is a valid power of two.
+	 * @param x the input value.
 	 * @return true if it is, false if not.
 	 */
 	public static boolean isPowerOfTwo(int x)
@@ -393,6 +447,7 @@ public final class RMath
 	
 	/**
 	 * Checks if an integer is a valid power of two.
+	 * @param x the input value.
 	 * @return true if it is, false if not.
 	 */
 	public static boolean isPowerOfTwo(long x)
@@ -402,9 +457,8 @@ public final class RMath
 	
 	/**
 	 * Returns the percentage of an integer to the nearest complete integer.
-	 * Example: getPercent(20,50) returns 10.
-	 * Example 2: getPercent(10,25) returns 2.
-	 * 
+	 * <br>Example: getPercent(20,50) returns 10.
+	 * <br>Example 2: getPercent(10,25) returns 2.
 	 * @param x the integer.
 	 * @param percentage the percentage.
 	 * @return the result equal to floor of x*(percentage/100), mathematically.
@@ -416,6 +470,7 @@ public final class RMath
 
 	/**
 	 * Converts radians to degrees.
+	 * @param radians the input angle in radians.
 	 * @return the resultant angle in degrees.
 	 */
 	public static double radToDeg(double radians)
@@ -425,6 +480,7 @@ public final class RMath
 
 	/**
 	 * Converts degrees to radians.
+	 * @param degrees the input angle in degrees.
 	 * @return the resultant angle in radians.
 	 */
 	public static double degToRad(double degrees)
@@ -434,6 +490,7 @@ public final class RMath
 
 	/**
 	 * Takes an angle in degrees and corrects it to the [0, 360) interval.
+	 * @param angle the input angle.
 	 * @return the equivalent angle in degrees.
 	 * @since 2.21.0
 	 */
@@ -448,6 +505,7 @@ public final class RMath
 
 	/**
 	 * Takes an angle in radians and corrects it to the [0, 2PI) interval.
+	 * @param angle the input angle.
 	 * @return the equivalent angle in radians.
 	 * @since 2.21.0
 	 */
@@ -481,7 +539,6 @@ public final class RMath
 	 * <br>Example: clampValue(32,-16,16) returns 16.
 	 * <br>Example: clampValue(4,-16,16) returns 4.
 	 * <br>Example: clampValue(-1000,-16,16) returns -16.
-	 * 
 	 * @param val the integer.
 	 * @param lo the lower bound.
 	 * @param hi the upper bound.
@@ -497,7 +554,6 @@ public final class RMath
 	 * <br>Example: clampValue(32,-16,16) returns 16.
 	 * <br>Example: clampValue(4,-16,16) returns 4.
 	 * <br>Example: clampValue(-1000,-16,16) returns -16.
-	 * 
 	 * @param val the short.
 	 * @param lo the lower bound.
 	 * @param hi the upper bound.
@@ -513,7 +569,6 @@ public final class RMath
 	 * <br>Example: clampValue(32,-16,16) returns 16.
 	 * <br>Example: clampValue(4,-16,16) returns 4.
 	 * <br>Example: clampValue(-1000,-16,16) returns -16.
-	 * 
 	 * @param val the float.
 	 * @param lo the lower bound.
 	 * @param hi the upper bound.
@@ -529,7 +584,6 @@ public final class RMath
 	 * <br>Example: clampValue(32,-16,16) returns 16.
 	 * <br>Example: clampValue(4,-16,16) returns 4.
 	 * <br>Example: clampValue(-1000,-16,16) returns -16.
-	 * 
 	 * @param val the double.
 	 * @param lo the lower bound.
 	 * @param hi the upper bound.
@@ -543,11 +597,10 @@ public final class RMath
 	
 	/**
 	 * Coerces an integer to the range bounded by lo and hi, by "wrapping"
-	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo > 0.
+	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo &gt; 0.
 	 * <br>Example: wrapValue(32,-16,16) returns 0.
 	 * <br>Example: wrapValue(4,-16,16) returns 4.
 	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
-	 * 
 	 * @param val the integer.
 	 * @param lo the lower bound.
 	 * @param hi the upper bound.
@@ -563,11 +616,10 @@ public final class RMath
 
 	/**
 	 * Coerces a float to the range bounded by lo and hi, by "wrapping"
-	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo > 0.
+	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo &gt; 0.
 	 * <br>Example: wrapValue(32,-16,16) returns 0.
 	 * <br>Example: wrapValue(4,-16,16) returns 4.
 	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
-	 * 
 	 * @param val the float.
 	 * @param lo the lower bound.
 	 * @param hi the upper bound.
@@ -583,11 +635,10 @@ public final class RMath
 
 	/**
 	 * Coerces a short to the range bounded by lo and hi, by "wrapping"
-	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo > 0.
+	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo &gt; 0.
 	 * <br>Example: wrapValue(32,-16,16) returns 0.
 	 * <br>Example: wrapValue(4,-16,16) returns 4.
 	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
-	 * 
 	 * @param val the short.
 	 * @param lo the lower bound.
 	 * @param hi the upper bound.
@@ -603,11 +654,10 @@ public final class RMath
 
 	/**
 	 * Coerces a double to the range bounded by lo and hi, by "wrapping"
-	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo > 0.
+	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo &gt; 0.
 	 * <br>Example: wrapValue(32,-16,16) returns 0.
 	 * <br>Example: wrapValue(4,-16,16) returns 4.
 	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
-	 * 
 	 * @param val the double.
 	 * @param lo the lower bound.
 	 * @param hi the upper bound.
@@ -625,9 +675,9 @@ public final class RMath
 	 * Logically "and"-s two boolean arrays together.
 	 * If both arrays are not the same size, an array of length <i>max(b1.length, b2.length)</i>
 	 * is returned and the longer array is "and"-ed against falses past <i>min(b1.length, b2.length)</i>.
-	 * @param b1	the first array.
-	 * @param b2	the second array.
-	 * @return		A new boolean array that is the logical "and" of both arrays.
+	 * @param b1 the first array.
+	 * @param b2 the second array.
+	 * @return A new boolean array that is the logical "and" of both arrays.
 	 */
 	public static boolean[] andBooleanArrays(boolean[] b1, boolean[] b2)
 	{
@@ -651,9 +701,9 @@ public final class RMath
 	 * Logically "or"-s two boolean arrays together.
 	 * If both arrays are not the same size, an array of length <i>max(b1.length, b2.length)</i>
 	 * is returned and the longer array is "or"-ed against falses past <i>min(b1.length, b2.length)</i>.
-	 * @param b1	the first array.
-	 * @param b2	the second array.
-	 * @return		A new boolean array that is the logical "or" of both arrays.
+	 * @param b1 the first array.
+	 * @param b2 the second array.
+	 * @return A new boolean array that is the logical "or" of both arrays.
 	 */
 	public static boolean[] orBooleanArrays(boolean[] b1, boolean[] b2)
 	{
@@ -677,9 +727,9 @@ public final class RMath
 	 * Logically "xor"-s two boolean arrays together.
 	 * If both arrays are not the same size, an array of length <i>max(b1.length, b2.length)</i>
 	 * is returned and the longer array is "xor"-ed against falses past <i>min(b1.length, b2.length)</i>.
-	 * @param b1	the first array.
-	 * @param b2	the second array.
-	 * @return		A new boolean array that is the logical "xor" of both arrays.
+	 * @param b1 the first array.
+	 * @param b2 the second array.
+	 * @return A new boolean array that is the logical "xor" of both arrays.
 	 */
 	public static boolean[] xorBooleanArrays(boolean[] b1, boolean[] b2)
 	{
@@ -701,10 +751,10 @@ public final class RMath
 
 	/**
 	 * Returns the value that "value" is closest to.
-	 * @param value		the input value
-	 * @param v1		first evaluating value
-	 * @param v2		second evaluating value
-	 * @return			either v1 or v2, whichever's closer.
+	 * @param value the input value
+	 * @param v1 first evaluating value
+	 * @param v2 second evaluating value
+	 * @return either v1 or v2, whichever's closer.
 	 */
 	public static int closer(double value, int v1, int v2)
 	{
@@ -714,6 +764,10 @@ public final class RMath
 	/**
 	 * Returns (val - min) if val is closer to min than max, (max - val) otherwise.
 	 * Result is always positive.
+	 * @param val the value to test.
+	 * @param min the minimum bound.
+	 * @param max the maximum bound.
+	 * @return the closer component value.
 	 * @since 2.21.0 
 	 */
 	public static double closerComponent(double val, double min, double max)
@@ -723,10 +777,10 @@ public final class RMath
 
 	/**
 	 * Returns the value that "value" is farthest from.
-	 * @param value		the input value
-	 * @param v1		first evaluating value
-	 * @param v2		second evaluating value
-	 * @return			either v1 or v2, whichever's farther.
+	 * @param value the input value
+	 * @param v1 first evaluating value
+	 * @param v2 second evaluating value
+	 * @return either v1 or v2, whichever's farther.
 	 */
 	public static int farther(double value, int v1, int v2)
 	{
@@ -735,9 +789,10 @@ public final class RMath
 
 	/**
 	 * Gives a value that is the result of a linear interpolation between two values.
-	 * @param factor	the interpolation factor.
-	 * @param x			the first value.
-	 * @param y			the second value.
+	 * @param factor the interpolation factor.
+	 * @param x the first value.
+	 * @param y the second value.
+	 * @return the interpolated value.
 	 */
 	public static double linearInterpolate(double factor, double x, double y)
 	{
@@ -746,9 +801,10 @@ public final class RMath
 	
 	/**
 	 * Gives a value that is the result of a cosine interpolation between two values.
-	 * @param factor	the interpolation factor.
-	 * @param x			the first value.
-	 * @param y			the second value.
+	 * @param factor the interpolation factor.
+	 * @param x the first value.
+	 * @param y the second value.
+	 * @return the interpolated value.
 	 */
 	public static double cosineInterpolate(double factor, double x, double y)
 	{
@@ -760,11 +816,12 @@ public final class RMath
 	/**
 	 * Gives a value that is the result of a cublic interpolation between two values.
 	 * Requires two outside values to predict a curve more accurately.
-	 * @param factor	the interpolation factor between x and y.
-	 * @param w			the value before the first.
-	 * @param x			the first value.
-	 * @param y			the second value.
-	 * @param z			the value after the second.
+	 * @param factor the interpolation factor between x and y.
+	 * @param w the value before the first.
+	 * @param x the first value.
+	 * @param y the second value.
+	 * @param z the value after the second.
+	 * @return the interpolated value.
 	 */
 	public static double cubicInterpolate(double factor, double w, double x, double y, double z)
 	{
@@ -827,10 +884,10 @@ public final class RMath
 	
 	/**
 	 * Gets a scalar factor that equals how "far along" a value is along an interval.
-	 * @param value	the value to test.
-	 * @param lo	the lower value of the interval.
-	 * @param hi	the higher value of the interval.
-	 * @return		a value between 0 and 1 describing this distance 
+	 * @param value the value to test.
+	 * @param lo the lower value of the interval.
+	 * @param hi the higher value of the interval.
+	 * @return a value between 0 and 1 describing this distance 
 	 * 		(0 = beginning or less, 1 = end or greater), or 0 if lo and hi are equal.
 	 */
 	public static double getInterpolationFactor(double value, double lo, double hi)
@@ -843,6 +900,8 @@ public final class RMath
 	/**
 	 * Returns the angular rotation of a vector described in two dimensions.
 	 * Result is in degrees.
+	 * @param x the x-component.
+	 * @param y the y-component.
 	 * @return a number in the range [0, 360). 0 is considered to be EAST. 
 	 * @since 2.3.1
 	 * @deprecated Since 2.10.0. Use {@link #getVectorAngleDegrees(double, double)} instead.
@@ -855,6 +914,8 @@ public final class RMath
 	/**
 	 * Returns the angular rotation of a vector described in two dimensions.
 	 * Result is in degrees.
+	 * @param x the x-component.
+	 * @param y the y-component.
 	 * @return a number in the range [0, 360). 0 is considered to be EAST. 
 	 * @since 2.3.1
 	 */
@@ -868,6 +929,8 @@ public final class RMath
 	/**
 	 * Returns the angular rotation of a vector described in two dimensions.
 	 * Result is in radians.
+	 * @param x the x-component.
+	 * @param y the y-component.
 	 * @return a number in the range [0, 2*PI). 0 is considered to be EAST. 
 	 * @since 2.10.0
 	 */
@@ -1127,7 +1190,7 @@ public final class RMath
 	 * @param angle1 the first angle in DEGREES.
 	 * @param angle2 the second angle in DEGREES.
 	 * @return a number in the range [-180, 180]. 0 is an EXACT match.
-	 * @Since 2.21.0 
+	 * @since 2.21.0 
 	 */
 	public static double getRelativeAngleDegrees(double angle1, double angle2)
 	{
@@ -1139,7 +1202,7 @@ public final class RMath
 	 * @param angle1 the first angle in RADIANS.
 	 * @param angle2 the second angle in RADIANS.
 	 * @return a number in the range [-Math.PI, Math.PI]. 0 is an EXACT match.
-	 * @Since 2.21.0 
+	 * @since 2.21.0 
 	 */
 	public static double getRelativeAngleRadians(double angle1, double angle2)
 	{
@@ -1186,6 +1249,7 @@ public final class RMath
 	 * @param by the second point, y-coordinate.
 	 * @param cx the third point, x-coordinate.
 	 * @param cy the third point, y-coordinate.
+	 * @return the calculated area.
 	 * @since 2.21.0
 	 */
 	public static double getTriangleArea(double ax, double ay, double bx, double by, double cx, double cy)
@@ -1201,6 +1265,7 @@ public final class RMath
 	 * @param by the second point, y-coordinate.
 	 * @param cx the third point, x-coordinate.
 	 * @param cy the third point, y-coordinate.
+	 * @return the calculated area.
 	 * @since 2.21.0
 	 */
 	public static double getTriangleAreaSigned(double ax, double ay, double bx, double by, double cx, double cy)
@@ -1216,6 +1281,7 @@ public final class RMath
 	 * @param by the second point, y-coordinate.
 	 * @param cx the third point, x-coordinate.
 	 * @param cy the third point, y-coordinate.
+	 * @return the calculated area.
 	 * @since 2.21.0
 	 */
 	public static double getTriangleAreaDoubleSigned(double ax, double ay, double bx, double by, double cx, double cy)
@@ -1250,7 +1316,7 @@ public final class RMath
 	 * @param crad the circle radius.
 	 * @since 2.21.0
 	 */
-	public static <T> void getProjectedCircle(Line2D outLine, double vx, double vy, double cx, double cy, double crad)
+	public static void getProjectedCircle(Line2D outLine, double vx, double vy, double cx, double cy, double crad)
 	{
 		getProjectedCircleFirstPoint(outLine.pointA, vx, vy, cx, cy, crad);
 		getProjectedCircleSecondPoint(outLine.pointB, vx, vy, cx, cy, crad);
@@ -1331,7 +1397,7 @@ public final class RMath
 	 * @param hh the box center point, half-height.
 	 * @since 2.21.0
 	 */
-	public static <T> void getProjectedBox(Line2D outLine, double vx, double vy, double cx, double cy, double hw, double hh)
+	public static void getProjectedBox(Line2D outLine, double vx, double vy, double cx, double cy, double hw, double hh)
 	{
 		getProjectedBoxFirstPoint(outLine.pointA, vx, vy, cx, cy, hw, hh);
 		getProjectedBoxSecondPoint(outLine.pointB, vx, vy, cx, cy, hw, hh);
@@ -1590,6 +1656,7 @@ public final class RMath
 	 * @param tpx the second circle center, x-coordinate.
 	 * @param tpy the second circle center, y-coordinate.
 	 * @param trad the second circle radius.
+	 * @return true if so, false if not.
 	 * @since 2.21.0
 	 */
 	public static boolean getIntersectionCircle(double spx, double spy, double srad, double tpx, double tpy, double trad)

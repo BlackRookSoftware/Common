@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2015 Black Rook Software
+ * Copyright (c) 2009-2016 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -10,7 +10,9 @@ package com.blackrook.commons;
 /**
  * Interface that is used by all "grid" types.
  * @author Matthew Tropiano
+ * @deprecated As of 2.21.0. This whole thing has flawed design and makes too many abstract assumptions at the base level. 
  */
+@Deprecated
 public abstract class AbstractGrid<T extends Object> implements Grid
 {
 
@@ -24,6 +26,7 @@ public abstract class AbstractGrid<T extends Object> implements Grid
 	/**
 	 * Sets one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the width axis.
+	 * @param type the wrapping type to set.
 	 */
 	public void setWidthWrapType(WrapType type)
 	{
@@ -33,6 +36,7 @@ public abstract class AbstractGrid<T extends Object> implements Grid
 	/**
 	 * Sets one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the height axis.
+	 * @param type the wrapping type to set.
 	 */
 	public void setHeightWrapType(WrapType type)
 	{
@@ -42,6 +46,7 @@ public abstract class AbstractGrid<T extends Object> implements Grid
 	/**
 	 * Sets one of the three wrapping types describing how this grid
 	 * should wrap coordinates on the depth axis.
+	 * @param type the wrapping type to set.
 	 */
 	public void setDepthWrapType(WrapType type)
 	{
@@ -70,6 +75,8 @@ public abstract class AbstractGrid<T extends Object> implements Grid
 	 * "Corrects" the input for the X axis based on the wrapping type
 	 * and whether the length of the axis is defined (greater than 0).
 	 * If not, this acts as though there is no wrapping type specified.
+	 * @param x the input coordinate.
+	 * @return the corrected coordinate.
 	 */
 	protected int correctX(int x)
 	{
@@ -91,6 +98,8 @@ public abstract class AbstractGrid<T extends Object> implements Grid
 	 * "Corrects" the input for the Y axis based on the wrapping type
 	 * and whether the length of the axis is defined (greater than 0).
 	 * If not, this acts as though there is no wrapping type specified.
+	 * @param y the input coordinate.
+	 * @return the corrected coordinate.
 	 */
 	protected int correctY(int y)
 	{
@@ -112,6 +121,8 @@ public abstract class AbstractGrid<T extends Object> implements Grid
 	 * "Corrects" the input for the Z axis based on the wrapping type
 	 * and whether the length of the axis is defined (greater than 0).
 	 * If not, this acts as though there is no wrapping type specified.
+	 * @param z the input coordinate.
+	 * @return the corrected coordinate.
 	 */
 	protected int correctZ(int z)
 	{
@@ -131,16 +142,17 @@ public abstract class AbstractGrid<T extends Object> implements Grid
 
 	/**
 	 * Sets an object at a particular part of the grid.
-	 * @param x		the grid position x to set info.
-	 * @param y		the grid position y to set info.
-	 * @param code	the code to set.
+	 * @param x	the grid position x to set info.
+	 * @param y	the grid position y to set info.
+	 * @param code the code to set.
 	 */
 	public abstract void set(int x, int y, T code);
 
 	/**
 	 * Gets the object at a particular part of the grid.
-	 * @param x	the grid position x to set info.
-	 * @param y	the grid position y to set info.
+	 * @param x	the grid position x to get info.
+	 * @param y	the grid position y to get info.
+	 * @return the object at that part of the grid.
 	 */
 	public abstract T get(int x, int y);
 }
