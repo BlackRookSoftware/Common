@@ -1,6 +1,6 @@
 # Black Rook Commons
 
-Copyright (c) 2009-2014 Black Rook Software. All rights reserved.  
+Copyright (c) 2009-2016 Black Rook Software. All rights reserved.  
 [http://blackrooksoftware.com/projects.htm?name=common](http://blackrooksoftware.com/projects.htm?name=common)  
 [https://github.com/BlackRookSoftware/Common](https://github.com/BlackRookSoftware/Common)
 
