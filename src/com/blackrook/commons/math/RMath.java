@@ -904,20 +904,6 @@ public final class RMath
 	 * @param y the y-component.
 	 * @return a number in the range [0, 360). 0 is considered to be EAST. 
 	 * @since 2.3.1
-	 * @deprecated Since 2.10.0. Use {@link #getVectorAngleDegrees(double, double)} instead.
-	 */
-	public static double getVectorAngle(double x, double y)
-	{
-		return getVectorAngleDegrees(x, y);
-	}
-	
-	/**
-	 * Returns the angular rotation of a vector described in two dimensions.
-	 * Result is in degrees.
-	 * @param x the x-component.
-	 * @param y the y-component.
-	 * @return a number in the range [0, 360). 0 is considered to be EAST. 
-	 * @since 2.3.1
 	 */
 	public static double getVectorAngleDegrees(double x, double y)
 	{

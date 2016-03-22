@@ -67,18 +67,6 @@ public class LoggingFactory
 	 * A convenience method for creating a Console-appending logger factory.
 	 * <p>Equivalent to: <code>new LoggingFactory(new ConsoleLogger(), LogLevel.DEBUG)</code></p>
 	 * @return the new logging factory.
-	 * @deprecated In 2.20.3 due to unclear method wording. Please switch to {@link LoggingFactory#createConsoleLoggingFactory()}.
-	 */
-	@Deprecated
-	public static LoggingFactory createConsoleLogger()
-	{
-		return createConsoleLoggingFactory();
-	}
-
-	/**
-	 * A convenience method for creating a Console-appending logger factory.
-	 * <p>Equivalent to: <code>new LoggingFactory(new ConsoleLogger(), LogLevel.DEBUG)</code></p>
-	 * @return the new logging factory.
 	 * @since 2.21.0
 	 */
 	public static LoggingFactory createConsoleLoggingFactory()

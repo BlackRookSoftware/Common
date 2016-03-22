@@ -22,9 +22,7 @@
 	<property name="project.classpath" value=""/>
 	<property name="project.javadoc.packages" value="
 		com.blackrook.commons,
-		com.blackrook.commons.bank,
 		com.blackrook.commons.comparators,
-		com.blackrook.commons.grid,
 		com.blackrook.commons.hash,
 		com.blackrook.commons.index,
 		com.blackrook.commons.linkedlist,
@@ -36,11 +34,7 @@
 		com.blackrook.commons.math.easing,
 		com.blackrook.commons.math.geometry,
 		com.blackrook.commons.math.wave,
-		com.blackrook.commons.scene,
-		com.blackrook.commons.search,
-		com.blackrook.commons.spatialhash,
-		com.blackrook.commons.trie,
-		com.blackrook.commons.vector
+		com.blackrook.commons.trie
 		"
 	/>
 	
