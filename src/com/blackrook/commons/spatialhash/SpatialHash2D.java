@@ -501,6 +501,7 @@ public class SpatialHash2D<T extends SpatialHashable> extends AbstractSpatialHas
 	 * @param x	the point, x-coordinate.
 	 * @param y	the point, y-coordinate.
 	 * @param object the object.
+	 * @return true if so, false if not.
 	 */
 	protected boolean pointIntersect(double x, double y, T object)
 	{

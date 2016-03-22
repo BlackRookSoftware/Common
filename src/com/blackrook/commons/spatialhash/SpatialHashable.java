@@ -20,22 +20,22 @@ package com.blackrook.commons.spatialhash;
 public interface SpatialHashable extends IntervalHashable
 {
 	/**
-	 * Gets the object's absolute Y coordinate in the spatial hash (center).
+	 * @return the object's absolute Y coordinate in the spatial hash (center).
 	 */
 	public double getObjectCenterY();
 
 	/**
-	 * Gets the object's absolute Z coordinate in the spatial hash (center).
+	 * @return the object's absolute Z coordinate in the spatial hash (center).
 	 */
 	public double getObjectCenterZ();
 
 	/**
-	 * Gets the object's half-height in the spatial hash.
+	 * @return the object's half-height in the spatial hash.
 	 */
 	public double getObjectHalfHeight();
 
 	/**
-	 * Gets the object's half-depth in the spatial hash.
+	 * @return the object's half-depth in the spatial hash.
 	 */
 	public double getObjectHalfDepth();
 
@@ -43,6 +43,7 @@ public interface SpatialHashable extends IntervalHashable
 	 * Gets the object's sweep along the Y-axis (from its center) in the spatial hash.
 	 * This is useful for detecting objects that are in the middle of, 
 	 * or anticipated to change between hash queries.
+	 * @return the y sweep.
 	 */
 	public double getObjectSweepY();
 
@@ -50,6 +51,7 @@ public interface SpatialHashable extends IntervalHashable
 	 * Gets the object's sweep along the Z-axis (from its center) in the spatial hash.
 	 * This is useful for detecting objects that are in the middle of, 
 	 * or anticipated to change between hash queries.
+	 * @return the z sweep.
 	 */
 	public double getObjectSweepZ();
 
@@ -59,12 +61,14 @@ public interface SpatialHashable extends IntervalHashable
 	 * Since this could be an expensive call, this 
 	 * is not always used - it is used if the object's {@link #useObjectRadius()} 
 	 * function returns true, which leaves it in the hands of the implementor.
+	 * @return the object radius.
 	 */
 	public double getObjectRadius();
 
 	/**
 	 * Should the object's radius value in the spatial hash be used for collision, rather
 	 * than its orthogonal measurements?
+	 * @return true if so, false if not.
 	 */
 	public boolean useObjectRadius();
 	

@@ -96,6 +96,7 @@ public class SortedVector<T extends Comparable<T>> extends AbstractVector<T>
 	
 	/** 
 	 * Swaps the object at this index with the one before it (used in sort).
+	 * @param index the source index.
 	 */
 	protected final void swap(int index)
 	{

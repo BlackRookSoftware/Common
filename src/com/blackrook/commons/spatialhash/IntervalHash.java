@@ -222,6 +222,9 @@ public class IntervalHash<T extends IntervalHashable> extends AbstractSpatialHas
 	 * Checks if an object intersects another bounding area.
 	 * This is NOT a comprehensive collision test, as two object's
 	 * BOUNDING volumes may intersect, but NOT their ACTUAL boundaries.
+	 * @param x0 the first bound.
+	 * @param x1 the second bound.
+	 * @param obj the object to test.
 	 * @return	true if their bounding areas overlap, false otherwise.
 	 */
 	protected boolean lineIntersects(double x0, double x1, T obj)

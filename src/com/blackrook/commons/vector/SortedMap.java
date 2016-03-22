@@ -50,6 +50,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	
 	/**
 	 * Adds an object to the list and sorts it insertion-style.
+	 * @param key the key.
+	 * @param value the value.
 	 */
 	public void add(T key, U value)
 	{
@@ -62,6 +64,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	/**
 	 * Replaces the value of a node in this structure.
 	 * If it doesn't exist, it will be added.
+	 * @param key the key.
+	 * @param value the value.
 	 */
 	public void replace(T key, U value)
 	{
@@ -74,6 +78,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	
 	/**
 	 * Checks if an object exists in this map via comparison binary-search style.
+	 * @param key the key.
+	 * @return true if so, false if not.
 	 */
 	public boolean contains(T key)
 	{
@@ -82,6 +88,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	
 	/**
 	 * Checks if an object exists in this map via comparison binary-search style.
+	 * @param key the key.
 	 * @return the index of the desired key or -1 if it does not exist.
 	 */
 	public int getIndexOf(T key)
@@ -112,6 +119,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 
 	/**
 	 * Checks if an object exists in this map via comparison linear-search style.
+	 * @param value the value to search for.
 	 * @return the index of the desired value or -1 if it does not exist.
 	 */
 	public int getIndexOfValue(U value)
@@ -124,6 +132,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 
 	/**
 	 * Gets the value at a particular index and returns the value.
+	 * @param index the desired index.
+	 * @return the corresponding value, or null if no value.
 	 */
 	public U getValueAtIndex(int index)
 	{
@@ -133,6 +143,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 
 	/**
 	 * Returns the object using this key.
+	 * @param key the desired key.
+	 * @return the corresponding value, or null if no value.
 	 */
 	public U get(T key)
 	{
@@ -144,6 +156,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 
 	/**
 	 * Removes an object from this Map.
+	 * @param key the desired key.
 	 * @return the removed object or null it wasn't in the Map.
 	 */
 	public U remove(T key)
@@ -156,6 +169,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	
 	/**
 	 * Removes a value from the map.
+	 * @param value the value to search for.
 	 * @return the removed object or null it wasn't in the Map.
 	 */
 	public boolean removeByValue(U value)
@@ -186,6 +200,8 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	/**
 	 * Removes the key, value pair at a particular index and returns
 	 * the value.
+	 * @param index the desired index.
+	 * @return the corresponding value, or null if no value.
 	 */
 	public U removeValueAtIndex(int index)
 	{
@@ -196,7 +212,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 	}
 
 	/**
-	 * Returns an iterator of this map's values.
+	 * @return an iterator of this map's values.
 	 */
 	public Iterator<U> getValueIterator()
 	{
@@ -215,6 +231,7 @@ public class SortedMap<T extends Comparable<T>, U extends Object> extends Abstra
 
 	/** 
 	 * Swaps the object at this index with the one before it (used in sort).
+	 * @param index the source index.
 	 */
 	protected final void swap(int index)
 	{

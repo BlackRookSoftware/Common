@@ -115,6 +115,7 @@ public class ComparatorVector<T extends Object> extends AbstractVector<T>
 
 	/** 
 	 * Swaps the object at this index with the one before it (used in sort).
+	 * @param index the source index. 
 	 */
 	protected final void swap(int index)
 	{

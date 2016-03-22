@@ -16,6 +16,7 @@ import com.blackrook.commons.AbstractVector;
  * Maintains an expandable list of paired objects, but is always sorted by key.
  * @author Matthew Tropiano
  * @param <T> any Object.
+ * @param <U> value object type.
  */
 public class SortedMap<T extends Comparable<T>, U extends Object> extends AbstractVector<ObjectPair<T, U>>
 {

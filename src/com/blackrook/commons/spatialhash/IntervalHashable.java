@@ -20,12 +20,12 @@ package com.blackrook.commons.spatialhash;
 public interface IntervalHashable extends AbstractSpatialHashable
 {
 	/**
-	 * Gets the object's absolute X coordinate in the spatial hash (center).
+	 * @return the object's absolute X coordinate in the spatial hash (center).
 	 */
 	public double getObjectCenterX();
 
 	/**
-	 * Gets the object's half-width in the spatial hash.
+	 * @return the object's half-width in the spatial hash.
 	 */
 	public double getObjectHalfWidth();
 
@@ -33,6 +33,7 @@ public interface IntervalHashable extends AbstractSpatialHashable
 	 * Gets the object's sweep along the X-axis (from its center) in the spatial hash.
 	 * This is useful for detecting objects that are in the middle of, 
 	 * or anticipated to change between hash queries.
+	 * @return the x sweep.
 	 */
 	public double getObjectSweepX();
 

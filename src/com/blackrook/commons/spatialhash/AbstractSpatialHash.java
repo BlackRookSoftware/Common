@@ -35,6 +35,9 @@ abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements
 		this(1);
 	}
 
+	/**
+	 * @param resolution the grid resolution in units.
+	 */
 	protected AbstractSpatialHash(int resolution)
 	{
 		if (resolution <= 0)
@@ -104,7 +107,7 @@ abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements
 	}
 
 	/**
-	 * Returns the number of objects in this hash.
+	 * @return the number of objects in this hash.
 	 */
 	public int size()
 	{
@@ -134,7 +137,7 @@ abstract class AbstractSpatialHash<T extends AbstractSpatialHashable> implements
 	public abstract int getIntersections(T object, AbstractVector<T> vector, boolean replace);
 
 	/**
-	 * Returns the spatial resolution of this grid. 
+	 * @return the spatial resolution of this grid. 
 	 */
 	public int getResolution()
 	{

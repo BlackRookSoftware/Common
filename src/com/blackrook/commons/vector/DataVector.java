@@ -59,6 +59,7 @@ public class DataVector
 	 * Gets a subset of data from this buffer.
 	 * @param offset the offset into the vector.
 	 * @param length the length of data in bytes to copy.
+	 * @return the bytes requested.
 	 * @throws IndexOutOfBoundsException if offset plus length exceeds size.
 	 * @since 2.1.0
 	 */
@@ -86,7 +87,7 @@ public class DataVector
 	}
 	
 	/**
-	 * Gets the capacity of this buffer.
+	 * @return the capacity of this buffer.
 	 */
 	public int getCapacity()
 	{
@@ -116,7 +117,7 @@ public class DataVector
 	}
 	
 	/**
-	 * Returns the capacity increment value.
+	 * @return the capacity increment value.
 	 */
 	public int getCapacityIncrement()
 	{
@@ -134,7 +135,7 @@ public class DataVector
 	}
 	
 	/**
-	 * Returns the amount of bytes in the buffer.
+	 * @return the amount of bytes in the buffer.
 	 */
 	public int size()
 	{
@@ -219,6 +220,7 @@ public class DataVector
 	
 	/**
 	 * Increases the size of the internal buffer if necessary.
+	 * @param requiredLength the target length for the vector.
 	 */
 	protected void capacityCheck(int requiredLength)
 	{
@@ -227,7 +229,7 @@ public class DataVector
 	}
 	
 	/**
-	 * Returns the bytes in this vector into an array.
+	 * @return the bytes in this vector into an array.
 	 */
 	public byte[] toByteArray()
 	{
@@ -237,7 +239,7 @@ public class DataVector
 	}
 	
 	/**
-	 * Returns this buffer as a string.
+	 * @return this buffer as a string.
 	 */
 	public String toString()
 	{
