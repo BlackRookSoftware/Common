@@ -19,7 +19,9 @@ import com.blackrook.commons.linkedlist.Queue;
  * using a combination of a sorted list of keys 
  * that correspond to a hashed list of integer keys.
  * @author Matthew Tropiano
+ * @deprecated Slated for deprecation on 2.21.0. Better served through SortedMaps.
  */
+@Deprecated
 public class Bank<T extends Object, U extends Object> implements Sizable
 {
 	/** Last id to use for added objects. */

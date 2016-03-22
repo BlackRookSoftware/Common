@@ -1,18 +1,22 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Slated for 2.21.0
+Changed in 2.21.0
 =================
 
-NOTE: Next version will be removing deprecated packages and classes!
+NOTE: Next version will be removing deprecated packages, classes, and methods!
 
 - Changed: Major javadoc fixes.
 - Updated: Copyright clauses for 2016.
-- Added: com.blackrook.commons.index package for indexing.
+
 - Deprecated: The entire com.blackrook.commons.spatialhash package in favor of
   a Model-View approach, in com.blackrook.commons.index.
-- Deprecated: AbstractGrid and com.blackrook.commons.grid.
+- Deprecated: Grid, AbstractGrid, and com.blackrook.commons.grid.
+- Deprecated: com.blackrook.commons.bank and com.blackrook.commons.search.
+
+- Added: com.blackrook.commons.index package for indexing.
 - Added: Addt'l methods to Vect2D, Vect2F for setting vector components.
 - Added: Addt'l convenience methods to LoggingFactory.
+- Added: Individual logging levels per logger.
 - Added: a series of vector/line calculations. The Tuple* classes point to 
   these methods now for relevant calculations.
 - Added: Reflect.getPublicFields(Object, boolean) for excluding static members.

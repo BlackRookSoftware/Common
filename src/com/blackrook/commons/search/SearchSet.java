@@ -31,7 +31,9 @@ import com.blackrook.commons.linkedlist.Queue;
  * If an object is added to this set, another add of the same object does nothing.
  * @author Matthew Tropiano
  * @since 2.16.0
+ * @deprecated Slated for deprecation on 2.21.0. Better served through tries.
  */
+@Deprecated
 public class SearchSet<T extends Object> implements Sizable, ResettableIterable<T>
 {
 	public static boolean DEBUG = Common.parseBoolean(System.getProperty(SearchSet.class.getName()+".debug"), false);

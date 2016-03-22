@@ -10,7 +10,9 @@ package com.blackrook.commons;
 /**
  * Interface that is used by all "grid" types.
  * @author Matthew Tropiano
+ * @deprecated Since 2.21.0. Structure is too rigid.
  */
+@Deprecated
 public interface Grid
 {
 	/**

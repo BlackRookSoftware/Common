@@ -5,5 +5,8 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  ******************************************************************************/
-/** Contains a set of classes for bank constructs. */
+/** 
+ * Contains a set of classes for bank constructs.
+ * @deprecated Since 2.21.0 
+ */
 package com.blackrook.commons.bank;
