@@ -7,12 +7,28 @@
  ******************************************************************************/
 package com.blackrook.commons.logging;
 
+import com.blackrook.commons.logging.LoggingFactory.LogLevel;
+
 /**
  * Logger interface for all log writing.
  * @author Matthew Tropiano  
  */
 public interface Logger
 {
+	/**
+	 * Sets the individual logging level for this logger.
+	 * @param loglevel the desired logging level or null to defer to the parent factory level.
+	 * @since 2.21.0
+	 */
+	public void setLoggingLevel(LogLevel loglevel);
+
+	/**
+	 * Gets the current individual logging level for this logger.
+	 * @return the current level. can be null, meaning this defers to the parent factory's log level.
+	 * @since 2.21.0
+	 */
+	public LogLevel getLoggingLevel();
+
 	/**
 	 * Outputs a FATAL log message.
 	 * @param message the object to convert to a string to dump.
