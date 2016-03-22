@@ -49,7 +49,7 @@
 	<target name="javadoc" depends="init.docs" description="Builds the documentation.">
         <javadoc access="protected" 
         	additionalparam="-J-Xmx512m  " author="true" 
-        	classpath="${project.classpath}${path.separator}${bin.dir}" 
+        	classpath="${bin.dir}" 
         	doctitle="${project.javadoc.title}" 
         	sourcepath="${src.dir}" 
         	packagenames="${project.javadoc.packages}"
