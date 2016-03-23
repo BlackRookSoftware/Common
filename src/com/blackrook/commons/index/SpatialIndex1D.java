@@ -45,6 +45,16 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		this.objectMap = new HashedHashMap<Integer, T>();
 	}
 
+	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+	// Get the cache.
+	private Cache getCache()
+	{
+		Cache out;
+		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
+			Common.setLocal(CACHE_NAME, out = new Cache());
+		return out;
+	}
+
 	/**
 	 * Clears this hash of all of its object references.
 	 */
@@ -63,7 +73,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		if (containsObject(object))
 			return;
 		
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -88,7 +98,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		if (!containsObject(object))
 			return false;
 		
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -152,7 +162,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	 */
 	protected boolean pointIntersects(double x, T object)
 	{
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -175,7 +185,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		double min = x0 < x1 ? x0 : x1;
 		double max = x0 < x1 ? x1 : x0;
 
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -194,7 +204,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	 */
 	protected boolean objectIntersects(T object, T object2)
 	{
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -211,7 +221,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	// Throws all object intersections into the accumulation hash.
 	private void accumObjectIntersections(T object)
 	{
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		model.getCenter(object, cache.tempPoint);
 		double centerX = cache.tempPoint.x;
 		model.getHalfWidths(object, cache.tempPoint);
@@ -248,7 +258,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		double halfWidth = (x0 + x1) / 2.0;
 		double centerX = x0 + halfWidth;
 		
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		cache.intersectionAccum.clear();
 		int startX = AbstractSpatialIndex.getStart(centerX, halfWidth, getResolution());
 		int endX = AbstractSpatialIndex.getEnd(centerX, halfWidth, getResolution());
@@ -272,7 +282,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	// Throws all point intersections into the accumulation hash.
 	private void accumPointIntersections(double x)
 	{
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		cache.intersectionAccum.clear();
 
 		int mapX = (int)(x / getResolution());
@@ -292,7 +302,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 	@SuppressWarnings("unchecked")
 	private int accumToVector(AbstractVector<? super T> vector)
 	{
-		Cache cache = Common.getLocal(Cache.class);
+		Cache cache = getCache();
 		cache.intersectionAccumIterator.reset();
 		int i = 0;
 		while (cache.intersectionAccumIterator.hasNext())

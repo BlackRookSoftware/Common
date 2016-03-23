@@ -47,6 +47,16 @@ public class Matrix4D
 		return out;
 	}
 
+	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+	// Get the cache.
+	private Cache getCache()
+	{
+		Cache out;
+		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
+			Common.setLocal(CACHE_NAME, out = new Cache());
+		return out;
+	}
+
 	/**
 	 * Sets this matrix to the identity matrix.
 	 */
@@ -116,7 +126,7 @@ public class Matrix4D
 	 */
 	public void setRotation(double degX, double degY, double degZ)
 	{
-		Cache c = Common.getLocal(Cache.class);
+		Cache c = getCache();
 		setIdentity();
 		c.rotwork.setRotateX(degX);
 		multiplyRight(c.rotwork);
@@ -198,7 +208,7 @@ public class Matrix4D
 	 */
 	public void multiplyRight(Matrix4D matrix)
 	{
-		Cache c = Common.getLocal(Cache.class);
+		Cache c = getCache();
 		getDoubles(c.SCRATCH_A);
 		matrix.getDoubles(c.SCRATCH_B);
 		multMatrices(c.SCRATCH_A, c.SCRATCH_B, mCoord);
@@ -211,7 +221,7 @@ public class Matrix4D
 	 */
 	public void multiplyLeft(Matrix4D matrix)
 	{
-		Cache c = Common.getLocal(Cache.class);
+		Cache c = getCache();
 		matrix.getDoubles(c.SCRATCH_A);
 		getDoubles(c.SCRATCH_B);
 		multMatrices(c.SCRATCH_A, c.SCRATCH_B, mCoord);

@@ -122,6 +122,16 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		}
 	}
 
+	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+	// Get the cache.
+	private Cache getCache()
+	{
+		Cache out;
+		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
+			Common.setLocal(CACHE_NAME, out = new Cache());
+		return out;
+	}
+
 	/**
 	 * Creates a new, empty PairGroup.
 	 * @return the new PairGroup.
@@ -515,10 +525,9 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public PairGroup remove(int x, int y)
 	{
-		Cache c = Common.getLocal(Cache.class);
-		c.pair.x = x;
-		c.pair.y = y;
-		int index = Arrays.binarySearch(pairList, c.pair, PAIR_COMPARATOR);
+		Cache c = getCache();
+		c.tempPair.set(x, y);
+		int index = Arrays.binarySearch(pairList, c.tempPair, PAIR_COMPARATOR);
 		if (index < 0)
 			return this;
 		
@@ -576,10 +585,9 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public boolean contains(int x, int y)
 	{
-		Cache c = Common.getLocal(Cache.class);
-		c.pair.x = x;
-		c.pair.y = y;
-		return Arrays.binarySearch(pairList, 0, size, c.pair, PAIR_COMPARATOR) >= 0;
+		Cache c = getCache();
+		c.tempPair.set(x, y);
+		return Arrays.binarySearch(pairList, 0, size, c.tempPair, PAIR_COMPARATOR) >= 0;
 	}
 
 	/**
@@ -724,7 +732,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		if (count <= 0)
 			return empty();
 		
-		Cache c = Common.getLocal(Cache.class);
+		Cache c = getCache();
 		int amount = Math.min(size(), count);
 		c.doRandom(random, size(), amount);
 		
@@ -783,11 +791,12 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	{
 		private int[] orderingSource;
 		private int[] randomOrdering;
-		private Pair pair;
+		/** Temp pair. */
+		private Pair tempPair;
 		
-		public Cache()
+		public Cache() 
 		{
-			this.pair = new Pair();
+			tempPair = new Pair();
 		}
 		
 		private void doRandom(Random random, int length, int amount)

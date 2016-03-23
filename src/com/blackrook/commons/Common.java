@@ -3426,6 +3426,7 @@ public final class Common
 	 * Gets a singleton object local to the current thread.
 	 * This attempts to create a POJO object if it isn't set.
 	 * If the object does not have a default public constructor, it cannot be instantiated.
+	 * <br><b>NOTE: As this relies on reflection to pull data, is would be wise to NOT use this method in real-time circumstances.</b>
 	 * @param <T> returned object class.
 	 * @param clazz the class to instantiate/fetch.
 	 * @return the associated class.

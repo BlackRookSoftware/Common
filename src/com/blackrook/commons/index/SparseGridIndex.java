@@ -34,6 +34,17 @@ public class SparseGridIndex<T extends Object> implements ResettableIterable<Obj
 		data = new HashMap<Pair, T>();
 	}
 	
+	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+
+	// Get the cache.
+	private Cache getCache()
+	{
+		Cache out;
+		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
+			Common.setLocal(CACHE_NAME, out = new Cache());
+		return out;
+	}
+
 	/**
 	 * Clears everything from the grid.
 	 */
@@ -50,7 +61,7 @@ public class SparseGridIndex<T extends Object> implements ResettableIterable<Obj
 	 */
 	public void set(int x, int y, T object)
 	{
-		Cache c = Common.getLocal(Cache.class);
+		Cache c = getCache();
 		c.tempPair.set(x, y);
 		if (object == null)
 			data.removeUsingKey(c.tempPair);
@@ -66,7 +77,7 @@ public class SparseGridIndex<T extends Object> implements ResettableIterable<Obj
 	 */
 	public T get(int x, int y)
 	{
-		Cache c = Common.getLocal(Cache.class);
+		Cache c = getCache();
 		c.tempPair.set(x, y);
 		return data.get(c.tempPair);
 	}
