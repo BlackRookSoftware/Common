@@ -47,16 +47,6 @@ public class Matrix4D
 		return out;
 	}
 
-	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
-	// Get the cache.
-	private Cache getCache()
-	{
-		Cache out;
-		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
-			Common.setLocal(CACHE_NAME, out = new Cache());
-		return out;
-	}
-
 	/**
 	 * Sets this matrix to the identity matrix.
 	 */
@@ -350,13 +340,24 @@ public class Matrix4D
 		System.arraycopy(mCoord,0,target.mCoord,0,16);
 	}
 	
-	public static final class Cache
+	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+
+	// Get the cache.
+	private Cache getCache()
+	{
+		Cache out;
+		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
+			Common.setLocal(CACHE_NAME, out = new Cache());
+		return out;
+	}
+
+	private static final class Cache
 	{
 		private Matrix4D rotwork;
 		private double[] SCRATCH_A;
 		private double[] SCRATCH_B;
 
-		public Cache()
+		private Cache()
 		{
 			rotwork = new Matrix4D();
 			SCRATCH_A = new double[16];

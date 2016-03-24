@@ -45,16 +45,6 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		this.objectMap = new HashedHashMap<Integer, T>();
 	}
 
-	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
-	// Get the cache.
-	private Cache getCache()
-	{
-		Cache out;
-		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
-			Common.setLocal(CACHE_NAME, out = new Cache());
-		return out;
-	}
-
 	/**
 	 * Clears this hash of all of its object references.
 	 */
@@ -314,8 +304,19 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		return i;
 	}
 	
+	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+
+	// Get the cache.
+	private Cache getCache()
+	{
+		Cache out;
+		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
+			Common.setLocal(CACHE_NAME, out = new Cache());
+		return out;
+	}
+
 	/** Index cache. Used internally. */
-	public static final class Cache
+	private static final class Cache
 	{
 		/** Temporary point. */
 		private Point1D tempPoint;
@@ -324,7 +325,7 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		/** Search accumulator iterator. */
 		private ResettableIterator<Object> intersectionAccumIterator;
 		
-		public Cache()
+		private Cache()
 		{
 			this.intersectionAccum = new Hash<Object>();
 			this.intersectionAccumIterator = intersectionAccum.iterator();
@@ -333,5 +334,4 @@ public class SpatialIndex1D<T> extends AbstractSpatialIndex<T>
 		
 	}
 	
-
 }

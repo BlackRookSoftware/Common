@@ -122,16 +122,6 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		}
 	}
 
-	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
-	// Get the cache.
-	private Cache getCache()
-	{
-		Cache out;
-		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
-			Common.setLocal(CACHE_NAME, out = new Cache());
-		return out;
-	}
-
 	/**
 	 * Creates a new, empty PairGroup.
 	 * @return the new PairGroup.
@@ -784,17 +774,27 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		return sb.toString();
 	}
 	
+	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+
+	// Get the cache.
+	private Cache getCache()
+	{
+		Cache out;
+		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
+			Common.setLocal(CACHE_NAME, out = new Cache());
+		return out;
+	}
+
 	/**
 	 * Local cache for multiple operations.
 	 */
-	public static class Cache
+	private static class Cache
 	{
 		private int[] orderingSource;
 		private int[] randomOrdering;
-		/** Temp pair. */
 		private Pair tempPair;
 		
-		public Cache() 
+		private Cache() 
 		{
 			tempPair = new Pair();
 		}
