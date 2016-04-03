@@ -1302,6 +1302,66 @@ public final class Common
 	}
 
 	/**
+	 * Adds a character sequence from the start of a string if it starts with the sequence.
+	 * @param input the input string to change.
+	 * @param sequence the sequence to potentially add.
+	 * @return a modified string or the input string if no modification.
+	 * @since 2.30.1
+	 */
+	public static String addStartingSequence(String input, String sequence)
+	{
+		if (!input.startsWith(sequence))
+			return sequence + input;
+		else
+			return input;
+	}
+	
+	/**
+	 * Adds a character sequence from the end of a string if it ends with the sequence.
+	 * @param input the input string to change.
+	 * @param sequence the sequence to potentially add.
+	 * @return a modified string or the input string if no modification.
+	 * @since 2.30.1
+	 */
+	public static String addEndingSequence(String input, String sequence)
+	{
+		if (!input.endsWith(sequence))
+			return input + sequence;
+		else
+			return input;
+	}
+	
+	/**
+	 * Removes a character sequence from the start of a string if it starts with the sequence.
+	 * @param input the input string to change.
+	 * @param sequence the sequence to potentially remove.
+	 * @return a modified string or the input string if no modification.
+	 * @since 2.30.1
+	 */
+	public static String removeStartingSequence(String input, String sequence)
+	{
+		if (input.startsWith(sequence))
+			return input.substring(sequence.length());
+		else
+			return input;
+	}
+	
+	/**
+	 * Removes a character sequence from the end of a string if it exists.
+	 * @param input the input string to change.
+	 * @param sequence the sequence to potentially remove.
+	 * @return a modified string or the input string if no modification.
+	 * @since 2.30.1
+	 */
+	public static String removeEndingSequence(String input, String sequence)
+	{
+		if (input.endsWith(sequence))
+			return input.substring(0, input.length() - sequence.length());
+		else
+			return input;
+	}
+	
+	/**
 	 * Creates the necessary directories for a file path.
 	 * @param file	the abstract file path.
 	 * @return		true if the paths were made (or exists), false otherwise.
