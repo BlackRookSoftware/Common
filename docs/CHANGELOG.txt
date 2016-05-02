@@ -4,7 +4,8 @@ Slated for 2.30.1
 =================
 
 - Added: Some additional string functions to Common.
-
+- Fixed: RMath.getAngularDistanceRadians/Degrees() should have really called 
+  getRelativeAngleDegrees/Radians() with an abs() added to them.
 
 Changed in 2.30.0
 =================

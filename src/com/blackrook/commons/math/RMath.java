@@ -1154,8 +1154,7 @@ public final class RMath
 	 */
 	public static double getAngularDistanceDegrees(double angle1, double angle2)
 	{
-		double diff = Math.abs((angle2 % 360.0) - (angle1 % 360.0));
-		return diff > 180.0 ? 360.0 - diff : diff; 
+		return Math.abs(getRelativeAngleDegrees(angle1, angle2)); 
 	}
 	
 	/**
@@ -1167,8 +1166,7 @@ public final class RMath
 	 */
 	public static double getAngularDistanceRadians(double angle1, double angle2)
 	{
-		double diff = Math.abs((angle2 % TWO_PI) - (angle1 % TWO_PI));
-		return diff > Math.PI ? TWO_PI - diff : diff; 
+		return Math.abs(getRelativeAngleRadians(angle1, angle2)); 
 	}
 
 	/**
