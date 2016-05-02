@@ -1,6 +1,6 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Slated for 2.30.1
+Changed in 2.30.1
 =================
 
 - Added: Some additional string functions to Common.
