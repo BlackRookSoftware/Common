@@ -1,5 +1,11 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Changed in 2.30.2
+=================
+
+- Fixed: Vector angle calls now sanitize angle ranges, according to spec.
+
+
 Changed in 2.30.1
 =================
 

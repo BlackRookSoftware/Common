@@ -907,9 +907,15 @@ public final class RMath
 	 */
 	public static double getVectorAngleDegrees(double x, double y)
 	{
-		return x != 0.0 
-			? radToDeg(Math.atan(y / x)) + (x < 0 ? 180 : 0) 
-			: (y < 0 ? 270d : 90d);
+		if (x != 0.0)
+		{
+			double deg = sanitizeAngleDegrees(radToDeg(Math.atan(y / x)));
+			return deg + (x < 0 ? 180 : 0);
+		}
+		else
+		{
+			return (y < 0 ? 270d : 90d);
+		}
 	}
 	
 	/**
@@ -922,9 +928,15 @@ public final class RMath
 	 */
 	public static double getVectorAngleRadians(double x, double y)
 	{
-		return x != 0.0 
-			? Math.atan(y / x) + (x < 0 ? Math.PI : 0) 
-			: (y < 0 ? THREE_PI_OVER_TWO : PI_OVER_TWO);
+		if (x != 0.0)
+		{
+			double rad = sanitizeAngleRadians(Math.atan(y / x));
+			return rad + (x < 0 ? Math.PI : 0);
+		}
+		else
+		{
+			return (y < 0 ? THREE_PI_OVER_TWO : PI_OVER_TWO);
+		}
 	}
 	
 	/**
