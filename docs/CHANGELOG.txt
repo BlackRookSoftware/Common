@@ -1,10 +1,15 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Slated for 2.31.0
+=================
+
+- Added: Matrix4X chaining commands and other commands.
+
+
 Changed in 2.30.2
 =================
 
 - Fixed: Vector angle calls now sanitize angle ranges, according to spec.
-
 
 Changed in 2.30.1
 =================

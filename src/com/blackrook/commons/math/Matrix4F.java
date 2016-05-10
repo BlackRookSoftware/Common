@@ -28,14 +28,14 @@ public class Matrix4F
 	protected static float[] IDENTITY = {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
 
 	/** Matrix coordinates. */
-	private float[] mCoord;
+	private float[] matrixArray;
 	
 	/**
 	 * Constructs a new, blank 4x4 matrix.
 	 */
 	public Matrix4F()
 	{
-		mCoord = new float[16];
+		matrixArray = new float[16];
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class Matrix4F
 	 */
 	public void setIdentity()
 	{
-		System.arraycopy(IDENTITY, 0, mCoord, 0, 16);
+		identityArray(matrixArray);
 	}
 	
 	/**
@@ -64,10 +64,7 @@ public class Matrix4F
 	 */
 	public void setTranslation(float x, float y, float z)
 	{
-		setIdentity();
-		mCoord[12] = x;
-		mCoord[13] = y;
-		mCoord[14] = z;
+		translateArray(matrixArray, x, y, z);
 	}
 
 	/**
@@ -76,11 +73,7 @@ public class Matrix4F
 	 */
 	public void setRotateX(float degrees)
 	{
-		float angle = (float)(degrees*Math.PI)/180;
-		setIdentity();
-		mCoord[5] = mCoord[10] = (float)Math.cos(angle);
-		mCoord[6] = (float)Math.sin(angle);
-		mCoord[9] = -mCoord[6];
+		rotationXArray(matrixArray, degrees);
 	}
 
 	/**
@@ -89,11 +82,7 @@ public class Matrix4F
 	 */
 	public void setRotateY(float degrees)
 	{
-		float angle = (float)(degrees*Math.PI)/180;
-		setIdentity();
-		mCoord[0] = mCoord[10] = (float)Math.cos(angle);
-		mCoord[8] = (float)Math.sin(angle);
-		mCoord[2] = -mCoord[8];
+		rotationYArray(matrixArray, degrees);
 	}
 	
 	/**
@@ -102,11 +91,7 @@ public class Matrix4F
 	 */
 	public void setRotateZ(float degrees)
 	{
-		float angle = (float)(degrees*Math.PI)/180;
-		setIdentity();
-		mCoord[0] = mCoord[5] = (float)Math.cos(angle);
-		mCoord[1] = (float)Math.sin(angle);
-		mCoord[4] = -mCoord[1];
+		rotationZArray(matrixArray, degrees);
 	}
 	
 	/**
@@ -117,14 +102,7 @@ public class Matrix4F
 	 */
 	public void setRotation(float degX, float degY, float degZ)
 	{
-		Cache c = getCache();
-		setIdentity();
-		c.rotwork.setRotateX(degX);
-		multiplyRight(c.rotwork);
-		c.rotwork.setRotateY(degY);
-		multiplyRight(c.rotwork);
-		c.rotwork.setRotateZ(degZ);
-		multiplyRight(c.rotwork);
+		reset().rotateX(degX).rotateY(degY).rotateZ(degZ);
 	}
 
 	/**
@@ -135,10 +113,7 @@ public class Matrix4F
 	 */
 	public void setScale(float scaleX, float scaleY, float scaleZ)
 	{
-		setIdentity();
-		mCoord[0] = scaleX;
-		mCoord[5] = scaleY;
-		mCoord[10] = scaleZ;
+		scaleArray(matrixArray, scaleX, scaleY, scaleZ);
 	}
 
 	/**
@@ -156,91 +131,21 @@ public class Matrix4F
 	 */
 	public void setShear(float shear)
 	{
-		setIdentity();
-		mCoord[4] = shear;
+		shearArray(matrixArray, shear);
 	}
 
-	/**
-	 * Sets a position in this matrix to a value.
-	 * @param row the desired matrix row.
-	 * @param col the desired matrix column.
-	 * @param val the new value to set.
-	 */
-	public void set(int row, int col, float val)
-	{
-		mCoord[row+(col*4)] = val;
-	}
-	
-	/**
-	 * Sets all positions in this matrix to a set of values.
-	 * Please note that the values must be in column-major order.
-	 * The amount of values copied is values.length or 16, whichever's smaller.
-	 * @param values new array of values.
-	 */
-	public void set(float[] values)
-	{
-		System.arraycopy(values,0,mCoord,0,Math.min(values.length, mCoord.length));
-	}
-	
-	/**
-	 * Sets a matrix index (column major index) to a value.
-	 * @param index the column-major-wise index.
-	 * @param value the value to set.
-	 */
-	public void set(int index, float value)
-	{
-		mCoord[index] = value;
-	}
-
-	/**
-	 * Multiplies this matrix with another.
-	 * <pre>this x m</pre>
-	 * @param matrix the multiplicand matrix.
-	 */
-	public void multiplyRight(Matrix4F matrix)
-	{
-		Cache c = getCache();
-		getFloats(c.SCRATCH_A);
-		matrix.getFloats(c.SCRATCH_B);
-		multMatrices(c.SCRATCH_A, c.SCRATCH_B, mCoord);
-	}
-	
-	/**
-	 * Multiplies this matrix with another.
-	 * <pre>m x this</pre>
-	 * @param matrix the multiplicand matrix.
-	 */
-	public void multiplyLeft(Matrix4F matrix)
-	{
-		Cache c = getCache();
-		matrix.getFloats(c.SCRATCH_A);
-		getFloats(c.SCRATCH_B);
-		multMatrices(c.SCRATCH_A, c.SCRATCH_B, mCoord);
-	}
-	
 	/**
 	 * Sets this matrix's values up as a projection matrix, perspective arguments.
-	 * @param degFOV front of view angle in degrees.
-	 * @param aspectRatio the aspect ratio, usually view width over view height.
+	 * @param fov front of view angle in degrees.
+	 * @param aspect the aspect ratio, usually view width over view height.
 	 * @param zNear the near clipping plane on the Z-Axis.
 	 * @param zFar the far clipping plane on the Z-Axis.
 	 */
-	public void setPerspective(float degFOV, float aspectRatio, float zNear, float zFar)
+	public void setPerspective(float fov, float aspect, float zNear, float zFar)
 	{
-		double halfangle = ((degFOV*Math.PI)/180)/2;
-		float fpn = zFar+zNear;
-		float nmf = zNear-zFar;
-		double cothalffov = Math.cos(halfangle)/Math.sin(halfangle);
-		
-		setIdentity();
-		mCoord[0] = (float)(cothalffov / aspectRatio);
-		mCoord[5] = (float)cothalffov;
-		mCoord[10] = fpn / nmf;
-		mCoord[11] = -1;
-		mCoord[14] = (2*zFar*zNear) / nmf;
-		mCoord[15] = 0;
+		perspectiveArray(matrixArray, fov, aspect, zNear, zFar);
 	}
-	
+
 	/**
 	 * Sets this matrix's values up as a projection matrix, frustum projection.
 	 * @param left the left clipping plane on the X axis.
@@ -252,22 +157,9 @@ public class Matrix4F
 	 */
 	public void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
 	{
-		float rml = right - left;
-		float tmb = top - bottom;
-		float fmn = zFar - zNear;
-		float n2 = zNear + zNear;
-		setIdentity();
-
-		mCoord[0] = n2 / rml;
-		mCoord[5] = n2 / tmb;
-		mCoord[8] = (right+left) / rml;
-		mCoord[9] = (top+bottom) / tmb;
-		mCoord[10] = (zFar+zNear) / fmn;
-		mCoord[11] = -1;
-		mCoord[14] = (2*zNear*zFar) / fmn;
-		mCoord[15] = 0;
+		frustumArray(matrixArray, left, right, bottom, top, zNear, zFar);
 	}
-	
+
 	/**
 	 * Sets this matrix's values up as a projection matrix, orthographic projection.
 	 * @param left the left clipping plane on the X axis.
@@ -279,28 +171,275 @@ public class Matrix4F
 	 */
 	public void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
 	{
-		float rml = right - left;
-		float tmb = top - bottom;
-		float fmn = zFar - zNear;
-		setIdentity();
-		
-		mCoord[0] = 2 / rml;
-		mCoord[5] = 2 / tmb;
-		mCoord[10] = -2 / fmn;
-		mCoord[12] = (right+left) / rml;
-		mCoord[13] = (top+bottom) / tmb;
-		mCoord[14] = (zFar+zNear) / fmn;
+		orthoArray(matrixArray, left, right, bottom, top, zNear, zFar);
+	}
+
+	/**
+	 * Sets this matrix's values up as an aspect-corrected projection matrix, orthographic projection.
+	 * @param aspect the target aspect.
+	 * @param left the left clipping plane on the X axis.
+	 * @param right	 the right clipping plane on the X axis.
+	 * @param bottom the bottom clipping plane on the Y axis.
+	 * @param top the upper clipping plane on the Y axis.
+	 * @param zNear	the near clipping plane on the Z axis.
+	 * @param zFar the far clipping plane on the Z axis.
+	 */
+	public void setAspectOrtho(float aspect, float left, float right, float bottom, float top, float zNear, float zFar)
+	{
+		aspectOrthoArray(matrixArray, aspect, left, right, bottom, top, zNear, zFar);
+	}
+
+	/**
+	 * Sets a position in this matrix to a value.
+	 * @param row the desired matrix row.
+	 * @param col the desired matrix column.
+	 * @param val the new value to set.
+	 */
+	public void set(int row, int col, float val)
+	{
+		matrixArray[row+(col*4)] = val;
 	}
 	
-	private void multMatrices(float[] a, float[] b, float[] dest)
+	/**
+	 * Sets all positions in this matrix to a set of values.
+	 * Please note that the values must be in column-major order.
+	 * The amount of values copied is values.length or 16, whichever's smaller.
+	 * @param values new array of values.
+	 */
+	public void set(float[] values)
 	{
-		for(int i = 0; i < 4; i++)
-		{
-			dest[i]    = a[i]*b[0]  + a[i+4]*b[1]  + a[i+8]*b[2]  + a[i+12]*b[3];
-			dest[i+4]  = a[i]*b[4]  + a[i+4]*b[5]  + a[i+8]*b[6]  + a[i+12]*b[7];
-			dest[i+8]  = a[i]*b[8]  + a[i+4]*b[9]  + a[i+8]*b[10] + a[i+12]*b[11];
-			dest[i+12] = a[i]*b[12] + a[i+4]*b[13] + a[i+8]*b[14] + a[i+12]*b[15];
-		}
+		System.arraycopy(values,0,matrixArray,0,Math.min(values.length, matrixArray.length));
+	}
+	
+	/**
+	 * Sets a matrix index (column major index) to a value.
+	 * @param index the column-major-wise index.
+	 * @param value the value to set.
+	 */
+	public void set(int index, float value)
+	{
+		matrixArray[index] = value;
+	}
+
+	/**
+	 * Resets this matrix to the identity matrix. 
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F reset()
+	{
+		setIdentity();
+		return this;
+	}
+	
+	/**
+	 * Multiplies a translation matrix into this one. 
+	 * @param x the x-axis translation.
+	 * @param y the y-axis translation.
+	 * @param z the z-axis translation.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F translate(float x, float y, float z)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		translateArray(c.scratchB, x, y, z);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies a X-axis rotation matrix into this one. 
+	 * @param degrees degrees to rotate.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F rotateX(float degrees)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		rotationXArray(c.scratchB, degrees);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies a Y-axis rotation matrix into this one. 
+	 * @param degrees degrees to rotate.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F rotateY(float degrees)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		rotationYArray(c.scratchB, degrees);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies a Z-axis rotation matrix into this one. 
+	 * @param degrees degrees to rotate.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F rotateZ(float degrees)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		rotationZArray(c.scratchB, degrees);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies a scaling matrix into this one. 
+	 * @param scaleX amount to scale along the X axis.
+	 * @param scaleY amount to scale along the Y axis.
+	 * @param scaleZ amount to scale along the Z axis.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F scale(float scaleX, float scaleY, float scaleZ)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		scaleArray(c.scratchB, scaleX, scaleY, scaleZ);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies a scaling matrix into this one. 
+	 * @param scalar amount to scale along the all axes.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F scale(float scalar)
+	{
+		return scale(scalar, scalar, scalar);
+	}
+	
+	/**
+	 * Multiplies a shearing matrix into this one. 
+	 * @param shear amount to shear.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F shear(float shear)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		shearArray(c.scratchB, shear);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies a perspective projection matrix into this one. 
+	 * @param fov front of view angle in degrees.
+	 * @param aspect the aspect ratio, usually view width over view height.
+	 * @param zNear the near clipping plane on the Z-Axis.
+	 * @param zFar the far clipping plane on the Z-Axis.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F perspective(float fov, float aspect, float zNear, float zFar)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		perspectiveArray(c.scratchB, fov, aspect, zNear, zFar);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies a frustum projection matrix into this one. 
+	 * @param left the left clipping plane on the X axis.
+	 * @param right	the right clipping plane on the X axis.
+	 * @param bottom the bottom clipping plane on the Y axis.
+	 * @param top the upper clipping plane on the Y axis.
+	 * @param zNear	the near clipping plane on the Z axis.
+	 * @param zFar the far clipping plane on the Z axis.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F frustum(float left, float right, float bottom, float top, float zNear, float zFar)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		frustumArray(c.scratchB, left, right, bottom, top, zNear, zFar);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies a orthographic projection matrix into this one. 
+	 * @param left the left clipping plane on the X axis.
+	 * @param right	the right clipping plane on the X axis.
+	 * @param bottom the bottom clipping plane on the Y axis.
+	 * @param top the upper clipping plane on the Y axis.
+	 * @param zNear	the near clipping plane on the Z axis.
+	 * @param zFar the far clipping plane on the Z axis.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F ortho(float left, float right, float bottom, float top, float zNear, float zFar)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		orthoArray(c.scratchB, left, right, bottom, top, zNear, zFar);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies an aspect-corrected orthographic projection matrix into this one. 
+	 * @param aspect the target aspect.
+	 * @param left the left clipping plane on the X axis.
+	 * @param right	the right clipping plane on the X axis.
+	 * @param bottom the bottom clipping plane on the Y axis.
+	 * @param top the upper clipping plane on the Y axis.
+	 * @param zNear	the near clipping plane on the Z axis.
+	 * @param zFar the far clipping plane on the Z axis.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F aspectOrtho(float aspect, float left, float right, float bottom, float top, float zNear, float zFar)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		aspectOrthoArray(c.scratchB, aspect, left, right, bottom, top, zNear, zFar);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+	
+	/**
+	 * Multiplies this matrix with another.
+	 * <pre>this x m</pre>
+	 * @param matrix the multiplicand matrix.
+	 */
+	public void multiplyRight(Matrix4F matrix)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		matrix.getFloats(c.scratchB);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+	}
+	
+	/**
+	 * Multiplies this matrix with another.
+	 * <pre>m x this</pre>
+	 * @param matrix the multiplicand matrix.
+	 */
+	public void multiplyLeft(Matrix4F matrix)
+	{
+		Cache c = getCache();
+		matrix.getFloats(c.scratchA);
+		getFloats(c.scratchB);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
 	}
 	
 	/**
@@ -309,36 +448,187 @@ public class Matrix4F
 	 */
 	public float[] getArray()
 	{
-		return mCoord;
+		return matrixArray;
 	}
-	
+
 	/**
 	 * Returns the floats that make up this matrix into a float array.
-	 * If the output array is shorter than 16, up to that amount of values are copied. 
+	 * If the output array is shorter than 16, up to that amount of values are copied.
+	 * Values are in <i>column-major</i> order. 
 	 * @param out the output array.
 	 */
 	public void getFloats(float[] out)
 	{
-		System.arraycopy(mCoord, 0, out, 0, Math.min(out.length, mCoord.length));
+		System.arraycopy(matrixArray, 0, out, 0, Math.min(out.length, matrixArray.length));
 	}
-	
-	/**
-	 * @return a copy of this Matrix.
-	 */
-	public Matrix4F copy()
-	{
-		Matrix4F out = new Matrix4F();
-		System.arraycopy(mCoord,0,out.mCoord,0,16);
-		return out;
-	}
-	
+
 	/**
 	 * Copies this Matrix into another.
 	 * @param target the target matrix to copy into.
 	 */
 	public void copyTo(Matrix4F target)
 	{
-		System.arraycopy(mCoord,0,target.mCoord,0,16);
+		System.arraycopy(matrixArray, 0, target.matrixArray, 0, 16);
+	}
+
+	/**
+	 * @return a new copy of this Matrix.
+	 */
+	public Matrix4F copy()
+	{
+		Matrix4F out = new Matrix4F();
+		System.arraycopy(matrixArray, 0, out.matrixArray, 0, 16);
+		return out;
+	}
+
+	// Set identity.
+	private static void identityArray(float[] out)
+	{
+		System.arraycopy(IDENTITY, 0, out, 0, 16);
+	}
+	
+	// Set translation.
+	private static void translateArray(float[] out, float x, float y, float z)
+	{
+		identityArray(out);
+		out[12] = x;
+		out[13] = y;
+		out[14] = z;
+	}
+
+	// Rotate X.
+	private static void rotationXArray(float[] out, float degrees)
+	{
+		double rads = RMath.degToRad(degrees);
+		identityArray(out);
+		out[5] = out[10] = (float)Math.cos(rads);
+		out[6] = (float)Math.sin(rads);
+		out[9] = -out[6];
+	}
+	
+	// Rotate Y.
+	private static void rotationYArray(float[] out, float degrees)
+	{
+		double rads = RMath.degToRad(degrees);
+		identityArray(out);
+		out[0] = out[10] = (float)Math.cos(rads);
+		out[8] = (float)Math.sin(rads);
+		out[2] = -out[8];
+	}
+	
+	// Rotate Z.
+	private static void rotationZArray(float[] out, float degrees)
+	{
+		double rads = RMath.degToRad(degrees);
+		identityArray(out);
+		out[0] = out[5] = (float)Math.cos(rads);
+		out[1] = (float)Math.sin(rads);
+		out[4] = -out[1];
+	}
+	
+	// Set scale.
+	private static void scaleArray(float[] out, float x, float y, float z)
+	{
+		identityArray(out);
+		out[0] = x;
+		out[5] = y;
+		out[10] = z;
+	}
+
+	// Set shear.
+	private static void shearArray(float[] out, float shear)
+	{
+		identityArray(out);
+		out[4] = shear;
+	}
+
+	// Set perspective.
+	private static void perspectiveArray(float[] out, float fov, float aspectRatio, float zNear, float zFar)
+	{
+		double halfangle = RMath.degToRad(fov) / 2;
+		float fpn = zFar+zNear;
+		float nmf = zNear-zFar;
+		double cothalffov = Math.cos(halfangle)/Math.sin(halfangle);
+		
+		identityArray(out);
+		out[0] = (float)(cothalffov / aspectRatio);
+		out[5] = (float)cothalffov;
+		out[10] = fpn / nmf;
+		out[11] = -1;
+		out[14] = (2*zFar*zNear) / nmf;
+		out[15] = 0;
+	}
+
+	// Set frustum.
+	private static void frustumArray(float[] out, float left, float right, float bottom, float top, float zNear, float zFar)
+	{
+		float rml = right - left;
+		float tmb = top - bottom;
+		float fmn = zFar - zNear;
+		float n2 = zNear + zNear;
+	
+		identityArray(out);
+		out[0] = n2 / rml;
+		out[5] = n2 / tmb;
+		out[8] = (right+left) / rml;
+		out[9] = (top+bottom) / tmb;
+		out[10] = (zFar+zNear) / fmn;
+		out[11] = -1f;
+		out[14] = (2f*zNear*zFar) / fmn;
+		out[15] = 0f;
+	}
+
+	// Set ortho.
+	private static void orthoArray(float[] out, float left, float right, float bottom, float top, float zNear, float zFar)
+	{
+		float rml = right - left;
+		float tmb = top - bottom;
+		float fmn = zFar - zNear;
+		
+		identityArray(out);
+		out[0] = 2f / rml;
+		out[5] = 2f / tmb;
+		out[10] = -2f / fmn;
+		out[12] = (right+left) / rml;
+		out[13] = (top+bottom) / tmb;
+		out[14] = (zFar+zNear) / fmn;
+	}
+
+	// Set aspect ortho.
+	private static void aspectOrthoArray(float[] out, float targetAspect, float left, float right, float bottom, float top, float near, float far)
+	{
+		float viewWidth = Math.max(left, right) - Math.min(left, right);
+		float viewHeight = Math.max(bottom, top) - Math.min(bottom, top);
+		float viewAspect = viewWidth / viewHeight;
+        
+        if (targetAspect >= viewAspect)
+        {
+            float axis = targetAspect * viewHeight;
+            float widthDiff = (axis - viewWidth) / 2f;
+            right = left + viewWidth + widthDiff;
+            left = left - widthDiff;
+        }
+        else
+        {
+            float axis = (1.0f / targetAspect) * viewWidth;
+            float heightDiff = (axis - viewHeight) / 2f;
+            top = bottom + viewHeight + heightDiff;
+        	bottom = bottom - heightDiff;
+        }
+		
+        orthoArray(out, left, right, bottom, top, near, far);	
+	}
+	
+	// Multiplies two matrices.
+	private static void multiplyArray(float[] a, float[] b, float[] out)
+	{
+		for(int i = 0; i < 4; i++)
+		{
+			out[i]    = a[i]*b[0]  + a[i+4]*b[1]  + a[i+8]*b[2]  + a[i+12]*b[3];
+			out[i+4]  = a[i]*b[4]  + a[i+4]*b[5]  + a[i+8]*b[6]  + a[i+12]*b[7];
+			out[i+8]  = a[i]*b[8]  + a[i+4]*b[9]  + a[i+8]*b[10] + a[i+12]*b[11];
+			out[i+12] = a[i]*b[12] + a[i+4]*b[13] + a[i+8]*b[14] + a[i+12]*b[15];
+		}
 	}
 	
 	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
@@ -354,15 +644,13 @@ public class Matrix4F
 
 	private static final class Cache
 	{
-		private Matrix4F rotwork;
-		private float[] SCRATCH_A;
-		private float[] SCRATCH_B;
+		private float[] scratchA;
+		private float[] scratchB;
 
 		private Cache()
 		{
-			rotwork = new Matrix4F();
-			SCRATCH_A = new float[16];
-			SCRATCH_B = new float[16];
+			scratchA = new float[16];
+			scratchB = new float[16];
 		}
 		
 	}
