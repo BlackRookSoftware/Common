@@ -135,6 +135,23 @@ public class Matrix4F
 	}
 
 	/**
+	 * Sets this matrix's values up as a "look at" perspective matrix.
+	 * @param eyeX the eye vector, x-component.
+	 * @param eyeY the eye vector, y-component.
+	 * @param eyeZ the eye vector, z-component.
+	 * @param centerX the centerpoint, x-component.
+	 * @param centerY the centerpoint, y-component.
+	 * @param centerZ the centerpoint, z-component.
+	 * @param upX the upward vector, x-component.
+	 * @param upY the upward vector, y-component.
+	 * @param upZ the upward vector, z-component.
+	 */
+	public void setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
+	{
+		lookAtArray(matrixArray, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+	}
+
+	/**
 	 * Sets this matrix's values up as a projection matrix, perspective arguments.
 	 * @param fov front of view angle in degrees.
 	 * @param aspect the aspect ratio, usually view width over view height.
@@ -338,6 +355,29 @@ public class Matrix4F
 	}
 	
 	/**
+	 * Multiplies a "look at" perspective matrix into this one.
+	 * @param eyeX the eye vector, x-component.
+	 * @param eyeY the eye vector, y-component.
+	 * @param eyeZ the eye vector, z-component.
+	 * @param centerX the centerpoint, x-component.
+	 * @param centerY the centerpoint, y-component.
+	 * @param centerZ the centerpoint, z-component.
+	 * @param upX the upward vector, x-component.
+	 * @param upY the upward vector, y-component.
+	 * @param upZ the upward vector, z-component.
+	 * @return itself, to chain commands.
+	 * @since 2.31.0
+	 */
+	public Matrix4F lookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
+	{
+		Cache c = getCache();
+		getFloats(c.scratchA);
+		lookAtArray(c.scratchB, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+		multiplyArray(c.scratchA, c.scratchB, matrixArray);
+		return this;
+	}
+
+	/**
 	 * Multiplies a perspective projection matrix into this one. 
 	 * @param fov front of view angle in degrees.
 	 * @param aspect the aspect ratio, usually view width over view height.
@@ -540,6 +580,50 @@ public class Matrix4F
 	{
 		identityArray(out);
 		out[4] = shear;
+	}
+
+	// Set "look at."
+	private static void lookAtArray(float[] out, float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
+	{
+		double fx = centerX - eyeX;
+		double fy = centerY - eyeY;
+		double fz = centerZ - eyeZ;
+		double flen = RMath.getVectorLength(fx, fy, fz);
+		fx = fx / flen;
+		fy = fy / flen;
+		fz = fz / flen;
+	
+		double ulen = RMath.getVectorLength(upX, upY, upZ);
+		double ux = upX / ulen;
+		double uy = upY / ulen;
+		double uz = upZ / ulen;
+	
+		double sx = fy*uz - fz*uy;
+		double sy = fz*ux - fx*uz;
+		double sz = fx*uy - fy*ux;
+		double slen = RMath.getVectorLength(sx, sy, sz);
+		sx = sx / slen;
+		sy = sy / slen;
+		sz = sz / slen;
+	
+		ux = sy*fz - sz*fy;
+		uy = sz*fx - sx*fz;
+		uz = sx*fy - sy*fx;
+		
+		out[0] = (float)sx;
+		out[1] = (float)sy;
+		out[2] = (float)sz;
+		out[3] = (float)-RMath.getVectorDotProduct(eyeX, eyeY, eyeZ, sx, sy, sz);
+		out[4] = (float)ux;
+		out[5] = (float)uy;
+		out[6] = (float)uz;
+		out[7] = (float)-RMath.getVectorDotProduct(eyeX, eyeY, eyeZ, ux, uy, uz);
+		out[8] = (float)-fx;
+		out[9] = (float)-fy;
+		out[10] = (float)-fz;
+		out[11] = (float)-RMath.getVectorDotProduct(eyeX, eyeY, eyeZ, fx, fy, fz);
+		out[12] = out[13] = out[14] = 0.0f;
+		out[15] = 1.0f;
 	}
 
 	// Set perspective.
