@@ -492,15 +492,28 @@ public class Matrix4D
 	}
 
 	/**
-	 * Returns the doubles that make up this matrix into a double array.
-	 * If the output array is shorter than 16, up to that amount of values are copied.
-	 * Values are in <i>column-major</i> order. 
+	 * Returns the doubles that make up this matrix into a float array.
+	 * Equivalent to <code>getFloats(out, 0)</code>
 	 * @param out the output array.
+	 * @throws ArrayIndexOutOfBoundsException if <code>out.length < 16</code>.
 	 */
 	public void getDoubles(double[] out)
 	{
-		System.arraycopy(matrixArray, 0, out, 0, Math.min(out.length, matrixArray.length));
+		getDoubles(out, 0);
 	}
+
+	/**
+	 * Returns the doubles that make up this matrix into a float array.
+	 * @param out the output array.
+	 * @param offset the starting offset array.
+	 * @throws ArrayIndexOutOfBoundsException if <code>offset + 16 >= out.length</code>.
+	 * @since 2.31.0
+	 */
+	public void getDoubles(double[] out, int offset)
+	{
+		System.arraycopy(matrixArray, 0, out, offset, matrixArray.length);
+	}
+
 
 	/**
 	 * Copies this Matrix into another.

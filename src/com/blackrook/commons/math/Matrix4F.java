@@ -493,13 +493,27 @@ public class Matrix4F
 
 	/**
 	 * Returns the floats that make up this matrix into a float array.
-	 * If the output array is shorter than 16, up to that amount of values are copied.
-	 * Values are in <i>column-major</i> order. 
+	 * Equivalent to <code>getFloats(out, 0)</code>
+	 * Values are in column-major order.
 	 * @param out the output array.
+	 * @throws ArrayIndexOutOfBoundsException if <code>out.length < 16</code>.
 	 */
 	public void getFloats(float[] out)
 	{
-		System.arraycopy(matrixArray, 0, out, 0, Math.min(out.length, matrixArray.length));
+		getFloats(out, 0);
+	}
+
+	/**
+	 * Returns the floats that make up this matrix into a float array.
+	 * Values are in column-major order.
+	 * @param out the output array.
+	 * @param offset the starting offset array.
+	 * @throws ArrayIndexOutOfBoundsException if <code>offset + 16 >= out.length</code>.
+	 * @since 2.31.0
+	 */
+	public void getFloats(float[] out, int offset)
+	{
+		System.arraycopy(matrixArray, 0, out, offset, matrixArray.length);
 	}
 
 	/**
