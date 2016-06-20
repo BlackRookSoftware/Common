@@ -13,7 +13,7 @@ package com.blackrook.commons;
  * @param <P> the object type that this data structure stores.
  * @since 2.19.0
  */
-public interface AbstractSet<P extends Object> extends ResettableIterable<P>, Sizable
+public interface AbstractSet<P extends Object> extends ResettableIterable<P>, Sizable, Dumpable<P>
 {
 	/**
 	 * Adds an object to this structure, but only if it does not exist, according to

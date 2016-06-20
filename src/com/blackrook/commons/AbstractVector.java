@@ -22,7 +22,7 @@ import com.blackrook.commons.math.RMath;
  * @author Matthew Tropiano
  */
 public abstract class AbstractVector<T extends Object> 
-	extends AbstractArrayStorage<T> implements ResettableIterable<T>, Sizable
+	extends AbstractArrayStorage<T> implements ResettableIterable<T>, Sizable, Dumpable<T>
 {
 	/** Capacity increment. */
 	protected int capacityIncrement;
@@ -429,12 +429,8 @@ public abstract class AbstractVector<T extends Object>
 	{
 		return size() == 0;
 	}
-	
-	/**
-	 * Copies the contents of this class into an array.
-	 * @param out the target array to copy the objects into.
-	 * @throws ArrayIndexOutOfBoundsException if the target array is too small.
-	 */
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public void toArray(T[] out)
 	{

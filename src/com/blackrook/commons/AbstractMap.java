@@ -46,4 +46,25 @@ public interface AbstractMap<K extends Object, V extends Object> extends Abstrac
 	 */
 	public V removeUsingKey(K key);
 	
+	/**
+	 * Copies the keys of this map into an array.
+	 * The order of the contents are not guaranteed unless otherwise noted.
+	 * @param out the target array to copy the key objects into.
+	 * @throws ArrayIndexOutOfBoundsException if the target array is too small to contain the objects.
+	 * @see #toArray(Object[])
+	 * @since 2.31.0
+	 */
+	public void toArrayKeys(K[] out);
+	
+	/**
+	 * Copies the values of this map into an array.
+	 * Values are not distinct - if more than one value is in this map, it is added as well.
+	 * The order of the contents are not guaranteed unless otherwise noted.
+	 * @param out the target array to copy the key objects into.
+	 * @throws ArrayIndexOutOfBoundsException if the target array is too small to contain the objects.
+	 * @see #toArray(Object[])
+	 * @since 2.31.0
+	 */
+	public void toArrayValues(V[] out);
+	
 }

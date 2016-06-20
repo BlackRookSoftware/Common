@@ -8,6 +8,7 @@
 package com.blackrook.commons.hash;
 
 import com.blackrook.commons.AbstractChainedHashMap;
+import com.blackrook.commons.ObjectPair;
 
 /**
  * Hashed data structure that maps keys to values.
@@ -44,4 +45,29 @@ public class HashMap<K extends Object, V extends Object> extends AbstractChained
 	{
 		super(capacity, rehashRatio);
 	}
+	
+	@Override
+	public void toArray(ObjectPair<K, V>[] out)
+	{
+		int i = 0;
+		for (ObjectPair<K, V> value : this)
+			out[i++] = value;
+	}
+
+	@Override
+	public void toArrayKeys(K[] out)
+	{
+		int i = 0;
+		for (ObjectPair<K, V> value : this)
+			out[i++] = value.getKey();
+	}
+	
+	@Override
+	public void toArrayValues(V[] out)
+	{
+		int i = 0;
+		for (ObjectPair<K, V> value : this)
+			out[i++] = value.getValue();
+	}
+	
 }

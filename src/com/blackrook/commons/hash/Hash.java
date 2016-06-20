@@ -139,4 +139,13 @@ public class Hash<T extends Object> extends AbstractChainedHash<T>
 		}
 		return (H)out;
 	}
+
+	@Override
+	public void toArray(T[] out) 
+	{
+		int i = 0;
+		for (T value : this)
+			out[i++] = value;
+	}
+	
 }

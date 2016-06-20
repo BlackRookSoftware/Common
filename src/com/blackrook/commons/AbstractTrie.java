@@ -222,6 +222,14 @@ public abstract class AbstractTrie<V extends Object, S extends Object> implement
 		return size() == 0;
 	}
 	
+	@Override
+	public void toArray(V[] out)
+	{
+		int i = 0;
+		for (V value : this)
+			out[i++] = value;
+	}
+	
 	/**
 	 * Removes all objects from the trie.
 	 * @since 2.21.0

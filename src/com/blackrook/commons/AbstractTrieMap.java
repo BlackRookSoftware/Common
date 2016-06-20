@@ -306,6 +306,22 @@ public abstract class AbstractTrieMap<K extends Object, V extends Object, S exte
 	}
 
 	@Override
+	public void toArrayKeys(K[] out)
+	{
+		int i = 0;
+		for (ObjectPair<K, V> value : this)
+			out[i++] = value.getKey();
+	}
+	
+	@Override
+	public void toArrayValues(V[] out)
+	{
+		int i = 0;
+		for (ObjectPair<K, V> value : this)
+			out[i++] = value.getValue();
+	}
+	
+	@Override
 	protected final boolean equalityMethod(ObjectPair<K, V> object1, ObjectPair<K, V> object2)
 	{
 		if (object1 == null && object2 != null)
