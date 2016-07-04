@@ -1318,7 +1318,7 @@ public final class RMath
 		getProjectedCircleSecondPoint(outLine.pointB, vx, vy, cx, cy, crad);
 	}
 
-	// Projects the first box corner.
+	// Projects the first circle point.
 	private static void getProjectedCircleFirstPoint(Tuple2D outPoint, double vx, double vy, double cx, double cy, double crad)
 	{
 		boolean swap = vx < 0 ^ vy < 0;
@@ -1350,7 +1350,7 @@ public final class RMath
 		getProjectedPoint(outPoint, vx, vy);
 	}
 	
-	// Projects the second box corner.
+	// Projects the second circle point.
 	private static void getProjectedCircleSecondPoint(Tuple2D outPoint, double vx, double vy, double cx, double cy, double crad)
 	{
 		boolean swap = vx < 0 ^ vy < 0;
@@ -1383,7 +1383,7 @@ public final class RMath
 	}
 	
 	/**
-	 * Projects a circle onto a 2D vector - result is a line segment.
+	 * Projects a box onto a 2D vector - result is a line segment.
 	 * @param outLine the output line to change.
 	 * @param vx the vector to project onto, x-component.
 	 * @param vy the vector to project onto, y-component.
@@ -1767,6 +1767,37 @@ public final class RMath
 		}
 	}
 
+	/**
+	 * Checks the collision of two cylinders.
+	 * @param sx the first cylinder, origin x-coordinate.
+	 * @param sy the first cylinder, origin y-coordinate.
+	 * @param sz the first cylinder, origin z-coordinate (base/floor of cylinder).
+	 * @param srad the first cylinder radius.
+	 * @param sh the first cylinder height.
+	 * @param tx the second cylinder, origin x-coordinate.
+	 * @param ty the second cylinder, origin y-coordinate.
+	 * @param tz the second cylinder, origin z-coordinate (base/floor of cylinder).
+	 * @param trad the second cylinder radius.
+	 * @param th the second cylinder height.
+	 * @return true if an intersection occurred, false if not.
+	 * @since 2.31.0
+	 */
+	public static boolean getIntersectionCylinder(
+		float sx, float sy, float sz, float srad, float sh,
+		float tx, float ty, float tz, float trad, float th
+	)
+	{
+		if (RMath.getIntersectionCircle(sx, sy, srad, tx, ty, trad))
+		{
+			float szh = sz + sh;
+			float tzh = tz + th;
+			return sz <= tzh && szh >= tz;
+		}
+		return false;
+	}
+
+
+	
 	/**
 	 * Calculates the intersection point as the result of a <code>getIntersectionLine</code> call.
 	 * @param out the point to write the information to.

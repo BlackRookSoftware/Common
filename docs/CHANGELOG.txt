@@ -7,7 +7,7 @@ Slated for 2.31.0
 - Added: Interface Dumpable<T>: dumps contents to an array of a similar type T.
 - Added: AbstractMap functions toArrayKeys(K[]), toArrayValues(V[]): dumps 
   keys/values to an array of a corresponding type.
-
+- Added: RMath.getIntersectionCylinder(...).
 
 Changed in 2.30.2
 =================
