@@ -1466,6 +1466,25 @@ public final class RMath
 	}
 	
 	/**
+	 * Checks what "side" a point is on a line.
+	 * Line orientation is "point A looking at point B"
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param px the point, x-coordinate.
+	 * @param py the point, y-coordinate.
+	 * @return a scalar value representing the line side (<code>0</code> is on the line, <code>&lt; 0</code> is left, <code>&gt; 0</code> is right).
+	 * @since 2.31.0
+	 */
+	public static double getLinePointSide(double ax, double ay, double bx, double by, double px, double py)
+	{
+		double nax = (by - ay);
+		double nay = -(bx - ax);
+		return getVectorDotProduct(nax, nay, px - ax, py - ay);
+	}
+
+	/**
 	 * Tests if an intersection occurs between two line segments.
 	 * @param ax the first line segment, first point, x-coordinate.
 	 * @param ay the first line segment, first point, y-coordinate.
@@ -1796,15 +1815,274 @@ public final class RMath
 		return false;
 	}
 
+	// Single "behind plane" consistent check.
+	private static boolean isPointBehindPlane(double ax, double ay, double bx, double by, double px, double py)
+	{
+		return getLinePointSide(ax, ay, bx, by, px, py) > 0;
+	}
 
+	/**
+	 * Checks if a point lies behind a 2D plane, represented by a line.
+	 * Directionality of the line affects the plane - plane normal goes away from the "right" side of the line.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param px the point, x-coordinate.
+	 * @param py the point, y-coordinate.
+	 * @return true if the point is past the plane, false if not.
+	 * @since 2.31.0
+	 * @see #getLinePointSide(double, double, double, double, double, double)
+	 */
+	public static boolean getIntersectionPoint2DPlane(double ax, double ay, double bx, double by, double px, double py)
+	{
+		return isPointBehindPlane(ax, ay, bx, by, px, py);
+	}
+
+	/**
+	 * Checks if a circle breaks a 2D plane, represented by a line.
+	 * Directionality of the line affects the plane - plane normal goes away from the "right" side of the line.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param ccx the circle centerpoint, x-coordinate.
+	 * @param ccy the circle centerpoint, y-coordinate.
+	 * @param crad the circle centerpoint, radius.
+	 * @return true if any part of the circle is past the plane, false if not.
+	 * @since 2.31.0
+	 * @see #getLinePointSide(double, double, double, double, double, double)
+	 */
+	public static boolean getIntersectionCircle2DPlane(double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
+	{
+		// normal
+		double vx = -(by - ay);
+		double vy = bx - ax;
+		double vlen = getVectorLength(vx, vy);
+		// normalize to radius length.
+		vx = vx / vlen * crad;
+		vy = vy / vlen * crad;
+		
+		return isPointBehindPlane(ax, ay, bx, by, ccx + vx, ccy + vy) || isPointBehindPlane(ax, ay, bx, by, ccx - vx, ccy - vy);
+	}
+
+	/**
+	 * Checks if an axis-aligned box breaks a 2D plane, represented by a line.
+	 * Directionality of the line affects the plane - plane normal goes away from the "right" side of the line.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param bcx the box center, x-coordinate.
+	 * @param bcy the box center, y-coordinate.
+	 * @param bhw the box half width.
+	 * @param bhh the box half height.
+	 * @return true if any part of the box is past the plane, false if not.
+	 * @since 2.31.0
+	 * @see #getLinePointSide(double, double, double, double, double, double)
+	 */
+	public static boolean getIntersectionBox2DPlane(double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
+	{
+		return 
+			isPointBehindPlane(ax, ay, bx, by, bcx + bhw, bcy + bhh) 
+			|| isPointBehindPlane(ax, ay, bx, by, bcx - bhw, bcy + bhh)
+			|| isPointBehindPlane(ax, ay, bx, by, bcx + bhw, bcy - bhh)
+			|| isPointBehindPlane(ax, ay, bx, by, bcx - bhw, bcy - bhh)
+		;
+	}
+
+	/**
+	 * Gets the overlap correction for a point lying behind a 2D plane, represented by a line.
+	 * An intersection is assumed to have happened, or the results are undefined.
+	 * Directionality of the line affects the plane - plane normal goes away from the "right" side of the line.
+	 * @param outOverlapVector the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncidentPoint the output point for the incident point.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param px the point, x-coordinate.
+	 * @param py the point, y-coordinate.
+	 * @since 2.31.0
+	 * @see #getLinePointSide(double, double, double, double, double, double)
+	 */
+	public static void getOverlapPoint2DPlane(Tuple2D outOverlapVector, Tuple2D outIncidentPoint, double ax, double ay, double bx, double by, double px, double py)
+	{
+		outIncidentPoint.set(px, py);
+		outOverlapVector.set(bx - ax, by - ay);
+		outIncidentPoint.projectOnto(outOverlapVector);
+		outOverlapVector.rightNormal();
+		outOverlapVector.setLength(getVectorLength(px - outIncidentPoint.x, py - outIncidentPoint.y));
+	}
+
+	/**
+	 * Gets the overlap correction for a circle (in whole or part) lying behind a 2D plane, represented by a line.
+	 * An intersection is assumed to have happened, or the results are undefined.
+	 * Directionality of the line affects the plane - plane normal goes away from the "right" side of the line.
+	 * @param outOverlapVector the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncidentPoint the output point for the incident point.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param ccx the circle centerpoint, x-coordinate.
+	 * @param ccy the circle centerpoint, y-coordinate.
+	 * @param crad the circle centerpoint, radius.
+	 * @since 2.31.0
+	 * @see #getLinePointSide(double, double, double, double, double, double)
+	 */
+	public static void getOverlapCircle2DPlane(Tuple2D outOverlapVector, Tuple2D outIncidentPoint, double ax, double ay, double bx, double by, double ccx, double ccy, double crad)
+	{
+		// translate into vector space
+		double tcx = ccx - ax;
+		double tcy = ccy - ay;
+		// translate line into vector space
+		double tbx = bx - ax;
+		double tby = by - ay;
+		
+		outOverlapVector.set(tbx, tby);
+		outIncidentPoint.set(tcx, tcy);
+		outIncidentPoint.projectOnto(outOverlapVector);
+		
+		outOverlapVector.rightNormal();
+		outOverlapVector.setLength(crad);
+		
+		double cp1x = tcx + outOverlapVector.x;
+		double cp1y = tcy + outOverlapVector.y;
+		double cp2x = tcx - outOverlapVector.x;
+		double cp2y = tcy - outOverlapVector.y;
+		
+		
+		double len1 = 0.0;
+		double len2 = 0.0;
+		if (isPointBehindPlane(0, 0, tbx, tby, cp1x, cp1y))
+			len1 = getVectorLength(cp1x - outIncidentPoint.x, cp1y - outIncidentPoint.y);
+		if (isPointBehindPlane(0, 0, tbx, tby, cp2x, cp2y))
+			len2 = getVectorLength(cp2x - outIncidentPoint.x, cp2y - outIncidentPoint.y);
+
+		if (len1 != 0.0 || len2 != 0.0)
+		{
+			if (len1 > len2)
+				outOverlapVector.set(cp1x - outIncidentPoint.x, cp1y - outIncidentPoint.y);
+			else
+				outOverlapVector.set(cp2x - outIncidentPoint.x, cp2y - outIncidentPoint.y);
+		}
+		
+		// move back to coordinate space.
+		outIncidentPoint.set(outIncidentPoint.x + ax, outIncidentPoint.y + ay);
+	}
+
+	/**
+	 * Gets the overlap correction for an axis-aligned (in whole or part) lying behind a 2D plane, represented by a line.
+	 * An intersection is assumed to have happened, or the results are undefined.
+	 * Directionality of the line affects the plane - plane normal goes away from the "right" side of the line.
+	 * @param outOverlapVector the output vector for the overlap (a.k.a. incident vector).
+	 * @param outIncidentPoint the output point for the incident point.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param bcx the box center, x-coordinate.
+	 * @param bcy the box center, y-coordinate.
+	 * @param bhw the box half width.
+	 * @param bhh the box half height.
+	 * @since 2.31.0
+	 * @see #getLinePointSide(double, double, double, double, double, double)
+	 */
+	public static void getOverlapBox2DPlane(Tuple2D outOverlapVector, Tuple2D outIncidentPoint, double ax, double ay, double bx, double by, double bcx, double bcy, double bhw, double bhh)
+	{
+		// translate into vector space
+		double tbcx = bcx - ax;
+		double tbcy = bcy - ay;
+		// translate line into vector space
+		double tbx = bx - ax;
+		double tby = by - ay;
+
+		outOverlapVector.set(bx - ax, by - ay);
+
+		double len1 = 0.0;
+		double len2 = 0.0;
+		double len3 = 0.0;
+		double len4 = 0.0;
+
+		if (isPointBehindPlane(0, 0, tbx, tby, tbcx + bhw, tbcy + bhh))
+		{
+			outIncidentPoint.set(tbcx + bhw, bcy + bhh);
+			outIncidentPoint.projectOnto(outOverlapVector);
+			len1 = getVectorLength(tbcx + bhw - outOverlapVector.x, tbcy + bhh - outOverlapVector.y);
+		}
+		if (isPointBehindPlane(0, 0, tbx, tby, tbcx - bhw, tbcy + bhh))
+		{
+			outIncidentPoint.set(tbcx - bhw, bcy + bhh);
+			outIncidentPoint.projectOnto(outOverlapVector);
+			len2 = getVectorLength(tbcx - bhw - outOverlapVector.x, tbcy + bhh - outOverlapVector.y);
+		}
+		if (isPointBehindPlane(0, 0, tbx, tby, tbcx + bhw, tbcy - bhh))
+		{
+			outIncidentPoint.set(tbcx + bhw, tbcy - bhh);
+			outIncidentPoint.projectOnto(outOverlapVector);
+			len3 = getVectorLength(tbcx + bhw - outOverlapVector.x, tbcy - bhh - outOverlapVector.y);
+		}
+		if (isPointBehindPlane(0, 0, tbx, tby, tbcx - bhw, tbcy - bhh))
+		{
+			outIncidentPoint.set(tbcx - bhw, tbcy - bhh);
+			outIncidentPoint.projectOnto(outOverlapVector);
+			len4 = getVectorLength(tbcx - bhw - outOverlapVector.x, tbcy - bhh - outOverlapVector.y);
+		}
+		
+		double maxLen = len1;
+		int point = 0;
+		if (len2 > maxLen)
+		{
+			point = 1;
+			maxLen = len2;
+		}
+		if (len3 > maxLen)
+		{
+			point = 2;
+			maxLen = len3;
+		}
+		if (len4 > maxLen)
+		{
+			point = 3;
+			maxLen = len4;
+		}
+		
+		switch (point)
+		{
+			case 0:
+				outIncidentPoint.set(tbcx + bhw, tbcy + bhh);
+				outIncidentPoint.projectOnto(outOverlapVector);
+				outOverlapVector.set(tbcx + bhw - outIncidentPoint.x, tbcy + bhh - outIncidentPoint.y);
+				break;
+			case 1:
+				outIncidentPoint.set(tbcx - bhw, tbcy + bhh);
+				outIncidentPoint.projectOnto(outOverlapVector);
+				outOverlapVector.set(tbcx - bhw - outIncidentPoint.x, tbcy + bhh - outIncidentPoint.y);
+				break;
+			case 2:
+				outIncidentPoint.set(tbcx + bhw, tbcy - bhh);
+				outIncidentPoint.projectOnto(outOverlapVector);
+				outOverlapVector.set(tbcx + bhw - outIncidentPoint.x, tbcy - bhh - outIncidentPoint.y);
+				break;
+			case 3:
+				outIncidentPoint.set(tbcx - bhw, tbcy - bhh);
+				outIncidentPoint.projectOnto(outOverlapVector);
+				outOverlapVector.set(tbcx - bhw - outIncidentPoint.x, tbcy - bhh - outIncidentPoint.y);
+				break;
+		}
+
+		// move back to coordinate space.
+		outIncidentPoint.set(outIncidentPoint.x + ax, outIncidentPoint.y + ay);
+	}
 	
 	/**
 	 * Calculates the intersection point as the result of a <code>getIntersectionLine</code> call.
 	 * @param out the point to write the information to.
-	 * @param ax the first line segment, first point, x-coordinate.
-	 * @param ay the first line segment, first point, y-coordinate.
-	 * @param bx the first line segment, second point, x-coordinate.
-	 * @param by the first line segment, second point, y-coordinate.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
 	 * @param intersectionScalar the scalar along the line.
 	 * @see #getIntersectionLine(double, double, double, double, double, double, double, double)
 	 * @since 2.21.0
@@ -1818,12 +2096,12 @@ public final class RMath
 	/**
 	 * Calculates the intersection point as the result of a <code>getIntersectionLinePlane</code> call.
 	 * @param out the point to write the information to.
-	 * @param ax the first line segment, first point, x-coordinate.
-	 * @param ay the first line segment, first point, y-coordinate.
-	 * @param az the first line segment, first point, z-coordinate.
-	 * @param bx the first line segment, second point, x-coordinate.
-	 * @param by the first line segment, second point, y-coordinate.
-	 * @param bz the first line segment, second point, z-coordinate.
+	 * @param ax the line segment, first point, x-coordinate.
+	 * @param ay the line segment, first point, y-coordinate.
+	 * @param az the line segment, first point, z-coordinate.
+	 * @param bx the line segment, second point, x-coordinate.
+	 * @param by the line segment, second point, y-coordinate.
+	 * @param bz the line segment, second point, z-coordinate.
 	 * @param intersectionScalar the scalar along the line.
 	 * @see #getIntersectionLinePlane(double, double, double, double, double, double, double, double, double, double)
 	 * @since 2.21.0
