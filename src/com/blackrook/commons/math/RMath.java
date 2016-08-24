@@ -1818,12 +1818,12 @@ public final class RMath
 	// Single "behind plane" consistent check.
 	private static boolean isPointBehindPlane(double ax, double ay, double bx, double by, double px, double py)
 	{
-		return getLinePointSide(ax, ay, bx, by, px, py) > 0;
+		return getLinePointSide(ax, ay, bx, by, px, py) < 0;
 	}
 
 	/**
 	 * Checks if a point lies behind a 2D plane, represented by a line.
-	 * Directionality of the line affects the plane - plane normal goes away from the "right" side of the line.
+	 * Directionality of the line affects the plane - plane normal goes away from the "left" side of the line.
 	 * @param ax the line segment, first point, x-coordinate.
 	 * @param ay the line segment, first point, y-coordinate.
 	 * @param bx the line segment, second point, x-coordinate.
@@ -1841,7 +1841,7 @@ public final class RMath
 
 	/**
 	 * Checks if a circle breaks a 2D plane, represented by a line.
-	 * Directionality of the line affects the plane - plane normal goes away from the "right" side of the line.
+	 * Directionality of the line affects the plane - plane normal goes away from the "left" side of the line.
 	 * @param ax the line segment, first point, x-coordinate.
 	 * @param ay the line segment, first point, y-coordinate.
 	 * @param bx the line segment, second point, x-coordinate.
