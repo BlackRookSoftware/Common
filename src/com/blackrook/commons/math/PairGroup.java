@@ -899,13 +899,12 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 		@Override
 		public void remove()
 		{
-			if (!removed)
-			{
-				Pair p = group.pairList[current];
-				group.remove(p.x, p.y);
-				removed = true;
-			}
+			if (removed) 
+				throw new IllegalStateException("remove() called before next()");
 			
+			Pair p = group.pairList[current];
+			group.remove(p.x, p.y);
+			removed = true;
 		}
 		
 	}
