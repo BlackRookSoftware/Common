@@ -1,5 +1,11 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Changed in 2.30.3
+=================
+
+- Changed: ResettableIterator implementations honor remove() interface policy.
+
+
 Changed in 2.30.2
 =================
 
