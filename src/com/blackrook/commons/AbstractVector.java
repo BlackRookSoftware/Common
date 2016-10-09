@@ -489,11 +489,11 @@ public abstract class AbstractVector<T extends Object>
 	
 		public void remove()
 		{
-			if (!removeCalled)
-			{
-				removeIndex(currIndex-1);
-				removeCalled = true;
-			}
+			if (removeCalled)
+				throw new IllegalStateException("remove() called before next()");
+			
+			removeIndex(currIndex-1);
+			removeCalled = true;
 		}
 
 		@Override

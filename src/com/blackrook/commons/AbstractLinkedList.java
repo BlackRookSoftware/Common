@@ -409,9 +409,8 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 	{
 		protected Node<T> previous;
 		protected Node<T> current;
+		protected Node<T> next;
 		protected boolean removeCalled;
-		
-		private final Node<T> BEGINNING_NODE = new Node<T>(null, head); 
 		
 		public LLIterator()
 		{
@@ -421,14 +420,18 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 		@Override
 		public boolean hasNext()
 		{
-			return current != null && current.next != null;
+			return next != null;
 		}
 	
 		@Override
 		public T next()
 		{
 			previous = current;
-			current = current.next;
+			if (current != null)
+				current = current.next;
+			current = next;
+			if (next != null)
+				next = next.next;
 			removeCalled = false;
 			return current.data;
 		}
@@ -436,19 +439,20 @@ public abstract class AbstractLinkedList<T extends Object> implements Resettable
 		@Override
 		public void remove()
 		{
-			if (removeCalled) return;
+			if (removeCalled) 
+				throw new IllegalStateException("remove() called before next()");
 			removeNode(current, previous);
-			size--;
+			current = previous;
 			removeCalled = true;
+			size--;
 		}
 
 		@Override
 		public void reset()
 		{
 			previous = null;
-			BEGINNING_NODE.data = null;
-			BEGINNING_NODE.next = head;
-			current = BEGINNING_NODE;
+			current = null;
+			next = head;
 			removeCalled = true;
 		}
 		

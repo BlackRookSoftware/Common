@@ -279,12 +279,12 @@ public abstract class AbstractChainedHash<P extends Object> extends AbstractArra
 		@Override
 		public void remove()
 		{
-			if (!removeFlag)
-			{
-				currentChain.removeIndex(currentChainIndex-1);
-				size--;
-				removeFlag = true;
-			}
+			if (removeFlag)
+				throw new IllegalStateException("remove() called before next()");
+
+			currentChain.removeIndex(currentChainIndex-1);
+			size--;
+			removeFlag = true;
 		}
 
 		/**
