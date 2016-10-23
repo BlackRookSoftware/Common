@@ -1,10 +1,16 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Changed in 2.30.4
+=================
+
+- Changed: ComparatorList getIndexOf() did not follow AbstractVector's method 
+  policy.
+
+
 Changed in 2.30.3
 =================
 
 - Changed: ResettableIterator implementations honor remove() interface policy.
-
 
 Changed in 2.30.2
 =================
