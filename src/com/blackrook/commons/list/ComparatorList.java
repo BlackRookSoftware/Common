@@ -72,17 +72,11 @@ public class ComparatorList<T extends Object> extends AbstractVector<T>
 		}
 	}
 	
-	/**
-	 * Gets the index of an object, presumably in the vector, binary search.
-	 * @param object the object to search for.
-	 * @return the index of the object if it is in the vector, or less than 0 if it is not present.
-	 * If less than 0, it is equal to where it would be added in the array. Add 1 then negate.
-	 * @see AbstractVector#search(Object, Comparator)
-	 */
 	@Override
 	public int getIndexOf(T object)
 	{
-		return search(object, comparator);
+		int out = search(object, comparator);
+		return out < 0 ? -1 : out;
 	}
 
 }

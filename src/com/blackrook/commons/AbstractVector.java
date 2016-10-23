@@ -248,7 +248,8 @@ public abstract class AbstractVector<T extends Object>
 	}
 
 	/**
-	 * Checks if an object exists in this vector via iterative comparison.
+	 * Checks if an object exists in this vector.
+	 * Implementation may dictate how the object is searched.
 	 * @param object the object to look for.
 	 * @return true if an equal object exists, or false if not.
 	 * @see #getIndexOf(Object)
@@ -260,7 +261,6 @@ public abstract class AbstractVector<T extends Object>
 	
 	/**
 	 * Gets the index of an object, presumably in the vector.
-	 * Sequential search.
 	 * @param object the object to search for.
 	 * @return the index of the object if it is in the vector, or -1 if it is not present.
 	 * @throws NullPointerException if object is null.

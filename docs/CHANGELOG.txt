@@ -9,16 +9,23 @@ Slated for 2.31.0
   keys/values to an array of a corresponding type.
 - Added: RMath.getIntersectionCylinder(...).
 
+
+Changed in 2.30.4
+=================
+
+- Changed: ComparatorList getIndexOf() did not follow AbstractVector's method 
+  policy.
+
 Changed in 2.30.3
 =================
 
 - Changed: ResettableIterator implementations honor remove() interface policy.
 
-
 Changed in 2.30.2
 =================
 
 - Fixed: Vector angle calls now sanitize angle ranges, according to spec.
+
 
 Changed in 2.30.1
 =================
