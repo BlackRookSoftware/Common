@@ -1,6 +1,6 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Slated for 2.31.0
+Changed in 2.31.0
 =================
 
 - Added: Matrix4X chaining commands and other commands.
