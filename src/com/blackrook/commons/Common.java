@@ -1302,7 +1302,7 @@ public final class Common
 	}
 
 	/**
-	 * Adds a character sequence from the start of a string if it starts with the sequence.
+	 * Adds a character sequence from the start of a string if it does not start with the sequence.
 	 * @param input the input string to change.
 	 * @param sequence the sequence to potentially add.
 	 * @return a modified string or the input string if no modification.
@@ -1317,7 +1317,7 @@ public final class Common
 	}
 	
 	/**
-	 * Adds a character sequence from the end of a string if it ends with the sequence.
+	 * Adds a character sequence from the end of a string if it does not end with the sequence.
 	 * @param input the input string to change.
 	 * @param sequence the sequence to potentially add.
 	 * @return a modified string or the input string if no modification.
