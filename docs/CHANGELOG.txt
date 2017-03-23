@@ -1,5 +1,12 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+
+Slated for 2.31.1
+=================
+
+- Changed Common HTTP request functionality, added some methods.
+
+
 Changed in 2.31.0
 =================
 
