@@ -1,6 +1,15 @@
 Commons (C) Black Rook Software, All rights reserved.
 
 
+Slated for 2.31.2
+=================
+
+- Fixed: Made PairGroup.intersection(...) a little more optimized.
+- Deprecated: PairGroup.random(Random, int) in favor of a more descriptive name.
+- Added: PairGroup.randomDensity(Random, float).
+- Added: PairGroup.randomAmount(Random, int).
+
+
 Changed in 2.31.1
 =================
 

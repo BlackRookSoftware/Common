@@ -632,11 +632,15 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 */
 	public PairGroup intersection(PairGroup group)
 	{
-		PairGroup out = new PairGroup(pairList.length);
-		for (int i = 0; i < size; i++)
+		// Intersections will never be larger than the smallest set - compare with smallest.
+		PairGroup smaller = this.size < group.size ? this : group;
+		PairGroup larger = smaller == this ? group : this;
+		
+		PairGroup out = new PairGroup(smaller.size);
+		for (int i = 0; i < smaller.size; i++)
 		{
 			Pair p = pairList[i];
-			if (group.contains(p.x, p.y))
+			if (larger.contains(p.x, p.y))
 				out.add(p.x, p.y);
 		}
 		return out;
@@ -712,15 +716,50 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	 * Creates a new PairGroup that is a randomly-selected
 	 * collection of a number of pairs inside this group.
 	 * @param random the random number generator to use.
-	 * @param count the amount of objects to return. if this is 0 or less,
-	 * no random numbers are picked and this returns an empty set. if this is
-	 * greater than {@link #size()}, then it will return a group no greater than {@link #size()}.
+	 * @param count the amount of objects to return. If this is 0 or less,
+	 * this returns a new empty set. If this is greater than or equal to {@link #size()}, this returns {@link #copy()}.
+	 * In the event of these specific values being passed in, no numbers are randomly generated.
 	 * @return a new PairGroup.
+	 * @deprecated in favor of a more descriptive method name.
 	 */
+	@Deprecated
 	public PairGroup random(Random random, int count)
+	{
+		return randomAmount(random, count);
+	}
+
+	/**
+	 * Creates a new PairGroup that is a randomly-selected
+	 * collection of the pairs inside this group, using a scalar describing how many total
+	 * get picked as a percentage of the whole group (0 is 0%, 1 is 100%).
+	 * @param random the random number generator to use.
+	 * @param density the density, from 0 to 1, of the amount of pairs to select.
+	 * 0 or less is NONE, 1 or greater is ALL. In the event of these
+	 * specific values being passed in, no numbers are randomly generated.
+	 * @return a new PairGroup.
+	 * @since 2.31.2
+	 */
+	public PairGroup randomDensity(Random random, float density)
+	{
+		return randomAmount(random, (int)(size() * density));
+	}
+
+	/**
+	 * Creates a new PairGroup that is a randomly-selected
+	 * collection of a number of pairs inside this group.
+	 * @param random the random number generator to use.
+	 * @param count the amount of objects to return. If this is 0 or less,
+	 * this returns a new empty set. If this is greater than or equal to {@link #size()}, this returns {@link #copy()}.
+	 * In the event of these specificvalues being passed in, no numbers are randomly generated.
+	 * @return a new PairGroup.
+	 * @since 2.31.2
+	 */
+	public PairGroup randomAmount(Random random, int count)
 	{
 		if (count <= 0)
 			return empty();
+		if (count >= size)
+			return copy();
 		
 		Cache c = getCache();
 		int amount = Math.min(size(), count);
