@@ -13,7 +13,6 @@ import com.blackrook.commons.list.List;
  * This is an abstract hash data structure. It stores several hashable objects
  * in a chained hash table.
  * @author Matthew Tropiano
- * FIXME: An extremely rare "get miss" may occur when one thread wants to "get" from the hash during a re-hash. Storage array will need to be replaced last and the "put" method modified slightly.
  */
 public abstract class AbstractChainedHash<P extends Object> extends AbstractArrayStorage<List<P>> implements AbstractSet<P>
 {
