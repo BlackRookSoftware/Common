@@ -61,6 +61,12 @@ public abstract class Tuple1F implements TupleF
 		return x - t.x;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return Float.hashCode(x);
+	}
+
 	/**
 	 * Returns true if the target has the same component values as this one. 
 	 * @param t the other tuple.

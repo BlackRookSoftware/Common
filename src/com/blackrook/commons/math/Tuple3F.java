@@ -204,6 +204,12 @@ public abstract class Tuple3F extends Tuple2F
 		return "["+x+", "+y+", "+z+"]";
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return Float.hashCode(x) + Float.hashCode(y) + Float.hashCode(z);
+	}
+
 	/**
 	 * Returns true if the target has the same component values as this one. 
 	 * @param v the other tuple.

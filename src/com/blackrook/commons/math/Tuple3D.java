@@ -214,6 +214,12 @@ public abstract class Tuple3D extends Tuple2D
 		return x == v.x && y == v.y && z == v.z;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return Double.hashCode(x) + Double.hashCode(y) + Double.hashCode(z);
+	}
+
 	/**
 	 * Gets the distance in units from this tuple to another.
 	 * @param point the other tuple.

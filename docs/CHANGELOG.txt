@@ -8,7 +8,7 @@ Slated for 2.31.2
 - Deprecated: PairGroup.random(Random, int) in favor of a more descriptive name.
 - Added: PairGroup.randomDensity(Random, float).
 - Added: PairGroup.randomAmount(Random, int).
-
+- Added: hashCode() methods to TupleXY classes.
 
 Changed in 2.31.1
 =================
