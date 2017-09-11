@@ -568,6 +568,21 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	}
 	
 	/**
+	 * Gets the contents of a pair is in this group.
+	 * @param index the index of the pair.
+	 * @param out the output pair.
+	 * @return true if a pair was returned, false if the index was out of range.
+	 */
+	public boolean get(int index, Pair out)
+	{
+		if (index < 0 || index >= size())
+			return false;
+		
+		out.set(pairList[index]);
+		return true;
+	}
+
+	/**
 	 * Checks if a pair is in this group.
 	 * @param x x-coordinate.
 	 * @param y y-coordinate.
