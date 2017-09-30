@@ -883,6 +883,43 @@ public final class RMath
 	}
 	
 	/**
+	 * Corrects a set of view clipping bounds to fit into a different aspect.
+	 * @param targetAspect the target aspect.
+	 * @param left the leftmost clipping bound.
+	 * @param right the rightmost clipping bound.
+	 * @param bottom the bottom clipping bound.
+	 * @param top the top clipping bound.
+	 * @param outBounds the output array to put the calculated planes.
+	 * @since 2.31.2
+	 */
+	public static void correctClippingAspect(double targetAspect, double left, double right, double bottom, double top, double[] outBounds)
+	{
+		double viewWidth = Math.max(left, right) - Math.min(left, right);
+		double viewHeight = Math.max(bottom, top) - Math.min(bottom, top);
+		double viewAspect = viewWidth / viewHeight;
+        
+        if (targetAspect >= viewAspect)
+        {
+        	double axis = targetAspect * viewHeight;
+        	double widthDiff = (axis - viewWidth) / 2f;
+            right = left + viewWidth + widthDiff;
+            left = left - widthDiff;
+        }
+        else
+        {
+        	double axis = (1.0f / targetAspect) * viewWidth;
+        	double heightDiff = (axis - viewHeight) / 2f;
+            top = bottom + viewHeight + heightDiff;
+        	bottom = bottom - heightDiff;
+        }
+		
+        outBounds[0] = left;
+        outBounds[1] = right;
+        outBounds[2] = bottom;
+        outBounds[3] = top;
+	}
+	
+	/**
 	 * Gets a scalar factor that equals how "far along" a value is along an interval.
 	 * @param value the value to test.
 	 * @param lo the lower value of the interval.
