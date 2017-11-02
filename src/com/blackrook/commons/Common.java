@@ -3177,6 +3177,22 @@ public final class Common
 	}
 
 	/**
+	 * Gets the element at an index in the array, but returns 
+	 * null if the index is outside of the array bounds.
+	 * @param array the array to use.
+	 * @param index the index to use.
+	 * @return <code>array[index]</code> or null if out of bounds.
+	 * @since 2.31.2
+	 */
+	public static <T> T arrayElement(T[] array, int index)
+	{
+		if (index < 0 || index >= array.length)
+			return null;
+		else
+			return array[index];
+	}
+	
+	/**
 	 * Swaps the contents of two indices of an array.
 	 * @param <T> the object type stored in the array.
 	 * @param array the input array.

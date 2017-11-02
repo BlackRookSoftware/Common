@@ -10,6 +10,7 @@ Slated for 2.31.2
 - Added: PairGroup.randomAmount(Random, int).
 - Added: hashCode() methods to TupleXY classes.
 - Added: RMath.correctClippingAspect(...).
+- Added: Common.arrayElement(T[], int)
 
 Changed in 2.31.1
 =================
