@@ -19,6 +19,18 @@ Contained in this release is a series of classes that should be used for
 common math and data structures. The javadocs contain basic outlines of each
 package's contents.
 
+### Compiling with Ant
+
+To compile this library with Apache Ant, type:
+
+	ant compile
+
+To make a JAR of this library, type:
+
+	ant jar
+
+And it will be placed in the *build/jar* directory.
+	
 ### Other
 
 This program and the accompanying materials
