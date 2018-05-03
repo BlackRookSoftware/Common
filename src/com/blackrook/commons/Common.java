@@ -22,10 +22,6 @@ import java.nio.*;
 import java.nio.channels.FileLock;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -3562,42 +3558,6 @@ public final class Common
 	{
 		if (c == null) return;
 		try { c.close(); } catch (Exception e){}
-	}
-	
-	/**
-	 * Attempts to close a {@link Connection} object.
-	 * If the object is null, this does nothing.
-	 * @param c the reference to the closeable object.
-	 * @since 2.15.0
-	 */
-	public static void close(Connection c)
-	{
-		if (c == null) return;
-		try { c.close(); } catch (SQLException e){}
-	}
-	
-	/**
-	 * Attempts to close a {@link Statement} object.
-	 * If the object is null, this does nothing.
-	 * @param s the reference to the closeable object.
-	 * @since 2.15.0
-	 */
-	public static void close(Statement s)
-	{
-		if (s == null) return;
-		try { s.close(); } catch (SQLException e){}
-	}
-	
-	/**
-	 * Attempts to close a {@link ResultSet} object.
-	 * If the object is null, this does nothing.
-	 * @param rs the reference to the closeable object.
-	 * @since 2.15.0
-	 */
-	public static void close(ResultSet rs)
-	{
-		if (rs == null) return;
-		try { rs.close(); } catch (SQLException e){}
 	}
 	
 	/**
