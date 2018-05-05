@@ -5,6 +5,7 @@ Slated for 2.31.2
 =================
 
 - Removed unnecessary overloadings of Common.close(...).
+- Removed calls to boxed primitive constructors in Reflect.
 - Fixed: Made PairGroup.intersection(...) a little more optimized.
 - Deprecated: PairGroup.random(Random, int) in favor of a more descriptive name.
 - Added: PairGroup.randomDensity(Random, float).

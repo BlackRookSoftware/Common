@@ -434,10 +434,18 @@ public final class Reflect
 	{
 		Object out = null;
 		try {
-			out = clazz.newInstance();
+			out = clazz.getDeclaredConstructor().newInstance();
 		} catch (InstantiationException ex) {
 			throw new RuntimeException(ex);
 		} catch (IllegalAccessException ex) {
+			throw new RuntimeException(ex);
+		} catch (IllegalArgumentException ex) {
+			throw new RuntimeException(ex);
+		} catch (InvocationTargetException ex) {
+			throw new RuntimeException(ex);
+		} catch (NoSuchMethodException ex) {
+			throw new RuntimeException(ex);
+		} catch (SecurityException ex) {
 			throw new RuntimeException(ex);
 		}
 		
@@ -770,64 +778,74 @@ public final class Reflect
 		
 		List<String> outList = new List<String>(128);
 		
-		if (classLoader instanceof URLClassLoader)
+		while (classLoader != null)
 		{
-			for (URL url : ((URLClassLoader)classLoader).getURLs())
-			{
-				if (url.getProtocol().equals("file"))
-				{
-					String startingPath = Common.urlUnescape(url.getPath().substring(1));
-					File file = new File(startingPath);
-					if (file.isDirectory())
-					{
-						for (File f : Common.explodeFiles(file))
-						{
-							String path = f.getPath();
-							int classExtIndex = path.endsWith(".class") ? path.indexOf(".class") : -1;
-							if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class"))
-							{
-								String className = path.substring(startingPath.length(), classExtIndex).replaceAll("[\\/\\\\]", ".");
-								if (className.startsWith(prefix))
-									outList.add(className);
-							}
-						}
-					}
-					else if (file.getName().endsWith(".jar"))
-					{
-						ZipFile jarFile = null;
-						try {
-							jarFile = new ZipFile(file);
-							Enumeration<? extends ZipEntry> zipEntries = jarFile.entries();
-							while (zipEntries.hasMoreElements())
-							{
-								ZipEntry ze = zipEntries.nextElement();
-								String path = ze.getName();
-								int classExtIndex = path.indexOf(".class");
-								if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class"))
-								{
-									String className = path.substring(0, classExtIndex).replaceAll("[\\/\\\\]", ".");
-									if (className.startsWith(prefix))
-										outList.add(className);
-								}
-							}
-							
-						} catch (ZipException e) {
-							throw new RuntimeException(e);
-						} catch (IOException e) {
-							throw new RuntimeException(e);
-						} finally {
-							Common.close(jarFile);
-						}
-					}
-				}
-			}
+			if (classLoader instanceof URLClassLoader)
+				scanURLClassLoader(prefix, (URLClassLoader)classLoader, outList);
+			
+			classLoader = classLoader.getParent();
 		}
+		
 		
 		String[] out = new String[outList.size()];
 		outList.toArray(out);
 		return out;
 	}
 
+	// Scans a URL classloader.
+	private static void scanURLClassLoader(String prefix, URLClassLoader classLoader, List<String> outList)
+	{
+		for (URL url : classLoader.getURLs())
+		{
+			if (url.getProtocol().equals("file"))
+			{
+				String startingPath = Common.urlUnescape(url.getPath().substring(1));
+				File file = new File(startingPath);
+				if (file.isDirectory())
+				{
+					for (File f : Common.explodeFiles(file))
+					{
+						String path = f.getPath();
+						int classExtIndex = path.endsWith(".class") ? path.indexOf(".class") : -1;
+						if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class"))
+						{
+							String className = path.substring(startingPath.length(), classExtIndex).replaceAll("[\\/\\\\]", ".");
+							if (className.startsWith(prefix))
+								outList.add(className);
+						}
+					}
+				}
+				else if (file.getName().endsWith(".jar"))
+				{
+					ZipFile jarFile = null;
+					try {
+						jarFile = new ZipFile(file);
+						Enumeration<? extends ZipEntry> zipEntries = jarFile.entries();
+						while (zipEntries.hasMoreElements())
+						{
+							ZipEntry ze = zipEntries.nextElement();
+							String path = ze.getName();
+							int classExtIndex = path.indexOf(".class");
+							if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class"))
+							{
+								String className = path.substring(0, classExtIndex).replaceAll("[\\/\\\\]", ".");
+								if (className.startsWith(prefix))
+									outList.add(className);
+							}
+						}
+						
+					} catch (ZipException e) {
+						throw new RuntimeException(e);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					} finally {
+						Common.close(jarFile);
+					}
+				}
+			}
+		}
+	}
+	
 	
 	/**
 	 * Takes the contents of an AbstractMap and applies it to a newly-created POJO 
@@ -923,21 +941,21 @@ public final class Reflect
 		if (object == null)
 		{
 			if (targetType == Boolean.TYPE)
-				return (T)new Boolean(false);
+				return (T)Boolean.valueOf(false);
 			else if (targetType == Byte.TYPE)
-				return (T)new Byte((byte)0x00);
+				return (T)Byte.valueOf((byte)0x00);
 			else if (targetType == Short.TYPE)
-				return (T)new Short((short)0);
+				return (T)Short.valueOf((short)0);
 			else if (targetType == Integer.TYPE)
-				return (T)new Integer(0);
+				return (T)Integer.valueOf(0);
 			else if (targetType == Float.TYPE)
-				return (T)new Float(0f);
+				return (T)Float.valueOf(0f);
 			else if (targetType == Long.TYPE)
-				return (T)new Long(0L);
+				return (T)Long.valueOf(0L);
 			else if (targetType == Double.TYPE)
-				return (T)new Double(0.0);
+				return (T)Double.valueOf(0.0);
 			else if (targetType == Character.TYPE)
-				return (T)new Character('\0');
+				return (T)Character.valueOf('\0');
 			return null;
 		}
 		
@@ -1034,35 +1052,35 @@ public final class Reflect
 	private static <T> T convertBoolean(String memberName, Boolean b, Class<T> targetType)
 	{
 		if (targetType == Boolean.TYPE)
-			return (T)new Boolean(b);
+			return (T)Boolean.valueOf(b);
 		else if (targetType == Boolean.class)
 			return targetType.cast(b);
 		else if (targetType == Byte.TYPE)
-			return (T)new Byte((byte)(b ? 1 : 0));
+			return (T)Byte.valueOf((byte)(b ? 1 : 0));
 		else if (targetType == Byte.class)
 			return targetType.cast(b ? 1 : 0);
 		else if (targetType == Short.TYPE)
-			return (T)new Short((short)(b ? 1 : 0));
+			return (T)Short.valueOf((short)(b ? 1 : 0));
 		else if (targetType == Short.class)
 			return targetType.cast(b ? 1 : 0);
 		else if (targetType == Integer.TYPE)
-			return (T)new Integer(b ? 1 : 0);
+			return (T)Integer.valueOf(b ? 1 : 0);
 		else if (targetType == Integer.class)
 			return targetType.cast(b ? 1 : 0);
 		else if (targetType == Float.TYPE)
-			return (T)new Float(b ? 1f : 0f);
+			return (T)Float.valueOf(b ? 1f : 0f);
 		else if (targetType == Float.class)
 			return targetType.cast(b ? 1f : 0f);
 		else if (targetType == Long.TYPE)
-			return (T)new Long(b ? 1L : 0L);
+			return (T)Long.valueOf(b ? 1L : 0L);
 		else if (targetType == Long.class)
 			return targetType.cast(b ? 1L : 0L);
 		else if (targetType == Double.TYPE)
-			return (T)new Double(b ? 1.0 : 0.0);
+			return (T)Double.valueOf(b ? 1.0 : 0.0);
 		else if (targetType == Double.class)
 			return targetType.cast(b ? 1.0 : 0.0);
 		else if (targetType == Character.TYPE)
-			return (T)new Character(b ? (char)1 : '\0');
+			return (T)Character.valueOf(b ? (char)1 : '\0');
 		else if (targetType == Character.class)
 			return targetType.cast(b ? (char)1 : '\0');
 		else if (targetType == String.class)
@@ -1085,27 +1103,27 @@ public final class Reflect
 	private static <T> T convertNumber(String memberName, Number n, Class<T> targetType)
 	{
 		if (targetType == Boolean.TYPE)
-			return (T)new Boolean(n.intValue() != 0);
+			return (T)Boolean.valueOf(n.intValue() != 0);
 		else if (targetType == Boolean.class)
 			return targetType.cast(n.intValue() != 0);
 		else if (targetType == Byte.TYPE)
-			return (T)new Byte(n.byteValue());
+			return (T)Byte.valueOf(n.byteValue());
 		else if (targetType == Byte.class)
 			return targetType.cast(n.byteValue());
 		else if (targetType == Short.TYPE)
-			return (T)new Short(n.shortValue());
+			return (T)Short.valueOf(n.shortValue());
 		else if (targetType == Short.class)
 			return targetType.cast(n.shortValue());
 		else if (targetType == Integer.TYPE)
-			return (T)new Integer(n.intValue());
+			return (T)Integer.valueOf(n.intValue());
 		else if (targetType == Integer.class)
 			return targetType.cast(n.intValue());
 		else if (targetType == Float.TYPE)
-			return (T)new Float(n.floatValue());
+			return (T)Float.valueOf(n.floatValue());
 		else if (targetType == Float.class)
 			return targetType.cast(n.floatValue());
 		else if (targetType == Long.TYPE)
-			return (T)new Long(n.longValue());
+			return (T)Long.valueOf(n.longValue());
 		else if (targetType == Long.class)
 			return targetType.cast(n.longValue());
 		else if (targetType == Timestamp.class)
@@ -1113,11 +1131,11 @@ public final class Reflect
 		else if (targetType == Date.class)
 			return targetType.cast(new Date(n.longValue()));
 		else if (targetType == Double.TYPE)
-			return (T)new Double(n.doubleValue());
+			return (T)Double.valueOf(n.doubleValue());
 		else if (targetType == Double.class)
 			return targetType.cast(n.doubleValue());
 		else if (targetType == Character.TYPE)
-			return (T)new Character((char)(n.shortValue()));
+			return (T)Character.valueOf((char)(n.shortValue()));
 		else if (targetType == Character.class)
 			return targetType.cast((char)(n.shortValue()));
 		else if (targetType == String.class)
@@ -1142,35 +1160,35 @@ public final class Reflect
 		char cv = c.charValue();
 		
 		if (targetType == Character.TYPE)
-			return (T)new Character(cv);
+			return (T)Character.valueOf(cv);
 		else if (targetType == Character.class)
 			return targetType.cast(cv);
 		else if (targetType == Boolean.TYPE)
-			return (T)new Boolean(c != 0);
+			return (T)Boolean.valueOf(c != 0);
 		else if (targetType == Boolean.class)
 			return targetType.cast(c != 0);
 		else if (targetType == Byte.TYPE)
-			return (T)new Byte((byte)cv);
+			return (T)Byte.valueOf((byte)cv);
 		else if (targetType == Byte.class)
 			return targetType.cast((byte)cv);
 		else if (targetType == Short.TYPE)
-			return (T)new Short((short)cv);
+			return (T)Short.valueOf((short)cv);
 		else if (targetType == Short.class)
 			return targetType.cast((short)cv);
 		else if (targetType == Integer.TYPE)
-			return (T)new Integer((int)cv);
+			return (T)Integer.valueOf((int)cv);
 		else if (targetType == Integer.class)
 			return targetType.cast((int)cv);
 		else if (targetType == Float.TYPE)
-			return (T)new Float((float)cv);
+			return (T)Float.valueOf((float)cv);
 		else if (targetType == Float.class)
 			return targetType.cast((float)cv);
 		else if (targetType == Long.TYPE)
-			return (T)new Long((long)cv);
+			return (T)Long.valueOf((long)cv);
 		else if (targetType == Long.class)
 			return targetType.cast((long)cv);
 		else if (targetType == Double.TYPE)
-			return (T)new Double((double)cv);
+			return (T)Double.valueOf((double)cv);
 		else if (targetType == Double.class)
 			return targetType.cast((double)cv);
 		else if (targetType == String.class)
@@ -1193,7 +1211,7 @@ public final class Reflect
 	private static <T> T convertDate(String memberName, Date d, Class<T> targetType)
 	{
 		if (targetType == Long.TYPE)
-			return (T)new Long(d.getTime());
+			return (T)Long.valueOf(d.getTime());
 		else if (targetType == Long.class)
 			return targetType.cast(d.getTime());
 		else if (targetType == String.class)
@@ -1218,7 +1236,7 @@ public final class Reflect
 	private static <T> T convertTimestamp(String memberName, Timestamp t, Class<T> targetType)
 	{
 		if (targetType == Long.TYPE)
-			return t != null ? (T)new Long(t.getTime()) : (T)new Long(0);
+			return t != null ? (T)Long.valueOf(t.getTime()) : (T)Long.valueOf(0);
 		else if (targetType == Long.class)
 			return targetType.cast(t.getTime());
 		else if (targetType == String.class)
@@ -1245,27 +1263,27 @@ public final class Reflect
 	private static <T> T convertEnum(String memberName, Enum<?> e, Class<T> targetType)
 	{
 		if (targetType == Byte.TYPE)
-			return (T)new Byte((byte)e.ordinal());
+			return (T)Byte.valueOf((byte)e.ordinal());
 		else if (targetType == Byte.class)
 			return targetType.cast((byte)e.ordinal());
 		else if (targetType == Short.TYPE)
-			return (T)new Short((short)e.ordinal());
+			return (T)Short.valueOf((short)e.ordinal());
 		else if (targetType == Short.class)
 			return targetType.cast((short)e.ordinal());
 		else if (targetType == Integer.TYPE)
-			return (T)new Integer(e.ordinal());
+			return (T)Integer.valueOf(e.ordinal());
 		else if (targetType == Integer.class)
 			return targetType.cast(e.ordinal());
 		else if (targetType == Float.TYPE)
-			return (T)new Float(e.ordinal());
+			return (T)Float.valueOf(e.ordinal());
 		else if (targetType == Float.class)
 			return targetType.cast(e.ordinal());
 		else if (targetType == Long.TYPE)
-			return (T)new Long(e.ordinal());
+			return (T)Long.valueOf(e.ordinal());
 		else if (targetType == Long.class)
 			return targetType.cast(e.ordinal());
 		else if (targetType == Double.TYPE)
-			return (T)new Double(e.ordinal());
+			return (T)Double.valueOf(e.ordinal());
 		else if (targetType == Double.class)
 			return targetType.cast(e.ordinal());
 		else if (targetType == String.class)
@@ -1283,35 +1301,35 @@ public final class Reflect
 	private static <T> T convertString(String memberName, String s, Class<T> targetType)
 	{
 		if (targetType == Boolean.TYPE)
-			return (T)new Boolean(Common.parseBoolean(s));
+			return (T)Boolean.valueOf(Common.parseBoolean(s));
 		else if (targetType == Boolean.class)
 			return targetType.cast(Common.parseBoolean(s));
 		else if (targetType == Byte.TYPE)
-			return (T)new Byte(Common.parseByte(s));
+			return (T)Byte.valueOf(Common.parseByte(s));
 		else if (targetType == Byte.class)
 			return targetType.cast(Common.parseByte(s));
 		else if (targetType == Short.TYPE)
-			return (T)new Short(Common.parseShort(s));
+			return (T)Short.valueOf(Common.parseShort(s));
 		else if (targetType == Short.class)
 			return targetType.cast(Common.parseShort(s));
 		else if (targetType == Integer.TYPE)
-			return (T)new Integer(Common.parseInt(s));
+			return (T)Integer.valueOf(Common.parseInt(s));
 		else if (targetType == Integer.class)
 			return targetType.cast(Common.parseInt(s));
 		else if (targetType == Float.TYPE)
-			return (T)new Float(Common.parseFloat(s));
+			return (T)Float.valueOf(Common.parseFloat(s));
 		else if (targetType == Float.class)
 			return targetType.cast(Common.parseFloat(s));
 		else if (targetType == Long.TYPE)
-			return (T)new Long(Common.parseLong(s));
+			return (T)Long.valueOf(Common.parseLong(s));
 		else if (targetType == Long.class)
 			return targetType.cast(Common.parseLong(s));
 		else if (targetType == Double.TYPE)
-			return (T)new Double(Common.parseDouble(s));
+			return (T)Double.valueOf(Common.parseDouble(s));
 		else if (targetType == Double.class)
 			return targetType.cast(Common.parseDouble(s));
 		else if (targetType == Character.TYPE && s.length() == 1)
-			return (T)new Character(s.charAt(0));
+			return (T)Character.valueOf(s.charAt(0));
 		else if (targetType == Character.class && s.length() == 1)
 			return targetType.cast(s.charAt(0));
 		else if (targetType == String.class)
