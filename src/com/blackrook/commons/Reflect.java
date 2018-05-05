@@ -758,12 +758,12 @@ public final class Reflect
 	 */
 	public static String[] getClasses(String prefix)
 	{
-		return getClasses(prefix, Thread.currentThread().getContextClassLoader());
+		return Common.joinArrays(getClasses(prefix, Thread.currentThread().getContextClassLoader()), getClassesFromClasspath(prefix));
 	}
 	
 	/**
 	 * Returns the fully-qualified names of all classes beginning with
-	 * a certain string. None of the classes are "forName"-ed into PermGen space.
+	 * a certain string. None of the classes are "forName"-ed into PermGen/Metaspace.
 	 * <p>This scan can be expensive, as this searches the contents of the entire {@link ClassLoader}.
 	 * @param prefix the String to use for lookup. Can be null.
 	 * @param classLoader the ClassLoader to look into.
@@ -786,6 +786,43 @@ public final class Reflect
 			classLoader = classLoader.getParent();
 		}
 		
+		String[] out = new String[outList.size()];
+		outList.toArray(out);
+		return out;
+	}
+
+	/**
+	 * Returns the fully-qualified names of all classes beginning with
+	 * a certain string. None of the classes are "forName"-ed into PermGen/Metaspace.
+	 * <p>This scan can be expensive, as this searches the contents of the entire {@link ClassLoader}.
+	 * @param prefix the String to use for lookup. Can be null.
+	 * @return the list of class names.
+	 * @throws RuntimeException if a JAR file could not be read for some reason.
+	 * @since 2.31.2
+	 */
+	public static String[] getClassesFromClasspath(String prefix)
+	{
+		if (prefix == null)
+			prefix = "";
+		
+		List<String> outList = new List<String>(128);
+
+		String classpath = System.getProperty("java.class.path");
+		String[] files = classpath.split("(\\"+File.pathSeparator+")");
+		
+		for (String fileName : files)
+		{
+			File f = new File(fileName);
+			if (!f.exists())
+				continue;
+			
+			if (f.isDirectory())
+				scanDirectory(prefix, outList, fileName, f);
+			else if (f.getName().toLowerCase().endsWith(".jar"))
+				scanJARFile(prefix, outList, f);
+			else if (f.getName().toLowerCase().endsWith(".jmod"))
+				scanJMODFile(prefix, outList, f);
+		}
 		
 		String[] out = new String[outList.size()];
 		outList.toArray(out);
@@ -802,47 +839,84 @@ public final class Reflect
 				String startingPath = Common.urlUnescape(url.getPath().substring(1));
 				File file = new File(startingPath);
 				if (file.isDirectory())
-				{
-					for (File f : Common.explodeFiles(file))
-					{
-						String path = f.getPath();
-						int classExtIndex = path.endsWith(".class") ? path.indexOf(".class") : -1;
-						if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class"))
-						{
-							String className = path.substring(startingPath.length(), classExtIndex).replaceAll("[\\/\\\\]", ".");
-							if (className.startsWith(prefix))
-								outList.add(className);
-						}
-					}
-				}
+					scanDirectory(prefix, outList, startingPath, file);
 				else if (file.getName().endsWith(".jar"))
+					scanJARFile(prefix, outList, file);
+			}
+		}
+	}
+
+	// Scans a directory for classes.
+	private static void scanDirectory(String prefix, List<String> outList, String startingPath, File file)
+	{
+		for (File f : Common.explodeFiles(file))
+		{
+			String path = f.getPath();
+			int classExtIndex = path.endsWith(".class") ? path.indexOf(".class") : -1;
+			if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class") && !path.endsWith("module-info.class"))
+			{
+				String className = path.substring(startingPath.length()+1, classExtIndex).replaceAll("[\\/\\\\]", ".");
+				if (className.startsWith(prefix))
+					outList.add(className);
+			}
+		}
+	}
+
+	// Scans a JAR file
+	private static void scanJARFile(String prefix, List<String> outList, File file)
+	{
+		ZipFile jarFile = null;
+		try {
+			jarFile = new ZipFile(file);
+			Enumeration<? extends ZipEntry> zipEntries = jarFile.entries();
+			while (zipEntries.hasMoreElements())
+			{
+				ZipEntry ze = zipEntries.nextElement();
+				String path = ze.getName();
+				int classExtIndex = path.indexOf(".class");
+				if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class") && !path.endsWith("module-info.class"))
 				{
-					ZipFile jarFile = null;
-					try {
-						jarFile = new ZipFile(file);
-						Enumeration<? extends ZipEntry> zipEntries = jarFile.entries();
-						while (zipEntries.hasMoreElements())
-						{
-							ZipEntry ze = zipEntries.nextElement();
-							String path = ze.getName();
-							int classExtIndex = path.indexOf(".class");
-							if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class"))
-							{
-								String className = path.substring(0, classExtIndex).replaceAll("[\\/\\\\]", ".");
-								if (className.startsWith(prefix))
-									outList.add(className);
-							}
-						}
-						
-					} catch (ZipException e) {
-						throw new RuntimeException(e);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					} finally {
-						Common.close(jarFile);
-					}
+					String className = path.substring(0, classExtIndex).replaceAll("[\\/\\\\]", ".");
+					if (className.startsWith(prefix))
+						outList.add(className);
 				}
 			}
+			
+		} catch (ZipException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			Common.close(jarFile);
+		}
+	}
+	
+	// Scans a JAR file
+	private static void scanJMODFile(String prefix, List<String> outList, File file)
+	{
+		ZipFile jmodFile = null;
+		try {
+			jmodFile = new ZipFile(file);
+			Enumeration<? extends ZipEntry> zipEntries = jmodFile.entries();
+			while (zipEntries.hasMoreElements())
+			{
+				ZipEntry ze = zipEntries.nextElement();
+				String path = ze.getName();
+				int classExtIndex = path.indexOf(".class");
+				if (classExtIndex >= 0 && !path.contains("$") && !path.endsWith("package-info.class") && !path.endsWith("module-info.class"))
+				{
+					String className = path.substring(0, classExtIndex).replaceAll("[\\/\\\\]", ".");
+					if (className.startsWith(prefix))
+						outList.add(className);
+				}
+			}
+			
+		} catch (ZipException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			Common.close(jmodFile);
 		}
 	}
 	
