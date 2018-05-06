@@ -8,6 +8,10 @@ Copyright (c) 2009-2016 Black Rook Software. All rights reserved.
 
 NONE
 
+### Required Java Modules
+
+[java.base](https://docs.oracle.com/javase/10/docs/api/java.base-summary.html)
+
 ### Introduction
 
 This library serves as a base set of code that all Black Rook projects use.
