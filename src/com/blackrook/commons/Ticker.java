@@ -162,6 +162,7 @@ public abstract class Ticker
 	}
 	
 	@Override
+	@SuppressWarnings("deprecation")
 	public void finalize() throws Throwable
 	{
 		stop();
@@ -205,8 +206,7 @@ public abstract class Ticker
 						doTick(currentTick++);
 				}
 				
-//				if (totalNanos > 0) 
-					Common.sleep(0, 500000);
+				Common.sleep(0, 500000);
 			}
 		}
 		

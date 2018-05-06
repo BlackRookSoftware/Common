@@ -1,7 +1,7 @@
 Commons (C) Black Rook Software, All rights reserved.
 
 
-Slated for 2.31.2
+Changed in 2.31.2
 =================
 
 - Removed unnecessary overloadings of Common.close(...).
