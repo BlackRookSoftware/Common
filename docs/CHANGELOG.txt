@@ -4,8 +4,10 @@ Commons (C) Black Rook Software, All rights reserved.
 Changed in 2.31.3
 =================
 
-- Modified Reflect to be more "modularly selective."
- 
+- Added Reflect.classExistsForName(String)
+- Added Reflect.classExistsForName(String, ClassLoader)
+- Added Reflect.classExistsForName(String, boolean, ClassLoader) 
+
 
 Changed in 2.31.2
 =================

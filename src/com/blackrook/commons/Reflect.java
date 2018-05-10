@@ -1117,14 +1117,10 @@ public final class Reflect
 			return convertDate(memberName, (Date)object, targetType);
 		else if (object instanceof String)
 			return convertString(memberName, (String)object, targetType);
-		// check for SQL module inclusion.
-		else if (classExistsForName("java.sql.SQLException"))
-		{
-			if (object instanceof Blob)
-				return convertBlob(memberName, (Blob)object, targetType);
-			else if (object instanceof Clob)
-				return convertClob(memberName, (Clob)object, targetType);
-		}
+		else if (object instanceof Blob)
+			return convertBlob(memberName, (Blob)object, targetType);
+		else if (object instanceof Clob)
+			return convertClob(memberName, (Clob)object, targetType);
 		
 		throw new ClassCastException("Object could not be converted: "+memberName+" is "+object.getClass()+", target is "+targetType);
 	}
