@@ -1,6 +1,6 @@
 # Black Rook Commons
 
-Copyright (c) 2009-2016 Black Rook Software. All rights reserved.  
+Copyright (c) 2009-2018 Black Rook Software. All rights reserved.  
 [http://blackrooksoftware.com/projects.htm?name=common](http://blackrooksoftware.com/projects.htm?name=common)  
 [https://github.com/BlackRookSoftware/Common](https://github.com/BlackRookSoftware/Common)
 
@@ -10,7 +10,8 @@ NONE
 
 ### Required Java Modules
 
-[java.base](https://docs.oracle.com/javase/10/docs/api/java.base-summary.html)
+[java.base](https://docs.oracle.com/javase/10/docs/api/java.base-summary.html)  
+[java.sql](https://docs.oracle.com/javase/10/docs/api/java.sql-summary.html)  
 
 ### Introduction
 

@@ -747,6 +747,54 @@ public final class Reflect
 	}
 
 	/**
+	 * Tests if a class exists on the classpath. Does not attempt to initialize it, 
+	 * and uses the current thread's classloader via {@link Thread#getContextClassLoader()}
+	 * Just for convenience - will swallow {@link ClassNotFoundException} and {@link NoClassDefFoundError}.
+	 * @param className the fully qualified class name (e.g. <code>java.lang.String</code>).
+	 * @return true if the class exists, false if not.
+	 * @since 2.31.3
+	 */
+	public static boolean classExistsForName(String className)
+	{
+		return classExistsForName(className, false, Thread.currentThread().getContextClassLoader());
+	}
+	
+	/**
+	 * Tests if a class exists on the classpath. Does not attempt to initialize it.
+	 * Just for convenience - will swallow {@link ClassNotFoundException} and {@link NoClassDefFoundError}.
+	 * @param className the fully qualified class name (e.g. <code>java.lang.String</code>).
+	 * @param classLoader the class loader to use.
+	 * @return true if the class exists, false if not.
+	 * @since 2.31.3
+	 */
+	public static boolean classExistsForName(String className, ClassLoader classLoader)
+	{
+		return classExistsForName(className, false, classLoader);
+	}
+	
+	/**
+	 * Tests if a class exists on the classpath.
+	 * Just for convenience - will swallow {@link ClassNotFoundException} and {@link NoClassDefFoundError}.
+	 * @param className the fully qualified class name (e.g. <code>java.lang.String</code>).
+	 * @param initialize if true, class will also be initialized, if found.
+	 * @param classLoader the class loader to use.
+	 * @return true if the class exists, false if not.
+	 * @since 2.31.3
+	 */
+	public static boolean classExistsForName(String className, boolean initialize, ClassLoader classLoader)
+	{
+		try {
+			Class.forName(className, initialize, classLoader);
+		} catch (ClassNotFoundException e) {
+			return false;
+		} catch (NoClassDefFoundError e) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * Returns the fully-qualified names of all classes beginning with
 	 * a certain string. This uses {@link Thread#getContextClassLoader()} on the current thread to find them.
 	 * None of the classes are "forName"-ed into PermGen space.
@@ -1069,12 +1117,16 @@ public final class Reflect
 			return convertDate(memberName, (Date)object, targetType);
 		else if (object instanceof String)
 			return convertString(memberName, (String)object, targetType);
-		else if (object instanceof Blob)
-			return convertBlob(memberName, (Blob)object, targetType);
-		else if (object instanceof Clob)
-			return convertClob(memberName, (Clob)object, targetType);
-		else
-			throw new ClassCastException("Object could not be converted: "+memberName+" is "+object.getClass()+", target is "+targetType);
+		// check for SQL module inclusion.
+		else if (classExistsForName("java.sql.SQLException"))
+		{
+			if (object instanceof Blob)
+				return convertBlob(memberName, (Blob)object, targetType);
+			else if (object instanceof Clob)
+				return convertClob(memberName, (Clob)object, targetType);
+		}
+		
+		throw new ClassCastException("Object could not be converted: "+memberName+" is "+object.getClass()+", target is "+targetType);
 	}
 
 	/**
