@@ -98,19 +98,17 @@ public class TypeConverter
 			return convertDate(memberName, (Date)object, targetType);
 		else if (object instanceof String)
 			return convertString(memberName, (String)object, targetType);
-		/*
-		else if (object instanceof Timestamp)
-			return convertTimestamp(memberName, (Timestamp)object, targetType);
-		else if (object instanceof Blob)
-			return convertBlob(memberName, (Blob)object, targetType);
-		else if (object instanceof Clob)
-			return convertClob(memberName, (Clob)object, targetType);
-		*/
 		
 		throw new ClassCastException("Object could not be converted: "+memberName+" is "+object.getClass()+", target is "+targetType);
 	}
 
-	// applies a value, converting, to an object.
+	/**
+	 * Applies an object value to a target object via a "field" name (setter/field).
+	 * @param <T> the target object type.
+	 * @param fieldName the field/setter name.
+	 * @param value the value to apply/convert.
+	 * @param targetObject the target object to set stuff on.
+	 */
 	protected final <T> void applyMemberToObject(String fieldName, Object value, T targetObject)
 	{
 		@SuppressWarnings("unchecked")
@@ -132,7 +130,12 @@ public class TypeConverter
 	}
 
 	/**
-	 * Converts a boolean value to a target type.
+	 * Converts a boolean to another type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param b the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	@SuppressWarnings("unchecked")
 	protected final <T> T convertBoolean(String memberName, Boolean b, Class<T> targetType)
@@ -184,6 +187,11 @@ public class TypeConverter
 
 	/**
 	 * Converts a numeric value to a target type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param n the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	@SuppressWarnings("unchecked")
 	protected final <T> T convertNumber(String memberName, Number n, Class<T> targetType)
@@ -236,7 +244,12 @@ public class TypeConverter
 	}
 
 	/**
-	 * Converts a numeric value to a target type.
+	 * Converts a character value to a target type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param c the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	@SuppressWarnings("unchecked")
 	protected final <T> T convertCharacter(String memberName, Character c, Class<T> targetType)
@@ -290,6 +303,11 @@ public class TypeConverter
 
 	/**
 	 * Converts a date value to a target type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param d the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	@SuppressWarnings("unchecked")
 	protected final <T> T convertDate(String memberName, Date d, Class<T> targetType)
@@ -315,6 +333,11 @@ public class TypeConverter
 
 	/**
 	 * Converts an enum value to a target type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param e the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected final <T> T convertEnum(String memberName, Enum<?> e, Class<T> targetType)
@@ -353,6 +376,11 @@ public class TypeConverter
 
 	/**
 	 * Converts a string value to a target type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param s the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected final <T> T convertString(String memberName, String s, Class<T> targetType)
@@ -413,6 +441,11 @@ public class TypeConverter
 
 	/**
 	 * Converts an array value to a target type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param array the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	protected final <T> T convertArray(String memberName, Object array, Class<T> targetType)
 	{
@@ -454,6 +487,11 @@ public class TypeConverter
 
 	/**
 	 * Converts a char array value to a target type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param charArray the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	protected final <T> T convertCharArray(String memberName, char[] charArray, Class<T> targetType)
 	{
@@ -474,6 +512,11 @@ public class TypeConverter
 
 	/**
 	 * Converts a byte array value to a target type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param byteArray the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	protected final <T> T convertByteArray(String memberName, byte[] byteArray, Class<T> targetType)
 	{
@@ -494,6 +537,11 @@ public class TypeConverter
 
 	/**
 	 * Converts a totally different array type.
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param array the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	protected final <T> T convertOtherArray(String memberName, Object array, Class<T> targetType)
 	{
@@ -511,6 +559,11 @@ public class TypeConverter
 
 	/**
 	 * Converts an iterable to another type (like an array).
+	 * @param <T> the target value type.
+	 * @param memberName the name of the member being converted (for logging).
+	 * @param iter the value to convert.
+	 * @param targetType the target type.
+	 * @return the resultant type.
 	 */
 	protected final <T> T convertIterable(String memberName, Iterable<?> iter, Class<T> targetType)
 	{

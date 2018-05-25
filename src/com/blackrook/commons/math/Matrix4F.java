@@ -496,7 +496,7 @@ public class Matrix4F
 	 * Equivalent to <code>getFloats(out, 0)</code>
 	 * Values are in column-major order.
 	 * @param out the output array.
-	 * @throws ArrayIndexOutOfBoundsException if <code>out.length < 16</code>.
+	 * @throws ArrayIndexOutOfBoundsException if <code>out.length &lt; 16</code>.
 	 */
 	public void getFloats(float[] out)
 	{
@@ -508,7 +508,7 @@ public class Matrix4F
 	 * Values are in column-major order.
 	 * @param out the output array.
 	 * @param offset the starting offset array.
-	 * @throws ArrayIndexOutOfBoundsException if <code>offset + 16 >= out.length</code>.
+	 * @throws ArrayIndexOutOfBoundsException if <code>offset + 16 &gt;= out.length</code>.
 	 * @since 2.31.0
 	 */
 	public void getFloats(float[] out, int offset)

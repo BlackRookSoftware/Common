@@ -3145,6 +3145,7 @@ public final class Common
 	/**
 	 * Gets the element at an index in the array, but returns 
 	 * null if the index is outside of the array bounds.
+	 * @param <T> the array type.
 	 * @param array the array to use.
 	 * @param index the index to use.
 	 * @return <code>array[index]</code> or null if out of bounds.

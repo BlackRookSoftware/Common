@@ -495,7 +495,7 @@ public class Matrix4D
 	 * Returns the doubles that make up this matrix into a float array.
 	 * Equivalent to <code>getFloats(out, 0)</code>
 	 * @param out the output array.
-	 * @throws ArrayIndexOutOfBoundsException if <code>out.length < 16</code>.
+	 * @throws ArrayIndexOutOfBoundsException if <code>out.length &lt; 16</code>.
 	 */
 	public void getDoubles(double[] out)
 	{
@@ -506,7 +506,7 @@ public class Matrix4D
 	 * Returns the doubles that make up this matrix into a float array.
 	 * @param out the output array.
 	 * @param offset the starting offset array.
-	 * @throws ArrayIndexOutOfBoundsException if <code>offset + 16 >= out.length</code>.
+	 * @throws ArrayIndexOutOfBoundsException if <code>offset + 16 &gt;= out.length</code>.
 	 * @since 2.31.0
 	 */
 	public void getDoubles(double[] out, int offset)
