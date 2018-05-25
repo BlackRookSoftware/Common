@@ -1,6 +1,17 @@
 Commons (C) Black Rook Software, All rights reserved.
 
 
+Changed in 2.31.4
+=================
+
+- Reflect.createForType(...) no longer converts SQL package structures,
+  this was separated into the Reflection utilities in the DB project.
+  As a result, the [java.sql] module is no longer needed.
+- Removed Common.argbToColor() and Common.colorToARGB(). too generic to keep.
+- Created TypeConverter to separate out common conversion methods previously
+  made private in Reflect.
+
+
 Changed in 2.31.3
 =================
 

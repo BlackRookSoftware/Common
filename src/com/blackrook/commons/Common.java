@@ -7,7 +7,6 @@
  ******************************************************************************/
 package com.blackrook.commons;
 
-import java.awt.Color;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -2509,35 +2508,6 @@ public final class Common
 				out.print(", ");
 		}
 		out.println("]");
-	}
-	
-	/**
-	 * Converts an ARGB 32-bit color value to a color.
-	 * @param argb an 0xAARRGGBB integer that represents a 32-bit color.
-	 * @return a Color object representing the color.
-	 */
-	public static Color argbToColor(int argb)
-	{
-		return new Color(
-			(argb & (0x0ff << 16)) >>> 16,
-			(argb & (0x0ff << 8)) >>> 8,
-			(argb & (0x0ff << 0)),
-			(argb & (0x0ff << 24)) >>> 24
-			);
-	}
-
-	/**
-	 * Converts a color to an ARGB 32-bit color value.
-	 * @param c a Color object representing the color.
-	 * @return an 0xAARRGGBB integer that represents a 32-bit color.
-	 */
-	public static int colorToARGB(Color c)
-	{
-		return
-			((c.getAlpha() & 0x0ff) << 24) |
-			((c.getRed() & 0x0ff) << 16) |
-			((c.getGreen() & 0x0ff) << 8) |
-			((c.getBlue() & 0x0ff) << 0);
 	}
 	
 	/**

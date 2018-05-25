@@ -11,7 +11,6 @@ NONE
 ### Required Java Modules
 
 [java.base](https://docs.oracle.com/javase/10/docs/api/java.base-summary.html)  
-[java.sql](https://docs.oracle.com/javase/10/docs/api/java.sql-summary.html)  
 
 ### Introduction
 
