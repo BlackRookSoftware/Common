@@ -596,8 +596,7 @@ public final class RMath
 	
 	
 	/**
-	 * Coerces an integer to the range bounded by lo and hi, by "wrapping"
-	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo &gt; 0.
+	 * Coerces an integer to the range bounded by lo and hi, by "wrapping" the value.
 	 * <br>Example: wrapValue(32,-16,16) returns 0.
 	 * <br>Example: wrapValue(4,-16,16) returns 4.
 	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
@@ -615,27 +614,7 @@ public final class RMath
 	}
 
 	/**
-	 * Coerces a float to the range bounded by lo and hi, by "wrapping"
-	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo &gt; 0.
-	 * <br>Example: wrapValue(32,-16,16) returns 0.
-	 * <br>Example: wrapValue(4,-16,16) returns 4.
-	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
-	 * @param val the float.
-	 * @param lo the lower bound.
-	 * @param hi the upper bound.
-	 * @return the value after being "wrapped" into the range.
-	 */
-	public static float wrapValue(float val, float lo, float hi)
-	{
-		val = val - (int)((val - lo) / (hi - lo) * (hi - lo));
-	   	if (val < 0)
-	   		val = val + hi - lo;
-	   	return val;
-	}
-
-	/**
-	 * Coerces a short to the range bounded by lo and hi, by "wrapping"
-	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo &gt; 0.
+	 * Coerces a short to the range bounded by lo and hi, by "wrapping" the value.
 	 * <br>Example: wrapValue(32,-16,16) returns 0.
 	 * <br>Example: wrapValue(4,-16,16) returns 4.
 	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
@@ -653,8 +632,27 @@ public final class RMath
 	}
 
 	/**
-	 * Coerces a double to the range bounded by lo and hi, by "wrapping"
-	 * the value. This is equal to <i>lo + (val % (hi - lo))</i> if lo &gt; 0.
+	 * Coerces a float to the range bounded by lo and hi, by "wrapping" the value.
+	 * <br>Example: wrapValue(32,-16,16) returns 0.
+	 * <br>Example: wrapValue(4,-16,16) returns 4.
+	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
+	 * @param val the float.
+	 * @param lo the lower bound.
+	 * @param hi the upper bound.
+	 * @return the value after being "wrapped" into the range.
+	 */
+	public static float wrapValue(float val, float lo, float hi)
+	{
+		float range = hi - lo;
+		val = val - lo;
+		val = (val % range);
+		if (val < 0.0)
+			val = val + hi;
+		return val;
+	}
+
+	/**
+	 * Coerces a double to the range bounded by lo and hi, by "wrapping" the value.
 	 * <br>Example: wrapValue(32,-16,16) returns 0.
 	 * <br>Example: wrapValue(4,-16,16) returns 4.
 	 * <br>Example: wrapValue(-1000,-16,16) returns 8.
@@ -665,10 +663,12 @@ public final class RMath
 	 */
 	public static double wrapValue(double val, double lo, double hi)
 	{
-		val = val - (int)((val - lo) / (hi - lo) * (hi - lo));
-	   	if (val < 0)
-	   		val = val + hi - lo;
-	   	return val;
+		double range = hi - lo;
+		val = val - lo;
+		val = (val % range);
+		if (val < 0.0)
+			val = val + hi;
+		return val;
 	}
 
 	/**

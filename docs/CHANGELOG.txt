@@ -1,6 +1,12 @@
 Commons (C) Black Rook Software, All rights reserved.
 
 
+Changed in 2.31.5
+=================
+
+- Fixed: RMath.wrapValue(...) for float/double. It only calculated 0 - 1 intervals.
+
+
 Changed in 2.31.4
 =================
 
