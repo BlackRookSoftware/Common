@@ -9,13 +9,11 @@ package com.blackrook.commons;
 
 import java.io.*;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.nio.*;
 import java.nio.channels.FileLock;
@@ -34,9 +32,11 @@ import com.blackrook.commons.list.List;
 import com.blackrook.commons.math.RMath;
 
 /**
+ * TODO: Turn into delegates.
  * This class serves as a static delegate for a slew of common methods
  * and functions.
  * @author Matthew Tropiano
+ * @deprecated as of 2.32.0.
  */
 public final class Common
 {
@@ -66,48 +66,9 @@ public final class Common
 
 	private static final String PARSE_ARRAY_SEPARATOR_PATTERN = "(\\s|\\,)+";
 
-	/** Is this running on an x86 architecture? */
-	private static boolean IS_X86 = false;
-	/** Is this running on an x64 architecture? */
-	private static boolean IS_X64 = false;
-	/** Is this running on a Power PC architecture? */
-	private static boolean IS_PPC = false;
-	/** Are we using Windows? */
 	private static boolean IS_WINDOWS = false;
-	/** Are we using Windows 95/98? */
-	private static boolean IS_WINDOWS_9X = false;
-	/** Are we using Windows Me (God forbid)?*/
-	private static boolean IS_WINDOWS_ME = false;
-	/** Are we using Windows 2000? */
-	private static boolean IS_WINDOWS_2000 = false;
-	/** Are we using Windows XP? */
-	private static boolean IS_WINDOWS_XP = false;
-	/** Are we using Windows XP? */
-	private static boolean IS_WINDOWS_VISTA = false;
-	/** Are we using Windows 7? */
-	private static boolean IS_WINDOWS_7 = false;
-	/** Are we using Windows 8? */
-	private static boolean IS_WINDOWS_8 = false;
-	/** Are we using Windows 8? */
-	private static boolean IS_WINDOWS_10 = false;
-	/** Are we using Windows NT? */
-	private static boolean IS_WINDOWS_NT = false;
-	/** Are we using Windows 2003 (Server)? */
-	private static boolean IS_WINDOWS_2003 = false;
-	/** Are we using Windows 2008 (Server)? */
-	private static boolean IS_WINDOWS_2008 = false;
-	/** Are we using Win32 mode? */
-	private static boolean IS_WIN32 = false;
-	/** Are we using Win64 mode? */
-	private static boolean IS_WIN64 = false;
 	/** Is this Mac OS X? */
 	private static boolean IS_OSX = false;
-	/** Is this Mac OS X x86 Edition? */
-	private static boolean IS_OSX86 = false;
-	/** Is this Mac OS X x64 Edition? */
-	private static boolean IS_OSX64 = false;
-	/** Is this Mac OS X Power PC Edition? */
-	private static boolean IS_OSXPPC = false;
 	/** Is this a Linux distro? */
 	private static boolean IS_LINUX = false;
 	/** Is this a Solaris distro? */
@@ -124,53 +85,13 @@ public final class Common
 	/** Current user's home directory. */
 	public static String HOME_DIR = System.getProperty("user.home");
 
-	/** The relay buffer size, used by relay(). */
-	private static int RELAY_BUFFER_SIZE = 8192;
-	/** The input wrapper used by getLine(). */
-	private static BufferedReader SYSTEM_IN_READER;
-	
 	static
 	{
 		String osName = System.getProperty("os.name");
-		//String osVer = System.getProperty("os.version");
-		String osArch = System.getProperty("os.arch");
-		IS_X86 = osArch.contains("86");
-		IS_X64 = osArch.contains("64");
-		IS_PPC = osArch.contains("ppc") || osArch.contains("Power PC");
 		IS_WINDOWS = osName.contains("Windows");
-		if (IS_WINDOWS)
-		{
-			IS_WINDOWS_9X = osName.contains("95") || osName.contains("98");
-			IS_WINDOWS_ME = osName.contains("Me");
-			IS_WINDOWS_2000 = osName.contains("2000");
-			IS_WINDOWS_XP = osName.contains("XP");
-			IS_WINDOWS_NT = osName.contains("NT");
-			IS_WINDOWS_2003 = osName.contains("2003");
-			IS_WINDOWS_2008 = osName.contains("2008");
-			IS_WINDOWS_VISTA = osName.contains("Vista");
-			IS_WINDOWS_7 = osName.contains(" 7");
-			IS_WINDOWS_8 = osName.contains(" 8");
-			IS_WINDOWS_10 = osName.contains(" 10");
-			IS_WIN32 = IS_X86;
-			IS_WIN64 = IS_X64;
-		}
-		IS_OSX = osName.contains("OS X");
-		if (IS_OSX)
-		{
-			IS_OSX86 = IS_X86;
-			IS_OSX64 = IS_X64;
-			IS_OSXPPC = IS_PPC;
-		}
+		IS_OSX = osName.contains("OS X") || osName.contains("macOS");
 		IS_LINUX = osName.contains("Linux");
-		if (IS_LINUX)
-		{
-			
-		}
 		IS_SOLARIS = osName.contains("Solaris");
-		if (IS_SOLARIS)
-		{
-			
-		}
 		
 		// Application data folder.
 		if (IS_WINDOWS)
@@ -181,7 +102,6 @@ public final class Common
 			APP_DIR = System.getenv("HOME");
 		else if (IS_SOLARIS)
 			APP_DIR = System.getenv("HOME");
-		
 	}
 	
 	private Common() {}
@@ -189,85 +109,85 @@ public final class Common
 	/** @return true if we using a Linux distro. */
 	public static boolean isLinux()
 	{
-		return IS_LINUX;
+		return OS.isLinux();
 	}
 
 	/** @return true if we using Mac OS X. */
 	public static boolean isOSX()
 	{
-		return IS_OSX;
+		return OS.isOSX();
 	}
 
 	/** @return true if we using 64-bit Mac OS X. */
 	public static boolean isOSX64()
 	{
-		return IS_OSX64;
+		return OS.isOSX64();
 	}
 
 	/** @return true if we using x86 Mac OS X. */
 	public static boolean isOSX86()
 	{
-		return IS_OSX86;
+		return OS.isOSX86();
 	}
 
 	/** @return true if we using Power PC Mac OS X. */
 	public static boolean isOSXPPC()
 	{
-		return IS_OSXPPC;
+		return OS.isOSXPPC();
 	}
 
 	/** @return true if this is running on an Power PC architecture. */
 	public static boolean isPPC()
 	{
-		return IS_PPC;
+		return OS.isPPC();
 	}
 
 	/** @return true if we using 32-bit Windows. */
 	public static boolean isWin32()
 	{
-		return IS_WIN32;
+		return OS.isWin32();
 	}
 
 	/** @return true if we using 64-bit Windows. */
 	public static boolean isWin64() 
 	{
-		return IS_WIN64;
+		return OS.isWin64();
 	}
 
 	/** @return true if we using Windows. */
 	public static boolean isWindows()
 	{
-		return IS_WINDOWS;
+		return OS.isWindows();
 	}
 
 	/** @return true if we using Windows 2000. */
 	public static boolean isWindows2000()
 	{
-		return IS_WINDOWS_2000;
+		return OS.isWindows2000();
 	}
 
 	/** @return true if we using Windows 2003. */
 	public static boolean isWindows2003()
 	{
-		return IS_WINDOWS_2003;
+		return OS.isWindows2003();
 	}
 
 	/** @return true if we using Windows 2008. */
 	public static boolean isWindows2008()
 	{
-		return IS_WINDOWS_2008;
+		return OS.isWindows2008();
 	}
 
 	/** @return true if we using Windows Vista. */
 	public static boolean isWindowsVista()
 	{
-		return IS_WINDOWS_VISTA;
+		return OS.isWindowsVista();
 	}
 
 	/** @return true if we using Windows 7. */
 	public static boolean isWindows7()
 	{
-		return IS_WINDOWS_7;
+		return OS.isWindows7();
 	}
 
 	/** 
@@ -276,7 +196,7 @@ public final class Common
 	 */
 	public static boolean isWindows8()
 	{
-		return IS_WINDOWS_8;
+		return OS.isWindows8();
 	}
 
 	/** 
@@ -285,49 +205,49 @@ public final class Common
 	 */
 	public static boolean isWindows10()
 	{
-		return IS_WINDOWS_10;
+		return OS.isWindows10();
 	}
 
 	/** @return true if we using Windows 95/98. */
 	public static boolean isWindows9X()
 	{
-		return IS_WINDOWS_9X;
+		return OS.isWindows9X();
 	}
 
 	/** @return true if we are using Windows ME, or better yet, if we should just kill the program now. */
 	public static boolean isWindowsME()
 	{
-		return IS_WINDOWS_ME;
+		return OS.isWindowsME();
 	}
 
 	/** @return true if we using Windows NT. */
 	public static boolean isWindowsNT()
 	{
-		return IS_WINDOWS_NT;
+		return OS.isWindowsNT();
 	}
 
 	/** @return true if we using Windows XP. */
 	public static boolean isWindowsXP()
 	{
-		return IS_WINDOWS_XP;
+		return OS.isWindowsXP();
 	}
 
 	/** @return true if this is running on an x64 architecture. */
 	public static boolean isX64()
 	{
-		return IS_X64;
+		return OS.isX64();
 	}
 
 	/** @return true if this is running on an x86 architecture. */
 	public static boolean isX86()
 	{
-		return IS_X86;
+		return OS.isX86();
 	}
 
 	/** @return true if this is running on Sun Solaris. */
 	public static boolean isSolaris()
 	{
-		return IS_SOLARIS;
+		return OS.isSolaris();
 	}
 
 	/**
@@ -340,7 +260,7 @@ public final class Common
 	 */
 	public static <T> T isNull(T testObject, T nullReturn)
 	{
-		return testObject != null ? testObject : nullReturn;
+		return Objects.isNull(testObject, nullReturn);
 	}
 	
 	/**
@@ -353,10 +273,7 @@ public final class Common
 	@SuppressWarnings("unchecked")
 	public static <T> T coalesce(T ... objects)
 	{
-		for (int i = 0; i < objects.length; i++)
-			if (objects[i] != null)
-				return objects[i];
-		return null;
+		return Objects.coalesce(objects);
 	}
 	
 	/**
@@ -371,14 +288,7 @@ public final class Common
 	 */
 	public static <T> int indexOf(T object, T[] searchArray)
 	{
-		for (int i = 0; i < searchArray.length; i++)
-		{
-			if (object == null && searchArray[i] == null)
-				return i;
-			else if (object.equals(searchArray[i]))
-				return i;
-		}
-		return -1;
+		return ArrayUtils.indexOf(object, searchArray);
 	}
 
 	/**
@@ -391,7 +301,7 @@ public final class Common
 	 */
 	public static void sleep(long millis)
 	{
-		try {Thread.sleep(millis);	} catch (InterruptedException e) {}
+		ThreadUtils.sleep(millis);
 	}
 	
 	/**
@@ -405,7 +315,7 @@ public final class Common
 	 */
 	public static void sleep(long millis, int nanos)
 	{
-		try {Thread.sleep(millis, nanos);	} catch (InterruptedException e) {}
+		ThreadUtils.sleep(millis, nanos);
 	}
 	
 	/**
@@ -415,7 +325,7 @@ public final class Common
 	 */
 	public static String getPackagePathForClass(Class<?> cls)
 	{
-		return cls.getPackage().getName().replaceAll("\\.", "/");		
+		return Reflect.getPackagePathForClass(cls);		
 	}
 	
 	/**
@@ -427,7 +337,7 @@ public final class Common
 	 */
 	public static void addFilesToClassPath(File ... files)
 	{
-		addURLsToClassPath(getURLsForFiles(files));
+		Reflect.addFilesToClassPath(files);
 	}
 	
 	/**
@@ -437,9 +347,7 @@ public final class Common
 	 */
 	public static void addURLsToClassPath(URL ... urls)
 	{
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		URLClassLoader ucl = new URLClassLoader(urls,cl);
-		Thread.currentThread().setContextClassLoader(ucl);
+		Reflect.addURLsToClassPath(urls);
 	}
 	
 	/**
@@ -453,19 +361,7 @@ public final class Common
 	 */
 	public static URL[] getURLsForFiles(File ... files)
 	{
-		File[] flist = explodeFiles(files);
-		URL[] urls = new URL[flist.length];
-		for (int i = 0; i < flist.length; i++)
-		{
-			try {
-				urls[i] = flist[i].toURI().toURL();
-			} catch (MalformedURLException e) {
-				RuntimeException re = new RuntimeException("A malformed URL was created somehow.");
-				re.initCause(e);
-				throw re;
-			}
-		}
-		return urls;
+		return Files.getURLsForFiles(files);
 	}
 	
 	/**
@@ -477,8 +373,7 @@ public final class Common
 	 */
 	public static void addLibrariesToPath(File ... libs)
 	{
-		for (File f : libs)
-			addLibraryToPath(f);
+		Reflect.addLibrariesToPath(libs);
 	}
 	
 	/**
@@ -490,27 +385,7 @@ public final class Common
 	 */
 	public static void addLibraryToPath(File lib)
 	{
-		String libPath = lib.getPath();
-		try {
-			Field field = ClassLoader.class.getDeclaredField("usr_paths");
-			field.setAccessible(true);
-			String[] paths = (String[])field.get(null);
-			for (int i = 0; i < paths.length; i++)
-			{
-				if (libPath.equals(paths[i])) {
-					return;
-			}
-		}
-			String[] tmp = new String[paths.length+1];
-			System.arraycopy(paths,0,tmp,0,paths.length);
-			tmp[paths.length] = libPath;
-			field.set(null,tmp);
-		} catch (IllegalAccessException e) {
-			throw new SecurityException("Failed to get permissions to set library path");
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException("Failed to get field handle to set library path");
-		}
-		System.setProperty("java.library.path", System.getProperty("java.library.path") + File.pathSeparator + libPath);
+		Reflect.addLibraryToPath(lib);
 	}
 	
 	/**
@@ -1117,51 +992,7 @@ public final class Common
 	 */
 	public static String asBase64(InputStream in, char sixtyTwo, char sixtyThree) throws IOException
 	{
-		final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		final char BLANK = '=';
-		
-		String alph = ALPHABET + sixtyTwo + sixtyThree;
-		
-		StringBuilder out = new StringBuilder();
-		int octetBuffer = 0x00000000;
-		int bidx = 0;
-		
-		byte[] buffer = new byte[RELAY_BUFFER_SIZE];
-		int buf = 0;
-		
-		while ((buf = in.read(buffer)) > 0) for (int i = 0; i < buf; i++)
-		{
-			byte b = buffer[i];
-			
-			octetBuffer |= ((b & 0x0ff) << ((2 - bidx) * 8));
-			bidx++;
-			if (bidx == 3)
-			{
-				out.append(alph.charAt((octetBuffer & (0x3f << 18)) >> 18));
-				out.append(alph.charAt((octetBuffer & (0x3f << 12)) >> 12));
-				out.append(alph.charAt((octetBuffer & (0x3f << 6)) >> 6));
-				out.append(alph.charAt(octetBuffer & 0x3f));
-				octetBuffer = 0x00000000;
-				bidx = 0;
-			}
-		}
-		
-		if (bidx == 2)
-		{
-			out.append(alph.charAt((octetBuffer & (0x3f << 18)) >> 18));
-			out.append(alph.charAt((octetBuffer & (0x3f << 12)) >> 12));
-			out.append(alph.charAt((octetBuffer & (0x3f << 6)) >> 6));
-			out.append(BLANK);
-		}
-		else if (bidx == 1)
-		{
-			out.append(alph.charAt((octetBuffer & (0x3f << 18)) >> 18));
-			out.append(alph.charAt((octetBuffer & (0x3f << 12)) >> 12));
-			out.append(BLANK);
-			out.append(BLANK);
-		}
-		
-		return out.toString();
+		return Encoding.asBase64(in, sixtyTwo, sixtyThree);
 	}
 	
 	/**
@@ -2173,7 +2004,7 @@ public final class Common
 	 */
 	public static int relay(InputStream in, OutputStream out) throws IOException
 	{
-		return relay(in, out, RELAY_BUFFER_SIZE, -1);
+		return IO.relay(in, out);
 	}
 	
 	/**
@@ -2193,7 +2024,7 @@ public final class Common
 	 */
 	public static int relay(InputStream in, OutputStream out, int bufferSize) throws IOException
 	{
-		return relay(in, out, bufferSize, -1);
+		return IO.relay(in, out, bufferSize, -1);
 	}
 	
 	/**
@@ -2214,19 +2045,7 @@ public final class Common
 	 */
 	public static int relay(InputStream in, OutputStream out, int bufferSize, int maxLength) throws IOException
 	{
-		int total = 0;
-		int buf = 0;
-			
-		byte[] RELAY_BUFFER = new byte[bufferSize];
-		
-		while ((buf = in.read(RELAY_BUFFER, 0, Math.min(maxLength < 0 ? Integer.MAX_VALUE : maxLength, bufferSize))) > 0)
-		{
-			out.write(RELAY_BUFFER, 0, buf);
-			total += buf;
-			if (maxLength >= 0)
-				maxLength -= buf;
-		}
-		return total;
+		return IO.relay(in, out, bufferSize, maxLength);
 	}
 	
 	/**
@@ -2237,9 +2056,7 @@ public final class Common
 	 */
 	public static void setRelayBufferSize(int size)
 	{
-		if (size <= 0)
-			throw new IllegalArgumentException("size is 0 or less.");
-		RELAY_BUFFER_SIZE = size;
+		IO.setRelayBufferSize(size);
 	}
 	
 	/**
@@ -2247,7 +2064,7 @@ public final class Common
 	 */
 	public static int getRelayBufferSize()
 	{
-		return RELAY_BUFFER_SIZE;
+		return IO.getRelayBufferSize();
 	}
 
 	/**
@@ -2260,15 +2077,7 @@ public final class Common
 	 */
 	public static String getLine()
 	{
-		String out = null;
-		try {
-			if (SYSTEM_IN_READER == null)
-				SYSTEM_IN_READER = openSystemIn();
-			out = SYSTEM_IN_READER.readLine();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return out;
+		return IO.getLine();
 	}
 	
 	/**

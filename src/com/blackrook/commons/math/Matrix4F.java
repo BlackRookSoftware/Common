@@ -7,7 +7,7 @@
  ******************************************************************************/
 package com.blackrook.commons.math;
 
-import com.blackrook.commons.Common;
+import com.blackrook.commons.ThreadUtils;
 
 /**
  * This is a 4x4 Matrix object that stores floats.
@@ -735,8 +735,8 @@ public class Matrix4F
 	private Cache getCache()
 	{
 		Cache out;
-		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
-			Common.setLocal(CACHE_NAME, out = new Cache());
+		if ((out = (Cache)ThreadUtils.getLocal(CACHE_NAME)) == null)
+			ThreadUtils.setLocal(CACHE_NAME, out = new Cache());
 		return out;
 	}
 

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
-import com.blackrook.commons.Common;
+import com.blackrook.commons.IO;
 import com.blackrook.commons.logging.LoggingDriver;
 import com.blackrook.commons.logging.LoggingFactory.LogLevel;
 
@@ -53,7 +53,7 @@ public class FileLogger implements LoggingDriver
 		{
 			if (file != null)
 			{
-				Common.close(writer);
+				IO.close(writer);
 				closeFile(file);
 				writer = null;
 				file = null;

@@ -7,8 +7,6 @@
  ******************************************************************************/
 package com.blackrook.commons;
 
-import com.blackrook.commons.Common;
-
 /**
  * Ticker class that keeps a steady rate of ticks per second.
  * It spawns a thread on starting that does its best to maintain a constant
@@ -206,7 +204,7 @@ public abstract class Ticker
 						doTick(currentTick++);
 				}
 				
-				Common.sleep(0, 500000);
+				ThreadUtils.sleep(0, 500000);
 			}
 		}
 		

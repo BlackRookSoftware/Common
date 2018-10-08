@@ -8,8 +8,8 @@
 package com.blackrook.commons.index;
 
 import com.blackrook.commons.AbstractVector;
-import com.blackrook.commons.Common;
 import com.blackrook.commons.ResettableIterator;
+import com.blackrook.commons.ThreadUtils;
 import com.blackrook.commons.hash.Hash;
 import com.blackrook.commons.linkedlist.Queue;
 import com.blackrook.commons.math.RMath;
@@ -473,8 +473,8 @@ public class SpatialIndex2D<T> extends AbstractSpatialIndex<T>
 	private Cache getCache()
 	{
 		Cache out;
-		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
-			Common.setLocal(CACHE_NAME, out = new Cache());
+		if ((out = (Cache)ThreadUtils.getLocal(CACHE_NAME)) == null)
+			ThreadUtils.setLocal(CACHE_NAME, out = new Cache());
 		return out;
 	}
 

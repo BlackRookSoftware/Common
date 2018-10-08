@@ -11,10 +11,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-import com.blackrook.commons.Common;
+import com.blackrook.commons.ArrayUtils;
 import com.blackrook.commons.ResettableIterable;
 import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.Sizable;
+import com.blackrook.commons.ThreadUtils;
 import com.blackrook.commons.math.Pair;
 
 /**
@@ -308,7 +309,7 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 			
 			pairList[size].x = x; 
 			pairList[size].y = y;
-			Common.sortFrom(pairList, size, PAIR_COMPARATOR);
+			ArrayUtils.sortFrom(pairList, size, PAIR_COMPARATOR);
 			size++;
 		}
 		
@@ -834,8 +835,8 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 	private Cache getCache()
 	{
 		Cache out;
-		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
-			Common.setLocal(CACHE_NAME, out = new Cache());
+		if ((out = (Cache)ThreadUtils.getLocal(CACHE_NAME)) == null)
+			ThreadUtils.setLocal(CACHE_NAME, out = new Cache());
 		return out;
 	}
 
@@ -906,19 +907,10 @@ public class PairGroup implements ResettableIterable<Pair>, Sizable
 
 		public PairGroupIterator(PairGroup group)
 		{
-			this.surrogateCurrent = getCachePair();
+			this.surrogateCurrent = new Pair();
 			this.group = group;
 			this.removed = false;
 			this.current = 0;
-		}
-		
-		private Pair getCachePair()
-		{
-			final String LOCALNAME = "IteratorPairCache-"+Pair.class.getCanonicalName();
-			Pair out = null;
-			if ((out = (Pair)Common.getLocal(LOCALNAME)) == null)
-				Common.setLocal(LOCALNAME, out = new Pair());
-			return out;
 		}
 		
 		@Override

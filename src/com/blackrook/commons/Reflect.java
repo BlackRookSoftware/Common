@@ -760,6 +760,85 @@ public final class Reflect
 	}
 
 	/**
+	 * Gets the package path for a particular class (for classpath resources).
+	 * @param cls the class for which to get to get the path.
+	 * @return the equivalent path for finding a class.
+	 */
+	public static String getPackagePathForClass(Class<?> cls)
+	{
+		return cls.getPackage().getName().replaceAll("\\.", "/");		
+	}
+
+	/**
+	 * Adds a list of files to the JVM Classpath during runtime.
+	 * The files are added to the current thread's class loader.
+	 * Directories in the list of files are exploded down to actual
+	 * files, so that no directories remain.
+	 * @param files	the list of files to add.
+	 */
+	public static void addFilesToClassPath(File ... files)
+	{
+		addURLsToClassPath(Files.getURLsForFiles(files));
+	}
+
+	/**
+	 * Adds a list of URLs to the JVM Classpath during runtime.
+	 * The URLs are added to the current thread's class loader.
+	 * @param urls	the list of files to add.
+	 */
+	public static void addURLsToClassPath(URL ... urls)
+	{
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		URLClassLoader ucl = new URLClassLoader(urls,cl);
+		Thread.currentThread().setContextClassLoader(ucl);
+	}
+
+	/**
+	 * Adds a list of files/directories to the library path of the JVM.
+	 * This utilizes a fix originally authored by Antony Miguel.
+	 * @param libs the files to add. 
+	 * @throws SecurityException if the JVM does not have access to the native library path field.
+	 * @throws RuntimeException if the JVM cannot find the native library path field.
+	 */
+	public static void addLibrariesToPath(File ... libs)
+	{
+		for (File f : libs)
+			addLibraryToPath(f);
+	}
+
+	/**
+	 * Adds a file/directory to the library path of the JVM.
+	 * This utilizes a fix originally authored by Antony Miguel.
+	 * @param lib the file to add. 
+	 * @throws SecurityException if the JVM does not have access to the native library path field.
+	 * @throws RuntimeException if the JVM cannot find the native library path field.
+	 */
+	public static void addLibraryToPath(File lib)
+	{
+		String libPath = lib.getPath();
+		try {
+			Field field = ClassLoader.class.getDeclaredField("usr_paths");
+			field.setAccessible(true);
+			String[] paths = (String[])field.get(null);
+			for (int i = 0; i < paths.length; i++)
+			{
+				if (libPath.equals(paths[i])) {
+					return;
+			}
+		}
+			String[] tmp = new String[paths.length+1];
+			System.arraycopy(paths,0,tmp,0,paths.length);
+			tmp[paths.length] = libPath;
+			field.set(null,tmp);
+		} catch (IllegalAccessException e) {
+			throw new SecurityException("Failed to get permissions to set library path");
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException("Failed to get field handle to set library path");
+		}
+		System.setProperty("java.library.path", System.getProperty("java.library.path") + File.pathSeparator + libPath);
+	}
+
+	/**
 	 * Tests if a class exists on the classpath. Does not attempt to initialize it, 
 	 * and uses the current thread's classloader via {@link Thread#getContextClassLoader()}
 	 * Just for convenience - will swallow {@link ClassNotFoundException} and {@link NoClassDefFoundError}.
@@ -819,7 +898,7 @@ public final class Reflect
 	 */
 	public static String[] getClasses(String prefix)
 	{
-		return Common.joinArrays(getClasses(prefix, Thread.currentThread().getContextClassLoader()), getClassesFromClasspath(prefix));
+		return ArrayUtils.joinArrays(getClasses(prefix, Thread.currentThread().getContextClassLoader()), getClassesFromClasspath(prefix));
 	}
 	
 	/**
@@ -897,7 +976,7 @@ public final class Reflect
 		{
 			if (url.getProtocol().equals("file"))
 			{
-				String startingPath = Common.urlUnescape(url.getPath().substring(1));
+				String startingPath = Strings.urlUnescape(url.getPath().substring(1));
 				File file = new File(startingPath);
 				if (file.isDirectory())
 					scanDirectory(prefix, outList, startingPath, file);
@@ -910,7 +989,7 @@ public final class Reflect
 	// Scans a directory for classes.
 	private static void scanDirectory(String prefix, List<String> outList, String startingPath, File file)
 	{
-		for (File f : Common.explodeFiles(file))
+		for (File f : Files.explodeFiles(file))
 		{
 			String path = f.getPath();
 			int classExtIndex = path.endsWith(".class") ? path.indexOf(".class") : -1;
@@ -948,7 +1027,7 @@ public final class Reflect
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
-			Common.close(jarFile);
+			IO.close(jarFile);
 		}
 	}
 	
@@ -977,7 +1056,7 @@ public final class Reflect
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
-			Common.close(jmodFile);
+			IO.close(jmodFile);
 		}
 	}
 	

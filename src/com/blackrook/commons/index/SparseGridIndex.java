@@ -7,11 +7,11 @@
  ******************************************************************************/
 package com.blackrook.commons.index;
 
-import com.blackrook.commons.Common;
 import com.blackrook.commons.ObjectPair;
 import com.blackrook.commons.ResettableIterable;
 import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.Sizable;
+import com.blackrook.commons.ThreadUtils;
 import com.blackrook.commons.hash.HashMap;
 import com.blackrook.commons.math.Pair;
 
@@ -101,8 +101,8 @@ public class SparseGridIndex<T extends Object> implements ResettableIterable<Obj
 	private Cache getCache()
 	{
 		Cache out;
-		if ((out = (Cache)Common.getLocal(CACHE_NAME)) == null)
-			Common.setLocal(CACHE_NAME, out = new Cache());
+		if ((out = (Cache)ThreadUtils.getLocal(CACHE_NAME)) == null)
+			ThreadUtils.setLocal(CACHE_NAME, out = new Cache());
 		return out;
 	}
 
