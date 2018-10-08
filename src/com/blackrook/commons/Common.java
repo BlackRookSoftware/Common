@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.blackrook.commons.HTTP.HTTPResponse;
 import com.blackrook.commons.hash.HashMap;
 import com.blackrook.commons.linkedlist.Queue;
 import com.blackrook.commons.linkedlist.Stack;
@@ -396,20 +397,7 @@ public final class Common
 	 */
 	public static String getExceptionString(Throwable t)
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(t.getClass().getName()+": "+t.getLocalizedMessage());
-		sb.append('\n');
-		for (StackTraceElement ent : t.getStackTrace())
-		{
-			sb.append(ent.toString());
-			sb.append('\n');
-		}
-		if (t.getCause() != null)
-		{
-			sb.append("...Caused by:\n");
-			sb.append(getExceptionString(t.getCause()));
-		}
-		return sb.toString();
+		return Strings.getExceptionString(t);
 	}
 	
 	/**
@@ -421,11 +409,7 @@ public final class Common
 	 */
 	public static String getJREExceptionString(Throwable t)
 	{
-		StringWriter sw;
-		PrintWriter pw = new PrintWriter(sw = new StringWriter(), true);
-		t.printStackTrace(pw);
-		pw.flush();
-		return sw.toString();
+		return Strings.getJREExceptionString(t);
 	}
 	
 	/**
@@ -443,29 +427,7 @@ public final class Common
 	 */
 	public static File[] explodeFiles(File ... files)
 	{
-		Queue<File> fileQueue = new Queue<File>();
-		List<File> fileList = new List<File>();
-
-		for (File f : files)
-			fileQueue.enqueue(f);
-
-		while (!fileQueue.isEmpty())
-		{
-			File dequeuedFile = fileQueue.dequeue();
-			if (dequeuedFile.isDirectory())
-			{
-				for (File f : dequeuedFile.listFiles())
-					fileQueue.enqueue(f);
-			}
-			else
-			{
-				fileList.add(dequeuedFile);
-			}
-		}
-
-		File[] out = new File[fileList.size()];
-		fileList.toArray(out);
-		return out;
+		return Files.explodeFiles(files);
 	}
 
 	/**
@@ -479,7 +441,7 @@ public final class Common
 	 */
 	public static BufferedReader openTextStream(InputStream in) throws IOException
 	{
-		return new BufferedReader(new InputStreamReader(in));
+		return IO.openTextStream(in);
 	}
 	
 	/**
@@ -493,7 +455,7 @@ public final class Common
 	 */
 	public static BufferedReader openTextFile(File file) throws IOException
 	{
-		return openTextStream(new FileInputStream(file));
+		return IO.openTextFile(file);
 	}
 	
 	/**
@@ -507,7 +469,7 @@ public final class Common
 	 */
 	public static BufferedReader openTextFile(String filePath) throws IOException
 	{
-		return openTextFile(new File(filePath));
+		return IO.openTextFile(filePath);
 	}
 	
 	/**
@@ -520,7 +482,7 @@ public final class Common
 	 */
 	public static BufferedReader openSystemIn() throws IOException
 	{
-		return openTextStream(System.in);
+		return IO.openSystemIn();
 	}
 	
 	/**
@@ -532,7 +494,7 @@ public final class Common
 	 */
 	public static InputStream openResource(String pathString)
 	{
-		return Thread.currentThread().getContextClassLoader().getResourceAsStream(pathString);
+		return IO.openResource(pathString);
 	}
 	
 	/**
@@ -545,7 +507,7 @@ public final class Common
 	 */
 	public static InputStream openResource(ClassLoader classLoader, String pathString)
 	{
-		return classLoader.getResourceAsStream(pathString);
+		return IO.openResource(classLoader, pathString);
 	}
 	
 	/**
@@ -557,10 +519,7 @@ public final class Common
 	 */
 	public static String getASCIIContents(File f) throws IOException
 	{
-		FileInputStream fis = new FileInputStream(f);
-		String out = getTextualContents(fis, "ASCII");
-		fis.close();
-		return out;
+		return IO.getASCIIContents(f);
 	}
 	
 	/**
@@ -572,10 +531,7 @@ public final class Common
 	 */
 	public static String getTextualContents(File f) throws IOException
 	{
-		FileInputStream fis = new FileInputStream(f);
-		String out = getTextualContents(fis);
-		fis.close();
-		return out;
+		return IO.getTextualContents(f);
 	}
 	
 	/**
@@ -586,17 +542,7 @@ public final class Common
 	 */
 	public static String getTextualContents(InputStream in) throws IOException
 	{
-		StringBuilder sb = new StringBuilder();
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		String line;
-		while ((line = br.readLine()) != null)
-		{
-			sb.append(line);
-			sb.append('\n');
-		}
-		br.close();
-		return sb.toString();
+		return IO.getTextualContents(in);
 	}
 	
 	/**
@@ -608,17 +554,7 @@ public final class Common
 	 */
 	public static String getTextualContents(InputStream in, String encoding) throws IOException
 	{
-		StringBuilder sb = new StringBuilder();
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(in, encoding));
-		String line;
-		while ((line = br.readLine()) != null)
-		{
-			sb.append(line);
-			sb.append('\n');
-		}
-		br.close();
-		return sb.toString();
+		return IO.getTextualContents(in, encoding);
 	}
 	
 	/**
@@ -630,10 +566,7 @@ public final class Common
 	 */
 	public static byte[] getBinaryContents(File f) throws IOException
 	{
-		FileInputStream fis = new FileInputStream(f);
-		byte[] b = getBinaryContents(fis, (int)f.length());
-		fis.close();
-		return b;
+		return IO.getBinaryContents(f);
 	}
 
 	/**
@@ -645,9 +578,7 @@ public final class Common
 	 */
 	public static byte[] getBinaryContents(InputStream in, int len) throws IOException
 	{
-		byte[] b = new byte[len];
-		in.read(b);
-		return b;
+		return IO.getBinaryContents(in, len);
 	}
 
 	/**
@@ -658,14 +589,8 @@ public final class Common
 	 */
 	public static byte[] getBinaryContents(InputStream in) throws IOException
 	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		Common.relay(in, bos);
-		return bos.toByteArray();
+		return IO.getBinaryContents(in);
 	}
-
-	
-    // Keep alphabetical.
-    protected static final String[] VALID_HTTP = new String[]{"http", "https"};
 
     /**
      * Gets the content from a opening an HTTP URL, using the default timeout of 30 seconds (30000 milliseconds).
@@ -677,7 +602,7 @@ public final class Common
      */
     public static String getHTTPContent(URL url) throws IOException
     {
-        return getHTTPContent(url, "GET", null, null, null, null, "UTF-8", 30000).getStringContent();
+        return HTTP.getHTTPContent(url);
     }
 
     /**
@@ -692,7 +617,7 @@ public final class Common
      */
     public static String getHTTPContent(URL url, int socketTimeoutMillis) throws IOException
     {
-        return getHTTPContent(url, "GET", null, null, null, null, "UTF-8", socketTimeoutMillis).getStringContent();
+        return HTTP.getHTTPContent(url, socketTimeoutMillis);
     }
 
     /**
@@ -708,7 +633,7 @@ public final class Common
      */
     public static String getHTTPContent(URL url, String defaultResponseCharset, int socketTimeoutMillis) throws IOException
     {
-        return getHTTPContent(url, "GET", null, null, null, defaultResponseCharset, "UTF-8", socketTimeoutMillis).getStringContent();
+        return HTTP.getHTTPContent(url, defaultResponseCharset, socketTimeoutMillis);
     }
 
     /**
@@ -730,28 +655,7 @@ public final class Common
      */
     public static HTTPResponse getResolvedHTTPContent(URL url, String requestMethod, byte[] data, String dataContentType, String dataContentEncoding, String defaultResponseEncoding, String defaultResponseCharset, int socketTimeoutMillis) throws IOException
     {
-        HTTPResponse response = getHTTPContent(url, requestMethod, data, dataContentType, dataContentEncoding, defaultResponseEncoding, defaultResponseCharset, socketTimeoutMillis);
-
-        // redirect permanent or redirect temporary
-        if (response.statusCode == 301 || response.statusCode == 307 || response.statusCode == 308)
-        {
-            if (response.location == null)
-                throw new IOException("Response was code "+response.statusCode+", but no location specified!");
-
-            URL nextLocation = null;
-            try {
-                nextLocation = new URL(response.location);
-            } catch (MalformedURLException ex) {
-                throw new IOException("Redirect location was malformed!", ex);
-            }
-
-            HTTPResponse redirectedResponse = getResolvedHTTPContent(nextLocation, requestMethod, data, dataContentType, dataContentEncoding, defaultResponseEncoding, defaultResponseCharset, socketTimeoutMillis);
-            redirectedResponse.referrer = url;
-            redirectedResponse.redirected = true;
-            return redirectedResponse;
-        }
-
-        return response;
+        return HTTP.getResolvedHTTPContent(url, requestMethod, data, dataContentType, dataContentEncoding, defaultResponseEncoding, defaultResponseCharset, socketTimeoutMillis);
     }
 
     /**
@@ -3408,108 +3312,6 @@ public final class Common
 	public static void noop()
 	{
 		// Do nothing.
-	}
-
-	/**
-	 * Response from an HTTP call.
-	 * @since 2.31.1
-	 */
-	public static class HTTPResponse
-	{
-	    private int statusCode;
-	    private String statusMessage;
-	    private String location;
-	    private URL referrer;
-	    private String charset;
-	    private String contentType;
-	    private String encoding;
-	    private byte[] content;
-	    private boolean redirected;
-
-	    /**
-	     * Gets the string contents of the response, decoded using the response's charset.
-	     * @return the content of the response as a native string, decoded.
-	     * @throws UnsupportedEncodingException if the response is not in an understood charset.
-	     */
-	    public String getStringContent() throws UnsupportedEncodingException
-	    {
-	    	if (charset == null)
-	    		throw new UnsupportedEncodingException("No charset specified.");
-	        return content != null ? new String(content, charset) : null;
-	    }
-	
-	    /**
-	     * @return the response status code.
-	     */
-	    public int getStatusCode()
-	    {
-	        return statusCode;
-	    }
-	
-	    /**
-	     * @return the response status message.
-	     */
-	    public String getStatusMessage()
-	    {
-	        return statusMessage;
-	    }
-	
-	    /**
-	     * @return the url of the next location, if this is a 3xx redirect response.
-	     */
-	    public String getLocation()
-	    {
-	        return location;
-	    }
-	
-	    /**
-	     * @return the response's charset. can be null.
-	     */
-	    public String getCharset()
-	    {
-	        return charset;
-	    }
-	
-	    /**
-	     * @return the response's content type. can be null.
-	     */
-	    public String getContentType()
-	    {
-	        return contentType;
-	    }
-	
-	    /**
-	     * @return the response's encoding. can be null.
-	     */
-	    public String getEncoding()
-	    {
-	        return encoding;
-	    }
-	
-	    /**
-	     * @return the response's content. can be null.
-	     */
-	    public byte[] getContent()
-	    {
-	        return content;
-	    }
-	
-	    /**
-	     * @return the response's referrer URL. can be null.
-	     */
-	    public URL getReferrer()
-	    {
-	        return referrer;
-	    }
-	
-	    /**
-	     * @return true if this response was the result of a redirect, false otherwise.
-	     */
-	    public boolean isRedirected()
-	    {
-	        return redirected;
-	    }
-	
 	}
 	
 }
