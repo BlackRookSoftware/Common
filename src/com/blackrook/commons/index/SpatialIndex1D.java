@@ -9,10 +9,10 @@ package com.blackrook.commons.index;
 
 import com.blackrook.commons.AbstractVector;
 import com.blackrook.commons.ResettableIterator;
-import com.blackrook.commons.ThreadUtils;
 import com.blackrook.commons.hash.Hash;
 import com.blackrook.commons.hash.HashedHashMap;
 import com.blackrook.commons.math.geometry.Point1D;
+import com.blackrook.commons.util.ThreadUtils;
 
 /**
  * A class to be used for one-dimensional Spatial Hashing in a uniform grid.

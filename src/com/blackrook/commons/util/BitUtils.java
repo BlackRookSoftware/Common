@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 /**
  * Simple encoding utility functions.

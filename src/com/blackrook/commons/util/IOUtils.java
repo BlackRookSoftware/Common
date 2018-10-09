@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -16,14 +16,14 @@ import java.io.OutputStream;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class IO
+public final class IOUtils
 {
 	/** The relay buffer size, used by relay(). */
 	private static int RELAY_BUFFER_SIZE = 8192;
 	/** The input wrapper used by getLine(). */
 	private static BufferedReader SYSTEM_IN_READER;
 	
-	private IO() {}
+	private IOUtils() {}
 	
 	/**
 	 * Convenience method for

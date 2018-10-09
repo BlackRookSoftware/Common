@@ -7,6 +7,8 @@
  ******************************************************************************/
 package com.blackrook.commons;
 
+import com.blackrook.commons.util.ThreadUtils;
+
 /**
  * Ticker class that keeps a steady rate of ticks per second.
  * It spawns a thread on starting that does its best to maintain a constant

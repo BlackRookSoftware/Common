@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,9 +12,9 @@ import java.security.NoSuchAlgorithmException;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class Encoding
+public final class EncodingUtils
 {
-	private Encoding() {}
+	private EncodingUtils() {}
 
 	/**
 	 * Returns a hash of a set of bytes digested by an encryption algorithm.

@@ -9,31 +9,28 @@ package com.blackrook.commons;
 
 import java.io.*;
 import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.*;
-import java.nio.channels.FileLock;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Random;
 
-import com.blackrook.commons.HTTP.HTTPResponse;
-import com.blackrook.commons.hash.HashMap;
-import com.blackrook.commons.linkedlist.Queue;
-import com.blackrook.commons.linkedlist.Stack;
-import com.blackrook.commons.list.List;
-import com.blackrook.commons.math.RMath;
+import com.blackrook.commons.util.ArrayUtils;
+import com.blackrook.commons.util.BitUtils;
+import com.blackrook.commons.util.BufferUtils;
+import com.blackrook.commons.util.EncodingUtils;
+import com.blackrook.commons.util.FileUtils;
+import com.blackrook.commons.util.HTTPUtils;
+import com.blackrook.commons.util.IOUtils;
+import com.blackrook.commons.util.OSUtils;
+import com.blackrook.commons.util.ObjectUtils;
+import com.blackrook.commons.util.StringUtils;
+import com.blackrook.commons.util.ThreadUtils;
+import com.blackrook.commons.util.ValueUtils;
+import com.blackrook.commons.util.HTTPUtils.HTTPResponse;
 
 /**
- * TODO: Turn into delegates.
  * This class serves as a static delegate for a slew of common methods
  * and functions.
  * @author Matthew Tropiano
@@ -41,15 +38,6 @@ import com.blackrook.commons.math.RMath;
  */
 public final class Common
 {
-	/** ThreadLocal HashMap */
-	private static final ThreadLocal<HashMap<String, Object>> THREADLOCAL_HASHMAP = new ThreadLocal<HashMap<String,Object>>()
-	{
-		protected HashMap<String,Object> initialValue()
-		{
-			return new HashMap<String, Object>();
-		}
-	};
-	
 	/** The size of a character in bytes. */
 	public static final int SIZEOF_CHAR = Character.SIZE/Byte.SIZE;
 	/** The size of an int in bytes. */
@@ -64,8 +52,6 @@ public final class Common
 	public static final int SIZEOF_LONG = Long.SIZE/Byte.SIZE;
 	/** The size of a double in bytes. */
 	public static final int SIZEOF_DOUBLE = Double.SIZE/Byte.SIZE;
-
-	private static final String PARSE_ARRAY_SEPARATOR_PATTERN = "(\\s|\\,)+";
 
 	private static boolean IS_WINDOWS = false;
 	/** Is this Mac OS X? */
@@ -110,85 +96,85 @@ public final class Common
 	/** @return true if we using a Linux distro. */
 	public static boolean isLinux()
 	{
-		return OS.isLinux();
+		return OSUtils.isLinux();
 	}
 
 	/** @return true if we using Mac OS X. */
 	public static boolean isOSX()
 	{
-		return OS.isOSX();
+		return OSUtils.isOSX();
 	}
 
 	/** @return true if we using 64-bit Mac OS X. */
 	public static boolean isOSX64()
 	{
-		return OS.isOSX64();
+		return OSUtils.isOSX64();
 	}
 
 	/** @return true if we using x86 Mac OS X. */
 	public static boolean isOSX86()
 	{
-		return OS.isOSX86();
+		return OSUtils.isOSX86();
 	}
 
 	/** @return true if we using Power PC Mac OS X. */
 	public static boolean isOSXPPC()
 	{
-		return OS.isOSXPPC();
+		return OSUtils.isOSXPPC();
 	}
 
 	/** @return true if this is running on an Power PC architecture. */
 	public static boolean isPPC()
 	{
-		return OS.isPPC();
+		return OSUtils.isPPC();
 	}
 
 	/** @return true if we using 32-bit Windows. */
 	public static boolean isWin32()
 	{
-		return OS.isWin32();
+		return OSUtils.isWin32();
 	}
 
 	/** @return true if we using 64-bit Windows. */
 	public static boolean isWin64() 
 	{
-		return OS.isWin64();
+		return OSUtils.isWin64();
 	}
 
 	/** @return true if we using Windows. */
 	public static boolean isWindows()
 	{
-		return OS.isWindows();
+		return OSUtils.isWindows();
 	}
 
 	/** @return true if we using Windows 2000. */
 	public static boolean isWindows2000()
 	{
-		return OS.isWindows2000();
+		return OSUtils.isWindows2000();
 	}
 
 	/** @return true if we using Windows 2003. */
 	public static boolean isWindows2003()
 	{
-		return OS.isWindows2003();
+		return OSUtils.isWindows2003();
 	}
 
 	/** @return true if we using Windows 2008. */
 	public static boolean isWindows2008()
 	{
-		return OS.isWindows2008();
+		return OSUtils.isWindows2008();
 	}
 
 	/** @return true if we using Windows Vista. */
 	public static boolean isWindowsVista()
 	{
-		return OS.isWindowsVista();
+		return OSUtils.isWindowsVista();
 	}
 
 	/** @return true if we using Windows 7. */
 	public static boolean isWindows7()
 	{
-		return OS.isWindows7();
+		return OSUtils.isWindows7();
 	}
 
 	/** 
@@ -197,7 +183,7 @@ public final class Common
 	 */
 	public static boolean isWindows8()
 	{
-		return OS.isWindows8();
+		return OSUtils.isWindows8();
 	}
 
 	/** 
@@ -206,49 +192,49 @@ public final class Common
 	 */
 	public static boolean isWindows10()
 	{
-		return OS.isWindows10();
+		return OSUtils.isWindows10();
 	}
 
 	/** @return true if we using Windows 95/98. */
 	public static boolean isWindows9X()
 	{
-		return OS.isWindows9X();
+		return OSUtils.isWindows9X();
 	}
 
 	/** @return true if we are using Windows ME, or better yet, if we should just kill the program now. */
 	public static boolean isWindowsME()
 	{
-		return OS.isWindowsME();
+		return OSUtils.isWindowsME();
 	}
 
 	/** @return true if we using Windows NT. */
 	public static boolean isWindowsNT()
 	{
-		return OS.isWindowsNT();
+		return OSUtils.isWindowsNT();
 	}
 
 	/** @return true if we using Windows XP. */
 	public static boolean isWindowsXP()
 	{
-		return OS.isWindowsXP();
+		return OSUtils.isWindowsXP();
 	}
 
 	/** @return true if this is running on an x64 architecture. */
 	public static boolean isX64()
 	{
-		return OS.isX64();
+		return OSUtils.isX64();
 	}
 
 	/** @return true if this is running on an x86 architecture. */
 	public static boolean isX86()
 	{
-		return OS.isX86();
+		return OSUtils.isX86();
 	}
 
 	/** @return true if this is running on Sun Solaris. */
 	public static boolean isSolaris()
 	{
-		return OS.isSolaris();
+		return OSUtils.isSolaris();
 	}
 
 	/**
@@ -261,7 +247,7 @@ public final class Common
 	 */
 	public static <T> T isNull(T testObject, T nullReturn)
 	{
-		return Objects.isNull(testObject, nullReturn);
+		return ObjectUtils.isNull(testObject, nullReturn);
 	}
 	
 	/**
@@ -274,7 +260,7 @@ public final class Common
 	@SuppressWarnings("unchecked")
 	public static <T> T coalesce(T ... objects)
 	{
-		return Objects.coalesce(objects);
+		return ObjectUtils.coalesce(objects);
 	}
 	
 	/**
@@ -362,7 +348,7 @@ public final class Common
 	 */
 	public static URL[] getURLsForFiles(File ... files)
 	{
-		return Files.getURLsForFiles(files);
+		return FileUtils.getURLsForFiles(files);
 	}
 	
 	/**
@@ -397,7 +383,7 @@ public final class Common
 	 */
 	public static String getExceptionString(Throwable t)
 	{
-		return Strings.getExceptionString(t);
+		return StringUtils.getExceptionString(t);
 	}
 	
 	/**
@@ -409,7 +395,7 @@ public final class Common
 	 */
 	public static String getJREExceptionString(Throwable t)
 	{
-		return Strings.getJREExceptionString(t);
+		return StringUtils.getJREExceptionString(t);
 	}
 	
 	/**
@@ -427,7 +413,7 @@ public final class Common
 	 */
 	public static File[] explodeFiles(File ... files)
 	{
-		return Files.explodeFiles(files);
+		return FileUtils.explodeFiles(files);
 	}
 
 	/**
@@ -441,7 +427,7 @@ public final class Common
 	 */
 	public static BufferedReader openTextStream(InputStream in) throws IOException
 	{
-		return IO.openTextStream(in);
+		return IOUtils.openTextStream(in);
 	}
 	
 	/**
@@ -455,7 +441,7 @@ public final class Common
 	 */
 	public static BufferedReader openTextFile(File file) throws IOException
 	{
-		return IO.openTextFile(file);
+		return IOUtils.openTextFile(file);
 	}
 	
 	/**
@@ -469,7 +455,7 @@ public final class Common
 	 */
 	public static BufferedReader openTextFile(String filePath) throws IOException
 	{
-		return IO.openTextFile(filePath);
+		return IOUtils.openTextFile(filePath);
 	}
 	
 	/**
@@ -482,7 +468,7 @@ public final class Common
 	 */
 	public static BufferedReader openSystemIn() throws IOException
 	{
-		return IO.openSystemIn();
+		return IOUtils.openSystemIn();
 	}
 	
 	/**
@@ -494,7 +480,7 @@ public final class Common
 	 */
 	public static InputStream openResource(String pathString)
 	{
-		return IO.openResource(pathString);
+		return IOUtils.openResource(pathString);
 	}
 	
 	/**
@@ -507,7 +493,7 @@ public final class Common
 	 */
 	public static InputStream openResource(ClassLoader classLoader, String pathString)
 	{
-		return IO.openResource(classLoader, pathString);
+		return IOUtils.openResource(classLoader, pathString);
 	}
 	
 	/**
@@ -519,7 +505,7 @@ public final class Common
 	 */
 	public static String getASCIIContents(File f) throws IOException
 	{
-		return IO.getASCIIContents(f);
+		return IOUtils.getASCIIContents(f);
 	}
 	
 	/**
@@ -531,7 +517,7 @@ public final class Common
 	 */
 	public static String getTextualContents(File f) throws IOException
 	{
-		return IO.getTextualContents(f);
+		return IOUtils.getTextualContents(f);
 	}
 	
 	/**
@@ -542,7 +528,7 @@ public final class Common
 	 */
 	public static String getTextualContents(InputStream in) throws IOException
 	{
-		return IO.getTextualContents(in);
+		return IOUtils.getTextualContents(in);
 	}
 	
 	/**
@@ -554,7 +540,7 @@ public final class Common
 	 */
 	public static String getTextualContents(InputStream in, String encoding) throws IOException
 	{
-		return IO.getTextualContents(in, encoding);
+		return IOUtils.getTextualContents(in, encoding);
 	}
 	
 	/**
@@ -566,7 +552,7 @@ public final class Common
 	 */
 	public static byte[] getBinaryContents(File f) throws IOException
 	{
-		return IO.getBinaryContents(f);
+		return IOUtils.getBinaryContents(f);
 	}
 
 	/**
@@ -578,7 +564,7 @@ public final class Common
 	 */
 	public static byte[] getBinaryContents(InputStream in, int len) throws IOException
 	{
-		return IO.getBinaryContents(in, len);
+		return IOUtils.getBinaryContents(in, len);
 	}
 
 	/**
@@ -589,7 +575,7 @@ public final class Common
 	 */
 	public static byte[] getBinaryContents(InputStream in) throws IOException
 	{
-		return IO.getBinaryContents(in);
+		return IOUtils.getBinaryContents(in);
 	}
 
     /**
@@ -602,7 +588,7 @@ public final class Common
      */
     public static String getHTTPContent(URL url) throws IOException
     {
-        return HTTP.getHTTPContent(url);
+        return HTTPUtils.getHTTPContent(url);
     }
 
     /**
@@ -617,7 +603,7 @@ public final class Common
      */
     public static String getHTTPContent(URL url, int socketTimeoutMillis) throws IOException
     {
-        return HTTP.getHTTPContent(url, socketTimeoutMillis);
+        return HTTPUtils.getHTTPContent(url, socketTimeoutMillis);
     }
 
     /**
@@ -633,7 +619,7 @@ public final class Common
      */
     public static String getHTTPContent(URL url, String defaultResponseCharset, int socketTimeoutMillis) throws IOException
     {
-        return HTTP.getHTTPContent(url, defaultResponseCharset, socketTimeoutMillis);
+        return HTTPUtils.getHTTPContent(url, defaultResponseCharset, socketTimeoutMillis);
     }
 
     /**
@@ -655,7 +641,7 @@ public final class Common
      */
     public static HTTPResponse getResolvedHTTPContent(URL url, String requestMethod, byte[] data, String dataContentType, String dataContentEncoding, String defaultResponseEncoding, String defaultResponseCharset, int socketTimeoutMillis) throws IOException
     {
-        return HTTP.getResolvedHTTPContent(url, requestMethod, data, dataContentType, dataContentEncoding, defaultResponseEncoding, defaultResponseCharset, socketTimeoutMillis);
+        return HTTPUtils.getResolvedHTTPContent(url, requestMethod, data, dataContentType, dataContentEncoding, defaultResponseEncoding, defaultResponseCharset, socketTimeoutMillis);
     }
 
     /**
@@ -675,64 +661,7 @@ public final class Common
      */
     public static HTTPResponse getHTTPContent(URL url, String requestMethod, byte[] data, String dataContentType, String dataContentEncoding, String defaultResponseEncoding, String defaultResponseCharset, int socketTimeoutMillis) throws IOException
     {
-        if (Arrays.binarySearch(VALID_HTTP, url.getProtocol()) < 0)
-            throw new IOException("This is not an HTTP URL.");
-
-        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-        conn.setReadTimeout(socketTimeoutMillis);
-        conn.setRequestMethod(requestMethod);
-
-        // set up POST data.
-        if (data != null)
-        {
-            conn.setRequestProperty("Content-Length", String.valueOf(data.length));
-            conn.setRequestProperty("Content-Type", dataContentType == null ? "application/octet-stream" : dataContentType);
-            if (dataContentEncoding != null)
-                conn.setRequestProperty("Content-Encoding", dataContentEncoding);
-            conn.setDoOutput(true);
-            DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
-            dos.write(data);
-            dos.close();
-        }
-
-        HTTPResponse out = new HTTPResponse();
-        out.statusCode = conn.getResponseCode();
-        out.statusMessage = conn.getResponseMessage();
-        out.encoding = conn.getContentEncoding();
-        out.contentType = conn.getContentType();
-        
-        int charsetindex;
-        if ((charsetindex = out.contentType.toLowerCase().indexOf("charset=")) >= 0)
-        {
-        	int endIndex = out.contentType.indexOf(";", charsetindex);
-        	if (endIndex >= 0)
-        		out.charset = out.contentType.substring(charsetindex + "charset=".length(), endIndex).trim();
-        	else
-        		out.charset = out.contentType.substring(charsetindex + "charset=".length()).trim();
-        }
-        
-        if (out.charset == null)
-            out.charset = defaultResponseCharset;
-        
-        out.location = conn.getHeaderField("Location"); // if any.
-
-        int range = out.statusCode / 100;
-        if (range >= 2 && range <= 3)
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            BufferedInputStream in = null;
-            try {
-                in = new BufferedInputStream(conn.getInputStream());
-                relay(in, bos);
-                out.content = bos.toByteArray();
-            } finally {
-                close(in);
-            }
-        }
-
-        conn.disconnect();
-
-        return out;
+        return HTTPUtils.getHTTPContent(url, requestMethod, data, dataContentType, dataContentEncoding, defaultResponseEncoding, defaultResponseCharset, socketTimeoutMillis);
     }
 
 	/**
@@ -746,7 +675,7 @@ public final class Common
 	 */
 	public static byte[] getHTTPByteContent(URL url) throws IOException, SocketTimeoutException
 	{
-		return getHTTPByteContent(url, 30000);
+		return HTTPUtils.getHTTPByteContent(url);
 	}
 	
 	/**
@@ -760,31 +689,7 @@ public final class Common
 	 */
 	public static byte[] getHTTPByteContent(URL url, int socketTimeoutMillis) throws IOException, SocketTimeoutException
 	{
-		if (!url.getProtocol().equalsIgnoreCase("http") && !url.getProtocol().equalsIgnoreCase("https"))
-			throw new IOException("This is not an HTTP URL.");
-		
-		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-		conn.setReadTimeout(socketTimeoutMillis);
-
-		int code = conn.getResponseCode();
-		String codeString = conn.getResponseMessage();
-		
-		if (!(code >= 200 && code < 300))
-		{
-			conn.disconnect();
-			throw new IOException("Response was code "+code+": "+codeString);
-		}
-
-		BufferedInputStream in = null;
-		try {
-			in = new BufferedInputStream(conn.getInputStream());
-			return getBinaryContents(in);
-		} catch (IOException e) {
-			throw e;
-		} finally {
-			Common.close(in);
-			conn.disconnect();
-		}
+		return HTTPUtils.getByteContent(url, socketTimeoutMillis);
 	}
 
 	/**
@@ -798,7 +703,7 @@ public final class Common
 	 */
 	public static byte[] getByteContent(URL url) throws IOException, SocketTimeoutException
 	{
-		return getByteContent(url, 30000);
+		return HTTPUtils.getByteContent(url);
 	}
 	
 	/**
@@ -812,18 +717,7 @@ public final class Common
 	 */
 	public static byte[] getByteContent(URL url, int socketTimeoutMillis) throws IOException, SocketTimeoutException
 	{
-		URLConnection conn = url.openConnection();
-		conn.setReadTimeout(socketTimeoutMillis);
-
-		BufferedInputStream in = null;
-		try {
-			in = new BufferedInputStream(conn.getInputStream());
-			return getBinaryContents(in);
-		} catch (IOException e) {
-			throw e;
-		} finally {
-			Common.close(in);
-		}
+		return HTTPUtils.getByteContent(url, socketTimeoutMillis);
 	}
 
 	/**
@@ -837,11 +731,7 @@ public final class Common
 	 */
 	public static byte[] digest(byte[] bytes, String algorithmName)
 	{
-		try {
-			return MessageDigest.getInstance(algorithmName).digest(bytes);
-		} catch (NoSuchAlgorithmException e) {
-			return null;
-		}
+		return EncodingUtils.digest(bytes, algorithmName);
 	}
 	
 	/**
@@ -855,7 +745,7 @@ public final class Common
 	 */
 	public static byte[] sha1(byte[] bytes)
 	{
-		return digest(bytes, "SHA-1");
+		return EncodingUtils.sha1(bytes);
 	}
 	
 	/**
@@ -869,7 +759,7 @@ public final class Common
 	 */
 	public static byte[] md5(byte[] bytes)
 	{
-		return digest(bytes, "MD5");
+		return EncodingUtils.md5(bytes);
 	}
 	
 	/**
@@ -882,7 +772,7 @@ public final class Common
 	 */
 	public static String asBase64(InputStream in) throws IOException
 	{
-		return asBase64(in, '+', '/');
+		return EncodingUtils.asBase64(in);
 	}
 
 	/**
@@ -896,7 +786,7 @@ public final class Common
 	 */
 	public static String asBase64(InputStream in, char sixtyTwo, char sixtyThree) throws IOException
 	{
-		return Encoding.asBase64(in, sixtyTwo, sixtyThree);
+		return EncodingUtils.asBase64(in, sixtyTwo, sixtyThree);
 	}
 	
 	/**
@@ -907,10 +797,7 @@ public final class Common
 	 */
 	public static boolean touch(String filePath) throws IOException
 	{
-		File f = new File(filePath);
-		FileOutputStream fos = new FileOutputStream(f,true);
-		fos.close();
-		return true;
+		return FileUtils.touch(filePath);
 	}
 
 	/**
@@ -930,7 +817,7 @@ public final class Common
 	 */
 	public static void secureDelete(File file) throws IOException
 	{
-		secureDelete(file, 1);
+		FileUtils.secureDelete(file);
 	}
 	
 	/**
@@ -952,42 +839,7 @@ public final class Common
 	 */
 	public static void secureDelete(File file, int passes) throws IOException
 	{
-		passes = passes < 1 ? 1 : passes;
-		boolean bitval = passes == 1 ? false : (passes % 2) == 0;
-
-		// Overwrite.
-		RandomAccessFile raf = new RandomAccessFile(file, "rws");
-		FileLock lock = raf.getChannel().lock();
-		byte[] buffer = new byte[65536];
-		while (passes-- > 0)
-		{
-			Arrays.fill(buffer, (byte)(bitval ? 0xFF : 0x00));
-			long end = raf.length();
-			raf.seek(0L);
-			long n = 0L;
-			while (n < end)
-			{
-				raf.write(buffer, 0, Math.min(buffer.length, (int)(end - n)));
-				n = raf.getFilePointer();
-			}
-		}
-		lock.release();
-		raf.close();
-		
-		// Overwrite filename.
-		String newName = null;
-		char[] namebuf = new char[file.getName().length()];
-		char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210".toCharArray();
-		for (char c : alphabet)
-		{
-			Arrays.fill(namebuf, c);
-			newName = new String(namebuf);
-			File ren = new File(file.getParent() + File.separator + newName);
-			file.renameTo(ren);
-			file = ren;
-		}
-		
-		file.delete();
+		FileUtils.secureDelete(file, passes);
 	}
 	
 	/**
@@ -1000,20 +852,7 @@ public final class Common
 	 */
 	public static void createJunkFile(File file, int length) throws IOException
 	{
-		byte[] buffer = new byte[65536];
-		Random r = new Random();
-		int n = 0;
-		
-		FileOutputStream fos = new FileOutputStream(file);
-		while (n < length)
-		{
-			RMath.randBytes(r, buffer);
-			int len = Math.min(buffer.length, length - n);
-			fos.write(buffer, 0, len);
-			fos.flush();
-			n += len;
-		}
-		fos.close();
+		FileUtils.createJunkFile(file, length);
 	}
 	
 	/**
@@ -1023,43 +862,7 @@ public final class Common
 	 */
 	public static String withEscChars(String s)
     {
-    	char[] c = s.toCharArray();
-    	String out = "";
-    	for (int i = 0; i < c.length; i++)
-    		switch (c[i])
-    		{
-				case '\0':
-					out += "\\0";
-					break;
-    			case '\b':
-    				out += "\\b";
-    				break;
-    			case '\t':
-    				out += "\\t";
-    				break;
-    			case '\n':
-    				out += "\\n";
-    				break;
-    			case '\f':
-    				out += "\\f";
-    				break;
-    			case '\r':
-    				out += "\\r";
-    				break;
-    			case '\\':
-    				out += "\\\\";
-    				break;
-    			case '"':
-    				if (i != 0 && i != c.length-1)
-    					out += "\\\"";    					
-    				else
-    					out += "\"";
-    				break;
-    			default:
-    				out += c[i];
-    				break;
-    		}
-    	return out;
+		return StringUtils.withEscChars(s);
     }
 
 	/**
@@ -1069,19 +872,7 @@ public final class Common
 	 */
 	public static String urlEscape(String inString)
 	{
-		StringBuffer sb = new StringBuffer();
-		char[] inChars = inString.toCharArray();
-		int i = 0;
-		while (i < inChars.length)
-		{
-			char c = inChars[i];
-			if (!((c >= 0x30 && c <= 0x39) || (c >= 0x41 && c <= 0x5a) || (c >= 0x61 && c <= 0x7a)))
-				sb.append(String.format("%%%02x", (short)c));
-			else
-				sb.append(c);
-			i++;
-		}
-		return sb.toString();
+		return StringUtils.urlEscape(inString);
 	}
 	
 	/**
@@ -1092,58 +883,7 @@ public final class Common
 	 */
 	public static String urlUnescape(String inString)
 	{
-		StringBuffer sb = new StringBuffer();
-		char[] inChars = inString.toCharArray();
-		char[] chars = new char[2];
-		int x = 0;
-		
-		final int STATE_START = 0;
-		final int STATE_DECODE = 1;
-		int state = STATE_START;
-		
-		int i = 0;
-		while (i < inChars.length)
-		{
-			char c = inChars[i];
-			
-			switch (state)
-			{
-				case STATE_START:
-					if (c == '%')
-					{
-						x = 0;
-						state = STATE_DECODE;
-					}
-					else
-						sb.append(c);
-					break;
-				case STATE_DECODE:
-					chars[x++] = c;
-					if (x == 2)
-					{
-						int v = 0;
-						try {
-							v = Integer.parseInt(new String(chars), 16);
-							sb.append((char)(v & 0x0ff));
-					} catch (NumberFormatException e) {
-							sb.append('%').append(chars[0]).append(chars[1]);
-						}
-						state = STATE_START;
-					}
-					break;
-			}
-			
-			i++;
-		}
-		
-		if (state == STATE_DECODE)
-		{
-			sb.append('%');
-			for (int n = 0; n < x; n++)
-				sb.append(chars[n]);
-		}
-		
-		return sb.toString();
+		return StringUtils.urlUnescape(inString);
 	}
 
 	/**
@@ -1155,10 +895,7 @@ public final class Common
 	 */
 	public static String addStartingSequence(String input, String sequence)
 	{
-		if (!input.startsWith(sequence))
-			return sequence + input;
-		else
-			return input;
+		return StringUtils.addStartingSequence(input, sequence);
 	}
 	
 	/**
@@ -1170,10 +907,7 @@ public final class Common
 	 */
 	public static String addEndingSequence(String input, String sequence)
 	{
-		if (!input.endsWith(sequence))
-			return input + sequence;
-		else
-			return input;
+		return StringUtils.addEndingSequence(input, sequence);
 	}
 	
 	/**
@@ -1185,10 +919,7 @@ public final class Common
 	 */
 	public static String removeStartingSequence(String input, String sequence)
 	{
-		if (input.startsWith(sequence))
-			return input.substring(sequence.length());
-		else
-			return input;
+		return StringUtils.removeStartingSequence(input, sequence);
 	}
 	
 	/**
@@ -1200,10 +931,7 @@ public final class Common
 	 */
 	public static String removeEndingSequence(String input, String sequence)
 	{
-		if (input.endsWith(sequence))
-			return input.substring(0, input.length() - sequence.length());
-		else
-			return input;
+		return StringUtils.removeEndingSequence(input, sequence);
 	}
 	
 	/**
@@ -1213,7 +941,7 @@ public final class Common
 	 */
 	public static boolean createPathForFile(File file)
 	{
-		return createPathForFile(file.getAbsolutePath());
+		return FileUtils.createPathForFile(file);
 	}
 
 	/**
@@ -1223,15 +951,7 @@ public final class Common
 	 */
 	public static boolean createPathForFile(String path)
 	{
-		int sindx = -1;
-		
-		if ((sindx = Math.max(
-				path.lastIndexOf(File.separator), 
-				path.lastIndexOf("/"))) != -1)
-		{
-			return createPath(path.substring(0, sindx));
-		}
-		return true;
+		return FileUtils.createPathForFile(path);
 	}
 	
 	/**
@@ -1241,10 +961,7 @@ public final class Common
 	 */
 	public static boolean createPath(String path)
 	{
-		File dir = new File(path);
-		if (dir.exists())
-			return true;
-		return dir.mkdirs();
+		return FileUtils.createPath(path);
 	}
 	
 	/**
@@ -1256,7 +973,7 @@ public final class Common
 	 */
 	public static String getRelativePath(String sourcePath, String targetPath) throws IOException
 	{
-		return getRelativePath(new File(sourcePath), new File(targetPath));
+		return FileUtils.getRelativePath(sourcePath, targetPath);
 	}
 	
 	/**
@@ -1268,61 +985,7 @@ public final class Common
 	 */
 	public static String getRelativePath(File source, File target) throws IOException
 	{
-		Stack<File> sourcePath = new Stack<File>();
-		Stack<File> targetPath = new Stack<File>();
-
-		source = source.getCanonicalFile();
-		sourcePath.push(source);
-		while (source.getParentFile() != null)
-		{
-			source = source.getParentFile();
-			sourcePath.push(source);
-		}
-
-		target = new File(target.getCanonicalPath());
-		targetPath.push(target);
-		while (target.getParentFile() != null)
-		{
-			target = target.getParentFile();
-			targetPath.push(target);
-		}
-		
-		if (isWindows())
-		{
-			String sroot = sourcePath.peek().getPath();
-			String troot = targetPath.peek().getPath();
-			if (!sroot.equals(troot))
-				return targetPath.tail().getCanonicalPath();
-		}
-		
-		while (!sourcePath.isEmpty() && !targetPath.isEmpty() && 
-				sourcePath.peek().equals(targetPath.peek()))
-		{
-			sourcePath.pop();
-			targetPath.pop();
-		}
-		
-		StringBuilder sb = new StringBuilder();
-		if (sourcePath.isEmpty())
-		{
-			sb.append(".");
-			sb.append(File.separator);
-		}
-		else while (!sourcePath.isEmpty())
-		{
-			sb.append("..");
-			sb.append(File.separator);
-			sourcePath.pop();
-		}
-		
-		while (!targetPath.isEmpty())
-		{
-			sb.append(targetPath.pop().getName());
-			if (!targetPath.isEmpty())
-				sb.append(File.separator);
-		}
-
-		return sb.toString();
+		return FileUtils.getRelativePath(source, target);
 	}
 	
 	/**
@@ -1334,10 +997,7 @@ public final class Common
 	 */
 	public static String getFileExtension(String filename, String extensionSeparator)
 	{
-		int extindex = filename.lastIndexOf(extensionSeparator);
-		if (extindex >= 0)
-			return filename.substring(extindex+1);
-		return "";
+		return FileUtils.getFileExtension(filename, extensionSeparator);
 	}
 	
 	/**
@@ -1349,7 +1009,7 @@ public final class Common
 	 */
 	public static String getFileExtension(File file, String extensionSeparator)
 	{
-		return getFileExtension(file.getName(), extensionSeparator);
+		return FileUtils.getFileExtension(file, extensionSeparator);
 	}
 	
 	/**
@@ -1361,7 +1021,7 @@ public final class Common
 	 */
 	public static String getFileExtension(String filename)
 	{
-		return getFileExtension(filename, ".");
+		return FileUtils.getFileExtension(filename);
 	}
 	
 	/**
@@ -1373,7 +1033,7 @@ public final class Common
 	 */
 	public static String getFileExtension(File file)
 	{
-		return getFileExtension(file.getName(), ".");
+		return FileUtils.getFileExtension(file);
 	}
 
 	/**
@@ -1391,7 +1051,7 @@ public final class Common
 	 */
 	public static boolean matchWildcardPattern(String pattern, File target)
 	{
-		return matchWildcardPattern(pattern, target, isWindows() ? true : false);
+		return FileUtils.matchWildcardPattern(pattern, target);
 	}
 
 	/**
@@ -1411,11 +1071,7 @@ public final class Common
 	 */
 	public static boolean matchWildcardPattern(String pattern, File target, boolean caseInsensitive)
 	{
-		boolean slashAgnostic = File.separatorChar == '\\';
-		return 
-			matchWildcardPattern(pattern, target.getName(), caseInsensitive, slashAgnostic)
-			|| matchWildcardPattern(pattern, target.getPath(), caseInsensitive, slashAgnostic)
-			|| matchWildcardPattern(pattern, target.getAbsolutePath(), caseInsensitive, slashAgnostic);
+		return FileUtils.matchWildcardPattern(pattern, target, caseInsensitive);
 	}
 
 	/**
@@ -1432,7 +1088,7 @@ public final class Common
 	 */
 	public static boolean matchWildcardPattern(String pattern, String target, boolean caseInsensitive)
 	{
-		return matchWildcardPattern(pattern, target, caseInsensitive, false);
+		return FileUtils.matchWildcardPattern(pattern, target, caseInsensitive);
 	}
 	
 	/**
@@ -1450,81 +1106,7 @@ public final class Common
 	 */
 	public static boolean matchWildcardPattern(String pattern, String target, boolean caseInsensitive, boolean slashAgnostic)
 	{
-		if (pattern.length() == 0 && target.length() == 0)
-			return true;
-		
-		final char ANY_ALL_CHAR = '*';
-		final char ANY_ONE_CHAR = '?';
-
-		int pi = 0;
-		int ti = 0;
-		int plen = pattern.length();
-		int tlen = target.length();
-		
-		while (pi < plen && ti < tlen)
-		{
-			char p = pattern.charAt(pi);
-			char t = target.charAt(ti);
-			if (p != ANY_ALL_CHAR)
-			{
-				if (p == ANY_ONE_CHAR)
-				{
-					if (t == '/' || t == '\\')
-						return false;
-					else
-					{
-						pi++; 
-						ti++;						
-					}
-				}
-				else if (p == t)
-				{
-					pi++; 
-					ti++;
-				}
-				else if (caseInsensitive && Character.toLowerCase(p) == Character.toLowerCase(t))
-				{
-					pi++; 
-					ti++;
-				}
-				else if (slashAgnostic && (p == '/' || p == '\\') && (t == '/' || t == '\\'))
-				{
-					pi++; 
-					ti++;
-				}
-				else
-					return false;
-			}
-			else
-			{
-				char nextChar = pi+1 < plen ? pattern.charAt(pi+1) : '\0';
-				if (nextChar == ANY_ALL_CHAR)
-					pi++;
-				else if (nextChar != '\0')
-				{
-					// does not match a slash.
-					if (t == '/' || t == '\\')
-						pi++;
-					else if (nextChar == t)
-						pi++;
-					else if (caseInsensitive && Character.toLowerCase(nextChar) == Character.toLowerCase(t))
-						pi++;
-					else if (slashAgnostic && (p == '/' || p == '\\') && (t == '/' || t == '\\'))
-						pi++; 
-					else
-						ti++;
-				}
-				// does not match a slash.
-				else if (t == '/' || t == '\\')
-					pi++;
-				else
-					ti++;
-			}
-		}
-		
-		if (pi == plen - 1)
-			return pattern.charAt(pi) == ANY_ALL_CHAR && ti == tlen;
-		return pi == plen && ti == tlen;
+		return FileUtils.matchWildcardPattern(pattern, target, caseInsensitive, slashAgnostic);
 	}
 	
 	/**
@@ -1536,7 +1118,7 @@ public final class Common
 	 */
 	public static File[] getFilesByWildcardPath(String path)
 	{
-		return getFilesByWildcardPath(path, false);
+		return FileUtils.getFilesByWildcardPath(path);
 	}
 	
 	/**
@@ -1549,44 +1131,7 @@ public final class Common
 	 */
 	public static File[] getFilesByWildcardPath(String path, boolean hidden)
 	{
-		Queue<File> out = new Queue<File>();
-		
-		boolean slashAgnostic = isWindows();
-		boolean caseInsensitive = isWindows();
-		
-		String parent = null;
-		String name = null;
-		File pathFile = new File(path);
-		
-		if (pathFile.exists() && pathFile.isDirectory())
-		{
-			parent = path;
-			name = "*";
-		}
-		else
-		{
-			int sidx = Math.max(path.lastIndexOf(File.separator), path.lastIndexOf("/"));
-			parent = sidx >= 0 ? path.substring(0, sidx) : ".";
-			name = sidx == path.length() - 1 ? "*" : path.substring(sidx + 1, path.length());
-		}
-		
-		File dir = new File(parent);
-		
-		if (!(dir.exists() && dir.isDirectory()))
-			return new File[0];
-		
-		for (File f : dir.listFiles())
-		{
-			if (!hidden && f.isHidden())
-				continue;
-			
-			if (matchWildcardPattern(name, f.getName(), caseInsensitive, slashAgnostic))
-				out.add(f);
-		}
-		
-		File[] files = new File[out.size()];
-		out.toArray(files);
-		return files;
+		return FileUtils.getFilesByWildcardPath(path, hidden);
 	}
 	
 	/**
@@ -1597,7 +1142,7 @@ public final class Common
 	 */
 	public static boolean bitIsSet(long value, long test)
 	{
-		return (value & test) == test;
+		return BitUtils.bitIsSet(value, test);
 	}
 	
 	/**
@@ -1608,7 +1153,7 @@ public final class Common
 	 */
 	public static long setBits(long value, long bits)
 	{
-		return value | bits;
+		return BitUtils.setBits(value, bits);
 	}
 
 	/**
@@ -1619,7 +1164,7 @@ public final class Common
 	 */
 	public static int setBits(int value, int bits)
 	{
-		return value | bits;
+		return BitUtils.setBits(value, bits);
 	}
 
 	/**
@@ -1630,7 +1175,7 @@ public final class Common
 	 */
 	public static long clearBits(long value, long bits)
 	{
-		return value & ~bits;
+		return BitUtils.clearBits(value, bits);
 	}
 
 	/**
@@ -1641,7 +1186,7 @@ public final class Common
 	 */
 	public static int clearBits(int value, int bits)
 	{
-		return value & ~bits;
+		return BitUtils.clearBits(value, bits);
 	}
 
 	/**
@@ -1653,11 +1198,7 @@ public final class Common
 	 */
 	public static int booleansToInt(boolean ... bool)
 	{
-		int out = 0;
-		for (int i = 0; i < Math.min(bool.length, 32); i++)
-			if (bool[i])
-				out |= (1 << i);
-		return out;
+		return BitUtils.booleansToInt(bool);
 	}
 	
 	/**
@@ -1669,11 +1210,7 @@ public final class Common
 	 */
 	public static long booleansToLong(boolean ... bool)
 	{
-		int out = 0;
-		for (int i = 0; i < Math.min(bool.length, 64); i++)
-			if (bool[i])
-				out |= (1 << i);
-		return out;
+		return BitUtils.booleansToLong(bool);
 	}
 	
 	/**
@@ -1686,12 +1223,7 @@ public final class Common
 	 */
 	public static byte[] deltaEncode(byte[] b)
 	{
-		byte[] delta = new byte[b.length];
-		delta[0] = b[0];
-		for (int i = 1; i < b.length; i++)
-			delta[i] = (byte)(b[i] - b[i-1]);
-		
-		return delta;
+		return EncodingUtils.deltaEncode(b);
 	}
 	
 	/**
@@ -1704,14 +1236,7 @@ public final class Common
 	 */
 	public static byte[] deltaDecode(byte[] b)
 	{
-		byte[] delta = /*decompressBytes(b)*/ b;
-		
-		byte[] out = new byte[delta.length];
-		out[0] = delta[0];
-		for (int i = 1; i < b.length; i++)
-			out[i] = (byte)(out[i-1] + delta[i]);
-		
-		return out;
+		return EncodingUtils.deltaDecode(b);
 	}
 
 	/**
@@ -1723,48 +1248,7 @@ public final class Common
 	 */
 	public static byte[] carmacize(byte[] b)
 	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		int seq = 1;
-		byte prev = b[0];
-
-		for(int i = 1; i < b.length; i++)
-		{
-			if (b[i] == prev)
-				seq++;
-			else if (prev == -1 || seq > 3)
-			{
-				while (seq > 0)
-				{
-					bos.write(255);
-					bos.write(prev);
-					bos.write(seq > 255 ? 255 : seq);
-					seq -= 255;
-				}
-				prev = b[i];
-				seq = 1;
-			}
-			else
-			{
-				for (int x = 0; x < seq; x++)
-					bos.write(prev);
-				prev = b[i];
-				seq = 1;
-			}
-		}
-
-		if (seq > 3)
-			while (seq > 0)
-			{
-				bos.write(255);	
-				bos.write(prev);
-				bos.write(seq > 255 ? 255 : seq);
-				seq -= 255;
-			}
-		else
-			for (int x = 0; x < seq; x++)
-				bos.write(prev);
-		
-		return bos.toByteArray(); 
+		return EncodingUtils.carmacize(b); 
 	}
 
 	/**
@@ -1776,22 +1260,7 @@ public final class Common
 	 */
 	public static byte[] decarmacize(byte[] b)
 	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		for (int i = 0; i < b.length; i++)
-		{
-			if (b[i] == -1)
-			{
-				i++;
-				byte z = b[i];
-				i++;
-				int x = b[i] < 0? b[i] + 256 : b[i];
-				for (int j = 0; j < x; j++)
-					bos.write(z);
-			}
-			else
-				bos.write(b[i]);
-		}
-		return bos.toByteArray();
+		return EncodingUtils.decarmacize(b); 
 	}
 
 	/**
@@ -1802,10 +1271,7 @@ public final class Common
 	 */
 	public static ByteBuffer wrapDirectBuffer(byte[] b)
 	{
-		ByteBuffer buf = allocDirectByteBuffer(b.length);
-		buf.put(b);
-		buf.rewind();
-		return buf;
+		return BufferUtils.wrapDirectBuffer(b);
 	}
 	
 	/**
@@ -1816,9 +1282,7 @@ public final class Common
 	 */
 	public static ByteBuffer allocDirectByteBuffer(int len)
 	{
-		ByteBuffer b = ByteBuffer.allocateDirect(len*SIZEOF_BYTE);
-		b.order(ByteOrder.nativeOrder());
-		return b;
+		return BufferUtils.allocDirectByteBuffer(len);
 	}
 	
 	/**
@@ -1828,9 +1292,7 @@ public final class Common
 	 */
 	public static IntBuffer allocDirectIntBuffer(int len)
 	{
-		ByteBuffer b = ByteBuffer.allocateDirect(len*SIZEOF_INT);
-		b.order(ByteOrder.nativeOrder());
-		return b.asIntBuffer();
+		return BufferUtils.allocDirectIntBuffer(len);
 	}
 	
 	/**
@@ -1840,9 +1302,7 @@ public final class Common
 	 */
 	public static FloatBuffer allocDirectFloatBuffer(int len)
 	{
-		ByteBuffer b = ByteBuffer.allocateDirect(len*SIZEOF_FLOAT);
-		b.order(ByteOrder.nativeOrder());
-		return b.asFloatBuffer();
+		return BufferUtils.allocDirectFloatBuffer(len);
 	}
 	
 	/**
@@ -1852,9 +1312,7 @@ public final class Common
 	 */
 	public static LongBuffer allocDirectLongBuffer(int len)
 	{
-		ByteBuffer b = ByteBuffer.allocateDirect(len*SIZEOF_LONG);
-		b.order(ByteOrder.nativeOrder());
-		return b.asLongBuffer();
+		return BufferUtils.allocDirectLongBuffer(len);
 	}
 	
 	/**
@@ -1864,9 +1322,7 @@ public final class Common
 	 */
 	public static ShortBuffer allocDirectShortBuffer(int len)
 	{
-		ByteBuffer b = ByteBuffer.allocateDirect(len*SIZEOF_SHORT);
-		b.order(ByteOrder.nativeOrder());
-		return b.asShortBuffer();
+		return BufferUtils.allocDirectShortBuffer(len);
 	}
 	
 	/**
@@ -1876,9 +1332,7 @@ public final class Common
 	 */
 	public static CharBuffer allocDirectCharBuffer(int len)
 	{
-		ByteBuffer b = ByteBuffer.allocateDirect(len*SIZEOF_CHAR);
-		b.order(ByteOrder.nativeOrder());
-		return b.asCharBuffer();
+		return BufferUtils.allocDirectCharBuffer(len);
 	}
 	
 	/**
@@ -1888,9 +1342,7 @@ public final class Common
 	 */
 	public static DoubleBuffer allocDirectDoubleBuffer(int len)
 	{
-		ByteBuffer b = ByteBuffer.allocateDirect(len*SIZEOF_DOUBLE);
-		b.order(ByteOrder.nativeOrder());
-		return b.asDoubleBuffer();
+		return BufferUtils.allocDirectDoubleBuffer(len);
 	}
 	
 	/**
@@ -1908,7 +1360,7 @@ public final class Common
 	 */
 	public static int relay(InputStream in, OutputStream out) throws IOException
 	{
-		return IO.relay(in, out);
+		return IOUtils.relay(in, out);
 	}
 	
 	/**
@@ -1928,7 +1380,7 @@ public final class Common
 	 */
 	public static int relay(InputStream in, OutputStream out, int bufferSize) throws IOException
 	{
-		return IO.relay(in, out, bufferSize, -1);
+		return IOUtils.relay(in, out, bufferSize, -1);
 	}
 	
 	/**
@@ -1949,7 +1401,7 @@ public final class Common
 	 */
 	public static int relay(InputStream in, OutputStream out, int bufferSize, int maxLength) throws IOException
 	{
-		return IO.relay(in, out, bufferSize, maxLength);
+		return IOUtils.relay(in, out, bufferSize, maxLength);
 	}
 	
 	/**
@@ -1960,7 +1412,7 @@ public final class Common
 	 */
 	public static void setRelayBufferSize(int size)
 	{
-		IO.setRelayBufferSize(size);
+		IOUtils.setRelayBufferSize(size);
 	}
 	
 	/**
@@ -1968,7 +1420,7 @@ public final class Common
 	 */
 	public static int getRelayBufferSize()
 	{
-		return IO.getRelayBufferSize();
+		return IOUtils.getRelayBufferSize();
 	}
 
 	/**
@@ -1981,7 +1433,7 @@ public final class Common
 	 */
 	public static String getLine()
 	{
-		return IO.getLine();
+		return IOUtils.getLine();
 	}
 	
 	/**
@@ -1995,7 +1447,7 @@ public final class Common
 	 */
 	public static int printWrapped(CharSequence message, int width)
 	{
-		return printWrapped(System.out, message, width);
+		return StringUtils.printWrapped(message, width);
 	}
 
 	/**
@@ -2010,7 +1462,7 @@ public final class Common
 	 */
 	public static int printWrapped(PrintStream out, CharSequence message, int width)
 	{
-		return printWrapped(out, message, 0, width);
+		return StringUtils.printWrapped(out, message, width);
 	}
 
 	/**
@@ -2026,68 +1478,7 @@ public final class Common
 	 */
 	public static int printWrapped(PrintStream out, CharSequence message, int startColumn, int width)
 	{
-		if (width <= 1) return startColumn;
-		
-		StringBuffer token = new StringBuffer();
-		StringBuffer line = new StringBuffer();
-		int ln = startColumn;
-		int tok = 0;
-		for (int i = 0; i < message.length(); i++)
-		{
-			char c = message.charAt(i);
-			if (c == '\n')
-			{
-				line.append(token);
-				ln += token.length();
-				token.delete(0, token.length());
-				tok = 0;
-				out.println(line.toString());
-				line.delete(0, line.length());
-				ln = 0;
-			}
-			else if (Character.isWhitespace(c))
-			{
-				line.append(token);
-				ln += token.length();
-				if (ln < width-1)
-				{
-					line.append(' ');
-					ln++;
-				}
-				token.delete(0, token.length());
-				tok = 0;
-			}
-			else if (c == '-')
-			{
-				line.append(token);
-				ln += token.length();
-				line.append('-');
-				ln++;
-				token.delete(0, token.length());
-				tok = 0;
-			}
-			else if (ln + token.length() + 1 > width-1)
-			{
-				out.println(line.toString());
-				line.delete(0, line.length());
-				ln = 0;
-				token.append(c);
-				tok++;
-			}
-			else
-			{
-				token.append(c);
-				tok++;
-			}
-		}
-		
-		String linestr = line.toString();
-		if (line.length() > 0)
-			out.print(linestr);
-		if (token.length() > 0)
-			out.print(token.toString());
-		
-		return ln + tok;
+		return StringUtils.printWrapped(out, message, startColumn, width);
 	}
 	
 	/**
@@ -2098,15 +1489,7 @@ public final class Common
 	 */
 	public static void printBuffer(ByteBuffer buffer, PrintStream out)
 	{
-		int len = buffer.capacity();
-		out.print("[");
-		for (int i = 0; i < len; i++)
-		{
-			out.print(buffer.get(i));
-			if (i + 1 < len)
-				out.print(", ");
-		}
-		out.println("]");
+		BufferUtils.printBuffer(buffer, out);
 	}
 	
 	/**
@@ -2117,15 +1500,7 @@ public final class Common
 	 */
 	public static void printBuffer(CharBuffer buffer, PrintStream out)
 	{
-		int len = buffer.capacity();
-		out.print("[");
-		for (int i = 0; i < len; i++)
-		{
-			out.print(buffer.get(i));
-			if (i + 1 < len)
-				out.print(", ");
-		}
-		out.println("]");
+		BufferUtils.printBuffer(buffer, out);
 	}
 	
 	/**
@@ -2136,15 +1511,7 @@ public final class Common
 	 */
 	public static void printBuffer(ShortBuffer buffer, PrintStream out)
 	{
-		int len = buffer.capacity();
-		out.print("[");
-		for (int i = 0; i < len; i++)
-		{
-			out.print(buffer.get(i));
-			if (i + 1 < len)
-				out.print(", ");
-		}
-		out.println("]");
+		BufferUtils.printBuffer(buffer, out);
 	}
 	
 	/**
@@ -2155,15 +1522,7 @@ public final class Common
 	 */
 	public static void printBuffer(IntBuffer buffer, PrintStream out)
 	{
-		int len = buffer.capacity();
-		out.print("[");
-		for (int i = 0; i < len; i++)
-		{
-			out.print(buffer.get(i));
-			if (i + 1 < len)
-				out.print(", ");
-		}
-		out.println("]");
+		BufferUtils.printBuffer(buffer, out);
 	}
 	
 	/**
@@ -2174,15 +1533,7 @@ public final class Common
 	 */
 	public static void printBuffer(FloatBuffer buffer, PrintStream out)
 	{
-		int len = buffer.capacity();
-		out.print("[");
-		for (int i = 0; i < len; i++)
-		{
-			out.print(buffer.get(i));
-			if (i + 1 < len)
-				out.print(", ");
-		}
-		out.println("]");
+		BufferUtils.printBuffer(buffer, out);
 	}
 	
 	/**
@@ -2193,15 +1544,7 @@ public final class Common
 	 */
 	public static void printBuffer(LongBuffer buffer, PrintStream out)
 	{
-		int len = buffer.capacity();
-		out.print("[");
-		for (int i = 0; i < len; i++)
-		{
-			out.print(buffer.get(i));
-			if (i + 1 < len)
-				out.print(", ");
-		}
-		out.println("]");
+		BufferUtils.printBuffer(buffer, out);
 	}
 	
 	/**
@@ -2212,15 +1555,7 @@ public final class Common
 	 */
 	public static void printBuffer(DoubleBuffer buffer, PrintStream out)
 	{
-		int len = buffer.capacity();
-		out.print("[");
-		for (int i = 0; i < len; i++)
-		{
-			out.print(buffer.get(i));
-			if (i + 1 < len)
-				out.print(", ");
-		}
-		out.println("]");
+		BufferUtils.printBuffer(buffer, out);
 	}
 	
 	/**
@@ -2243,24 +1578,7 @@ public final class Common
 	 */
 	public static boolean isEmpty(Object obj)
 	{
-		if (obj == null)
-			return true;
-		else if (Reflect.isArray(obj))
-			return Array.getLength(obj) == 0;
-		else if (obj instanceof Boolean)
-			return !((Boolean)obj);
-		else if (obj instanceof Character)
-			return ((Character)obj) == '\0';
-		else if (obj instanceof Number)
-			return ((Number)obj).doubleValue() == 0.0;
-		else if (obj instanceof String)
-			return ((String)obj).trim().length() == 0;
-		else if (obj instanceof Collection<?>)
-			return ((Collection<?>)obj).isEmpty();
-		else if (obj instanceof Sizable)
-			return ((Sizable)obj).isEmpty();
-		
-		return false;
+		return ObjectUtils.isEmpty(obj);
 	}
 	
 	/**
@@ -2272,10 +1590,7 @@ public final class Common
 	 */
 	public static boolean parseBoolean(String s)
 	{
-		if (s == null || !s.equalsIgnoreCase("true"))
-			return false;
-		else
-			return true;
+		return ValueUtils.parseBoolean(s);
 	}
 
 	/**
@@ -2286,13 +1601,7 @@ public final class Common
 	 */
 	public static byte parseByte(String s)
 	{
-		if (s == null)
-			return 0;
-		try {
-			return Byte.parseByte(s);
-		} catch (NumberFormatException e) {
-			return 0;
-		}
+		return ValueUtils.parseByte(s);
 	}
 	
 	/**
@@ -2303,13 +1612,7 @@ public final class Common
 	 */
 	public static short parseShort(String s)
 	{
-		if (s == null)
-			return 0;
-		try {
-			return Short.parseShort(s);
-		} catch (NumberFormatException e) {
-			return 0;
-		}
+		return ValueUtils.parseShort(s);
 	}
 	
 	/**
@@ -2320,10 +1623,7 @@ public final class Common
 	 */
 	public static char parseChar(String s)
 	{
-		if (isEmpty(s))
-			return '\0';
-		else
-			return s.charAt(0);
+		return ValueUtils.parseChar(s);
 	}
 	
 	/**
@@ -2334,13 +1634,7 @@ public final class Common
 	 */
 	public static int parseInt(String s)
 	{
-		if (s == null)
-			return 0;
-		try {
-			return Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return 0;
-		}
+		return ValueUtils.parseInt(s);
 	}
 	
 	/**
@@ -2351,13 +1645,7 @@ public final class Common
 	 */
 	public static long parseLong(String s)
 	{
-		if (s == null)
-			return 0L;
-		try {
-			return Long.parseLong(s);
-		} catch (NumberFormatException e) {
-			return 0L;
-		}
+		return ValueUtils.parseLong(s);
 	}
 	
 	/**
@@ -2368,13 +1656,7 @@ public final class Common
 	 */
 	public static float parseFloat(String s)
 	{
-		if (s == null)
-			return 0f;
-		try {
-			return Float.parseFloat(s);
-		} catch (NumberFormatException e) {
-			return 0f;
-		}
+		return ValueUtils.parseFloat(s);
 	}
 	
 	/**
@@ -2385,13 +1667,7 @@ public final class Common
 	 */
 	public static double parseDouble(String s)
 	{
-		if (s == null)
-			return 0.0;
-		try {
-			return Double.parseDouble(s);
-		} catch (NumberFormatException e) {
-			return 0.0;
-		}
+		return ValueUtils.parseDouble(s);
 	}
 
 	/**
@@ -2404,12 +1680,7 @@ public final class Common
 	 */
 	public static boolean parseBoolean(String s, boolean def)
 	{
-		if (isEmpty(s))
-			return def;
-		else if (!s.equalsIgnoreCase("true"))
-			return false;
-		else
-			return true;
+		return ValueUtils.parseBoolean(s, def);
 	}
 
 	/**
@@ -2421,13 +1692,7 @@ public final class Common
 	 */
 	public static byte parseByte(String s, byte def)
 	{
-		if (isEmpty(s))
-			return def;
-		try {
-			return Byte.parseByte(s);
-		} catch (NumberFormatException e) {
-			return 0;
-		}
+		return ValueUtils.parseByte(s, def);
 	}
 
 	/**
@@ -2439,13 +1704,7 @@ public final class Common
 	 */
 	public static short parseShort(String s, short def)
 	{
-		if (isEmpty(s))
-			return def;
-		try {
-			return Short.parseShort(s);
-		} catch (NumberFormatException e) {
-			return 0;
-		}
+		return ValueUtils.parseShort(s, def);
 	}
 
 	/**
@@ -2457,10 +1716,7 @@ public final class Common
 	 */
 	public static char parseChar(String s, char def)
 	{
-		if (isEmpty(s))
-			return def;
-		else
-			return s.charAt(0);
+		return ValueUtils.parseChar(s, def);
 	}
 
 	/**
@@ -2472,13 +1728,7 @@ public final class Common
 	 */
 	public static int parseInt(String s, int def)
 	{
-		if (isEmpty(s))
-			return def;
-		try {
-			return Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return 0;
-		}
+		return ValueUtils.parseInt(s, def);
 	}
 
 	/**
@@ -2490,13 +1740,7 @@ public final class Common
 	 */
 	public static long parseLong(String s, long def)
 	{
-		if (isEmpty(s))
-			return def;
-		try {
-			return Long.parseLong(s);
-		} catch (NumberFormatException e) {
-			return 0L;
-		}
+		return ValueUtils.parseLong(s, def);
 	}
 
 	/**
@@ -2508,13 +1752,7 @@ public final class Common
 	 */
 	public static float parseFloat(String s, float def)
 	{
-		if (isEmpty(s))
-			return def;
-		try {
-			return Float.parseFloat(s);
-		} catch (NumberFormatException e) {
-			return 0f;
-		}
+		return ValueUtils.parseFloat(s, def);
 	}
 
 	/**
@@ -2526,13 +1764,7 @@ public final class Common
 	 */
 	public static double parseDouble(String s, double def)
 	{
-		if (isEmpty(s))
-			return def;
-		try {
-			return Double.parseDouble(s);
-		} catch (NumberFormatException e) {
-			return 0.0;
-		}
+		return ValueUtils.parseDouble(s, def);
 	}
 	
 	/**
@@ -2549,7 +1781,7 @@ public final class Common
 	 */
 	public static boolean[] parseBooleanArray(String s, boolean[] def)
 	{
-		return parseBooleanArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+		return ValueUtils.parseBooleanArray(s, def);
 	}
 	
 	/**
@@ -2566,7 +1798,7 @@ public final class Common
 	 */
 	public static byte[] parseByteArray(String s, byte[] def)
 	{
-		return parseByteArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+		return ValueUtils.parseByteArray(s, def);
 	}
 	
 	/**
@@ -2583,7 +1815,7 @@ public final class Common
 	 */
 	public static short[] parseShortArray(String s, short[] def)
 	{
-		return parseShortArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+		return ValueUtils.parseShortArray(s, def);
 	}
 	
 	/**
@@ -2600,7 +1832,7 @@ public final class Common
 	 */
 	public static char[] parseCharArray(String s, char[] def)
 	{
-		return parseCharArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+		return ValueUtils.parseCharArray(s, def);
 	}
 	
 	/**
@@ -2617,7 +1849,7 @@ public final class Common
 	 */
 	public static int[] parseIntArray(String s, int[] def)
 	{
-		return parseIntArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+		return ValueUtils.parseIntArray(s, def);
 	}
 	
 	/**
@@ -2634,7 +1866,7 @@ public final class Common
 	 */
 	public static float[] parseFloatArray(String s, float[] def)
 	{
-		return parseFloatArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+		return ValueUtils.parseFloatArray(s, def);
 	}
 	
 	/**
@@ -2651,7 +1883,7 @@ public final class Common
 	 */
 	public static long[] parseLongArray(String s, long[] def)
 	{
-		return parseLongArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+		return ValueUtils.parseLongArray(s, def);
 	}
 	
 	/**
@@ -2668,7 +1900,7 @@ public final class Common
 	 */
 	public static double[] parseDoubleArray(String s, double[] def)
 	{
-		return parseDoubleArray(s, PARSE_ARRAY_SEPARATOR_PATTERN, def);
+		return ValueUtils.parseDoubleArray(s, def);
 	}
 	
 	/**
@@ -2684,14 +1916,7 @@ public final class Common
 	 */
 	public static boolean[] parseBooleanArray(String s, String separatorRegex, boolean[] def)
 	{
-		if (isEmpty(s))
-			return def;
-		String[] tokens = s.split(separatorRegex);
-		boolean[] out = new boolean[tokens.length];
-		int i = 0;
-		for (String token : tokens)
-			out[i++] = parseBoolean(token);
-		return out;
+		return ValueUtils.parseBooleanArray(s, separatorRegex, def);
 	}
 
 	/**
@@ -2707,14 +1932,7 @@ public final class Common
 	 */
 	public static byte[] parseByteArray(String s, String separatorRegex, byte[] def)
 	{
-		if (isEmpty(s))
-			return def;
-		String[] tokens = s.split(separatorRegex);
-		byte[] out = new byte[tokens.length];
-		int i = 0;
-		for (String token : tokens)
-			out[i++] = parseByte(token);
-		return out;
+		return ValueUtils.parseByteArray(s, separatorRegex, def);
 	}
 
 	/**
@@ -2730,14 +1948,7 @@ public final class Common
 	 */
 	public static short[] parseShortArray(String s, String separatorRegex, short[] def)
 	{
-		if (isEmpty(s))
-			return def;
-		String[] tokens = s.split(separatorRegex);
-		short[] out = new short[tokens.length];
-		int i = 0;
-		for (String token : tokens)
-			out[i++] = parseShort(token);
-		return out;
+		return ValueUtils.parseShortArray(s, separatorRegex, def);
 	}
 
 	/**
@@ -2753,14 +1964,7 @@ public final class Common
 	 */
 	public static char[] parseCharArray(String s, String separatorRegex, char[] def)
 	{
-		if (isEmpty(s))
-			return def;
-		String[] tokens = s.split(separatorRegex);
-		char[] out = new char[tokens.length];
-		int i = 0;
-		for (String token : tokens)
-			out[i++] = parseChar(token);
-		return out;
+		return ValueUtils.parseCharArray(s, separatorRegex, def);
 	}
 
 	/**
@@ -2776,14 +1980,7 @@ public final class Common
 	 */
 	public static int[] parseIntArray(String s, String separatorRegex, int[] def)
 	{
-		if (isEmpty(s))
-			return def;
-		String[] tokens = s.split(separatorRegex);
-		int[] out = new int[tokens.length];
-		int i = 0;
-		for (String token : tokens)
-			out[i++] = parseInt(token);
-		return out;
+		return ValueUtils.parseIntArray(s, separatorRegex, def);
 	}
 
 	/**
@@ -2799,14 +1996,7 @@ public final class Common
 	 */
 	public static float[] parseFloatArray(String s, String separatorRegex, float[] def)
 	{
-		if (isEmpty(s))
-			return def;
-		String[] tokens = s.split(separatorRegex);
-		float[] out = new float[tokens.length];
-		int i = 0;
-		for (String token : tokens)
-			out[i++] = parseFloat(token);
-		return out;
+		return ValueUtils.parseFloatArray(s, separatorRegex, def);
 	}
 
 	/**
@@ -2822,14 +2012,7 @@ public final class Common
 	 */
 	public static long[] parseLongArray(String s, String separatorRegex, long[] def)
 	{
-		if (isEmpty(s))
-			return def;
-		String[] tokens = s.split(separatorRegex);
-		long[] out = new long[tokens.length];
-		int i = 0;
-		for (String token : tokens)
-			out[i++] = parseLong(token);
-		return out;
+		return ValueUtils.parseLongArray(s, separatorRegex, def);
 	}
 
 	/**
@@ -2845,14 +2028,7 @@ public final class Common
 	 */
 	public static double[] parseDoubleArray(String s, String separatorRegex, double[] def)
 	{
-		if (isEmpty(s))
-			return def;
-		String[] tokens = s.split(separatorRegex);
-		double[] out = new double[tokens.length];
-		int i = 0;
-		for (String token : tokens)
-			out[i++] = parseDouble(token);
-		return out;
+		return ValueUtils.parseDoubleArray(s, separatorRegex, def);
 	}
 
 	/**
@@ -2866,10 +2042,7 @@ public final class Common
 	 */
 	public static <T> T arrayElement(T[] array, int index)
 	{
-		if (index < 0 || index >= array.length)
-			return null;
-		else
-			return array[index];
+		return ArrayUtils.arrayElement(array, index);
 	}
 	
 	/**
@@ -2882,9 +2055,7 @@ public final class Common
 	 */
 	public static <T> void arraySwap(T[] array, int a, int b)
 	{
-		T temp = array[a];
-		array[a] = array[b];
-		array[b] = temp;
+		ArrayUtils.arraySwap(array, a, b);
 	}
 
 	/**
@@ -2899,22 +2070,7 @@ public final class Common
 	@SuppressWarnings("unchecked")
 	public static <T> T[] joinArrays(T[]...  arrays)
 	{
-		int totalLen = 0;
-		for (T[] a : arrays)
-			if (a != null)
-				totalLen += a.length;
-		
-		Class<?> type = Reflect.getArrayType(arrays);
-		T[] out = (T[])Array.newInstance(type, totalLen);
-		
-		int offs = 0;
-		for (T[] a : arrays)
-		{
-			System.arraycopy(a, 0, out, offs, a.length);
-			offs += a.length;
-		}
-		
-		return out;
+		return ArrayUtils.joinArrays(arrays);
 	}
 	
 	/**
@@ -2933,8 +2089,7 @@ public final class Common
 	 */
 	public static <T extends Comparable<T>> int addSorted(T[] array, T object, int start)
 	{
-		array[start] = object;
-		return sortFrom(array, start);
+		return ArrayUtils.addSorted(array, object, start);
 	}
 	
 	/**
@@ -2954,8 +2109,7 @@ public final class Common
 	 */
 	public static <T> int addSorted(T[] array, T object, int start, Comparator<T> comparator)
 	{
-		array[start] = object;
-		return sortFrom(array, start, comparator);
+		return ArrayUtils.addSorted(array, object, start, comparator);
 	}
 	
 	/**
@@ -2974,10 +2128,7 @@ public final class Common
 	 */
 	public static <T extends Comparable<T>> int addSortedUnique(T[] array, T object, int start)
 	{
-		if (Arrays.binarySearch(array, 0, start, object) < 0)
-			return addSorted(array, object, start);
-		else
-			return -1;
+		return ArrayUtils.addSortedUnique(array, object, start);
 	}
 	
 	/**
@@ -2997,10 +2148,7 @@ public final class Common
 	 */
 	public static <T> int addSortedUnique(T[] array, T object, int start, Comparator<T> comparator)
 	{
-		if (Arrays.binarySearch(array, 0, start, object, comparator) < 0)
-			return addSorted(array, object, start, comparator);
-		else
-			return -1;
+		return ArrayUtils.addSortedUnique(array, object, start, comparator);
 	}
 	
 	/**
@@ -3013,12 +2161,7 @@ public final class Common
 	 */
 	public static <T extends Comparable<T>> int sortFrom(T[] array, int index)
 	{
-		while (index > 0 && array[index].compareTo(array[index - 1]) < 0)
-		{
-			arraySwap(array, index, index - 1);
-			index--;
-		}
-		return index;
+		return ArrayUtils.sortFrom(array, index);
 	}
 	
 	/**
@@ -3032,12 +2175,7 @@ public final class Common
 	 */
 	public static <T> int sortFrom(T[] array, int index, Comparator<? super T> comparator)
 	{
-		while (index > 0 && comparator.compare(array[index], array[index - 1]) < 0)
-		{
-			arraySwap(array, index, index - 1);
-			index--;
-		}
-		return index;
+		return ArrayUtils.sortFrom(array, index, comparator);
 	}
 	
 	/**
@@ -3050,7 +2188,7 @@ public final class Common
 	 */
 	public static <T extends Comparable<T>> void quicksort(T[] array)
 	{
-		quicksort(array, 0, array.length - 1);
+		ArrayUtils.quicksort(array);
 	}
 	
 	/**
@@ -3064,7 +2202,7 @@ public final class Common
 	 */
 	public static <T> void quicksort(T[] array, Comparator<? super T> comparator)
 	{
-		quicksort(array, 0, array.length - 1, comparator);
+		ArrayUtils.quicksort(array, comparator);
 	}
 	
 	/**
@@ -3079,11 +2217,7 @@ public final class Common
 	 */
 	public static <T extends Comparable<T>> void quicksort(T[] array, int lo, int hi)
 	{
-		if (lo >= hi)
-			return;
-        int p = quicksortPartition(array, lo, hi);
-        quicksort(array, lo, p - 1);
-        quicksort(array, p + 1, hi);
+		ArrayUtils.quicksort(array, lo, hi);
 	}
 	
 	/**
@@ -3099,45 +2233,7 @@ public final class Common
 	 */
 	public static <T> void quicksort(T[] array, int lo, int hi, Comparator<? super T> comparator)
 	{
-		if (lo >= hi)
-			return;
-        int p = quicksortPartition(array, lo, hi, comparator);
-        quicksort(array, lo, p - 1, comparator);
-        quicksort(array, p + 1, hi, comparator);
-	}
-	
-	// Do quicksort partition - pivot sort.
-	private static <T extends Comparable<T>> int quicksortPartition(T[] array, int lo, int hi)
-	{
-		T pivot = array[hi];
-	    int i = lo;
-	    for (int j = lo; j <= hi - 1; j++)
-	    {
-	        if (array[j].compareTo(pivot) <= 0)
-	        {
-	        	arraySwap(array, i, j);
-	            i++;
-	        }
-	    }
-    	arraySwap(array, i, hi);
-	    return i;
-	}
-	
-	// Do quicksort partition - pivot sort.
-	private static <T> int quicksortPartition(T[] array, int lo, int hi, Comparator<? super T> comparator)
-	{
-		T pivot = array[hi];
-	    int i = lo;
-	    for (int j = lo; j <= hi - 1; j++)
-	    {
-	        if (comparator.compare(array[j], pivot) <= 0)
-	        {
-	        	arraySwap(array, i, j);
-	            i++;
-	        }
-	    }
-    	arraySwap(array, i, hi);
-	    return i;
+		ArrayUtils.quicksort(array, lo, hi, comparator);
 	}
 	
 	/**
@@ -3154,10 +2250,7 @@ public final class Common
 	 */
 	public static <T> int arrayCopyToNull(T[] source, int sourceOffset, T[] destination, int destinationOffset)
 	{
-		int s;
-		for (s = 0; s + sourceOffset < source.length && source[s + sourceOffset] != null; s++)
-			destination[s + destinationOffset] = source[s + sourceOffset];
-		return s;
+		return ArrayUtils.arrayCopyToNull(source, sourceOffset, destination, destinationOffset);
 	}
 	
 	
@@ -3170,14 +2263,7 @@ public final class Common
 	 */
 	public static String joinStrings(String separator, String... strings)
 	{
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < strings.length; i++)
-		{
-			sb.append(strings[i]);
-			if (i < strings.length - 1)
-				sb.append(separator);
-		}
-		return sb.toString();
+		return StringUtils.joinStrings(separator, strings);
 	}
 	
 	/**
@@ -3190,14 +2276,7 @@ public final class Common
 	 */
 	public static String joinStrings(int startIndex, String separator, String... strings)
 	{
-		StringBuilder sb = new StringBuilder();
-		for (int i = startIndex; i < strings.length; i++)
-		{
-			sb.append(strings[i]);
-			if (!Common.isEmpty(separator) && i < strings.length - 1)
-				sb.append(separator);
-		}
-		return sb.toString();
+		return StringUtils.joinStrings(startIndex, separator, strings);
 	}
 	
 	/**
@@ -3209,15 +2288,7 @@ public final class Common
 	 */
 	public static String joinStrings(String separator, Iterable<String> strings)
 	{
-		StringBuilder sb = new StringBuilder();
-		Iterator<String> it = strings.iterator();
-		while(it.hasNext())
-		{
-			sb.append(it.next());
-			if (it.hasNext())
-				sb.append(separator);
-		}
-		return sb.toString();
+		return StringUtils.joinStrings(separator, strings);
 	}
 	
 	/**
@@ -3228,8 +2299,7 @@ public final class Common
 	 */
 	public static void close(Closeable c)
 	{
-		if (c == null) return;
-		try { c.close(); } catch (IOException e){}
+		IOUtils.close(c);
 	}
 	
 	/**
@@ -3240,8 +2310,7 @@ public final class Common
 	 */
 	public static void close(AutoCloseable c)
 	{
-		if (c == null) return;
-		try { c.close(); } catch (Exception e){}
+		IOUtils.close(c);
 	}
 	
 	/**
@@ -3253,7 +2322,7 @@ public final class Common
 	 */
 	public static Object getLocal(String key)
 	{
-		return THREADLOCAL_HASHMAP.get().get(key);
+		return ThreadUtils.getLocal(key);
 	}
 
 	/**
@@ -3266,7 +2335,7 @@ public final class Common
 	 */
 	public static void setLocal(String key, Object object)
 	{
-		THREADLOCAL_HASHMAP.get().put(key, object);
+		ThreadUtils.setLocal(key, object);
 	}
 
 	/**
@@ -3284,23 +2353,9 @@ public final class Common
 	 * @throws IllegalArgumentException if clazz.getCannonicalName() would return null.
 	 * @throws NullPointerException if clazz is null.
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T getLocal(Class<T> clazz)
 	{
-		String className = clazz.getCanonicalName();
-		if (className == null)
-			throw new IllegalArgumentException("Provided class must be anonymous, primitive, or has no cannonical name.");
-		
-		T out;
-		HashMap<String, Object> objectMap = THREADLOCAL_HASHMAP.get();
-		String classKey = "$$" + className;
-		
-		if (!objectMap.containsKey(classKey))
-			setLocal(classKey, out = Reflect.create(clazz));
-		else
-			out = (T)getLocal(classKey);
-		
-		return out;
+		return ThreadUtils.getLocal(clazz);
 	}
 
 	/**

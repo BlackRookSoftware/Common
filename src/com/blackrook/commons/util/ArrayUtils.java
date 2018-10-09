@@ -1,8 +1,10 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
+
+import com.blackrook.commons.Reflect;
 
 /**
  * Simple utility functions around Arrays.

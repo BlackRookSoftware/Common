@@ -1,5 +1,6 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
+import com.blackrook.commons.Reflect;
 import com.blackrook.commons.hash.HashMap;
 
 /**

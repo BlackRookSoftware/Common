@@ -11,12 +11,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-import com.blackrook.commons.ArrayUtils;
 import com.blackrook.commons.ResettableIterable;
 import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.Sizable;
-import com.blackrook.commons.ThreadUtils;
 import com.blackrook.commons.math.Pair;
+import com.blackrook.commons.util.ArrayUtils;
+import com.blackrook.commons.util.ThreadUtils;
 
 /**
  * An object for holding a set of ordered pairs.

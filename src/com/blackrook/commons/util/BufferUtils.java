@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
@@ -16,7 +16,7 @@ import java.nio.ShortBuffer;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class Buffers
+public final class BufferUtils
 {
 	/** The size of a character in bytes. */
 	public static final int SIZEOF_CHAR = Character.SIZE/Byte.SIZE;
@@ -33,7 +33,7 @@ public final class Buffers
 	/** The size of a double in bytes. */
 	public static final int SIZEOF_DOUBLE = Double.SIZE/Byte.SIZE;
 
-	private Buffers() {}
+	private BufferUtils() {}
 
 	/**
 	 * Allocates a DIRECT ByteBuffer using byte array data.

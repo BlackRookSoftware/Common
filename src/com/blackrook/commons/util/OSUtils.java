@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 /**
  * Simple OS utility functions.
@@ -6,7 +6,7 @@ package com.blackrook.commons;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class OS
+public final class OSUtils
 {
 	/** Is this running on an x86 architecture? */
 	private static boolean IS_X86 = false;
@@ -122,7 +122,7 @@ public final class OS
 		HOME_DIR = System.getProperty("user.home");
 	}
 
-	private OS() {}
+	private OSUtils() {}
 
 	/** @return true if we using a Linux distro. */
 	public static boolean isLinux()

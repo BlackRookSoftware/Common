@@ -7,7 +7,7 @@
  ******************************************************************************/
 package com.blackrook.commons.math;
 
-import com.blackrook.commons.ThreadUtils;
+import com.blackrook.commons.util.ThreadUtils;
 
 /**
  * This is a 4x4 Matrix object that stores floats.

@@ -11,9 +11,9 @@ import com.blackrook.commons.ObjectPair;
 import com.blackrook.commons.ResettableIterable;
 import com.blackrook.commons.ResettableIterator;
 import com.blackrook.commons.Sizable;
-import com.blackrook.commons.ThreadUtils;
 import com.blackrook.commons.hash.HashMap;
 import com.blackrook.commons.math.Pair;
+import com.blackrook.commons.util.ThreadUtils;
 
 /**
  * This is a grid that contains a grid of Object data generally used for maps and lookups.

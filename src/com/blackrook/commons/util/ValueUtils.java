@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 /**
  * Simple utility functions around values.
@@ -6,11 +6,11 @@ package com.blackrook.commons;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class Values
+public final class ValueUtils
 {
 	private static final String PARSE_ARRAY_SEPARATOR_PATTERN = "(\\s|\\,)+";
 
-	private Values() {}
+	private ValueUtils() {}
 	
 	/**
 	 * Attempts to parse a boolean from a string.
@@ -69,7 +69,7 @@ public final class Values
 	 */
 	public static char parseChar(String s)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return '\0';
 		else
 			return s.charAt(0);
@@ -153,7 +153,7 @@ public final class Values
 	 */
 	public static boolean parseBoolean(String s, boolean def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		else if (!s.equalsIgnoreCase("true"))
 			return false;
@@ -170,7 +170,7 @@ public final class Values
 	 */
 	public static byte parseByte(String s, byte def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		try {
 			return Byte.parseByte(s);
@@ -188,7 +188,7 @@ public final class Values
 	 */
 	public static short parseShort(String s, short def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		try {
 			return Short.parseShort(s);
@@ -206,7 +206,7 @@ public final class Values
 	 */
 	public static char parseChar(String s, char def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		else
 			return s.charAt(0);
@@ -221,7 +221,7 @@ public final class Values
 	 */
 	public static int parseInt(String s, int def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		try {
 			return Integer.parseInt(s);
@@ -239,7 +239,7 @@ public final class Values
 	 */
 	public static long parseLong(String s, long def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		try {
 			return Long.parseLong(s);
@@ -257,7 +257,7 @@ public final class Values
 	 */
 	public static float parseFloat(String s, float def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		try {
 			return Float.parseFloat(s);
@@ -275,7 +275,7 @@ public final class Values
 	 */
 	public static double parseDouble(String s, double def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		try {
 			return Double.parseDouble(s);
@@ -433,7 +433,7 @@ public final class Values
 	 */
 	public static boolean[] parseBooleanArray(String s, String separatorRegex, boolean[] def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		String[] tokens = s.split(separatorRegex);
 		boolean[] out = new boolean[tokens.length];
@@ -456,7 +456,7 @@ public final class Values
 	 */
 	public static byte[] parseByteArray(String s, String separatorRegex, byte[] def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		String[] tokens = s.split(separatorRegex);
 		byte[] out = new byte[tokens.length];
@@ -479,7 +479,7 @@ public final class Values
 	 */
 	public static short[] parseShortArray(String s, String separatorRegex, short[] def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		String[] tokens = s.split(separatorRegex);
 		short[] out = new short[tokens.length];
@@ -502,7 +502,7 @@ public final class Values
 	 */
 	public static char[] parseCharArray(String s, String separatorRegex, char[] def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		String[] tokens = s.split(separatorRegex);
 		char[] out = new char[tokens.length];
@@ -525,7 +525,7 @@ public final class Values
 	 */
 	public static int[] parseIntArray(String s, String separatorRegex, int[] def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		String[] tokens = s.split(separatorRegex);
 		int[] out = new int[tokens.length];
@@ -548,7 +548,7 @@ public final class Values
 	 */
 	public static float[] parseFloatArray(String s, String separatorRegex, float[] def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		String[] tokens = s.split(separatorRegex);
 		float[] out = new float[tokens.length];
@@ -571,7 +571,7 @@ public final class Values
 	 */
 	public static long[] parseLongArray(String s, String separatorRegex, long[] def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		String[] tokens = s.split(separatorRegex);
 		long[] out = new long[tokens.length];
@@ -594,7 +594,7 @@ public final class Values
 	 */
 	public static double[] parseDoubleArray(String s, String separatorRegex, double[] def)
 	{
-		if (Objects.isEmpty(s))
+		if (ObjectUtils.isEmpty(s))
 			return def;
 		String[] tokens = s.split(separatorRegex);
 		double[] out = new double[tokens.length];

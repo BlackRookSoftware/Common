@@ -26,6 +26,10 @@ import com.blackrook.commons.TypeProfile.MethodSignature;
 import com.blackrook.commons.hash.Hash;
 import com.blackrook.commons.hash.HashMap;
 import com.blackrook.commons.list.List;
+import com.blackrook.commons.util.ArrayUtils;
+import com.blackrook.commons.util.FileUtils;
+import com.blackrook.commons.util.IOUtils;
+import com.blackrook.commons.util.StringUtils;
 
 /**
  * A utility class that holds several helpful Reflection
@@ -778,7 +782,7 @@ public final class Reflect
 	 */
 	public static void addFilesToClassPath(File ... files)
 	{
-		addURLsToClassPath(Files.getURLsForFiles(files));
+		addURLsToClassPath(FileUtils.getURLsForFiles(files));
 	}
 
 	/**
@@ -976,7 +980,7 @@ public final class Reflect
 		{
 			if (url.getProtocol().equals("file"))
 			{
-				String startingPath = Strings.urlUnescape(url.getPath().substring(1));
+				String startingPath = StringUtils.urlUnescape(url.getPath().substring(1));
 				File file = new File(startingPath);
 				if (file.isDirectory())
 					scanDirectory(prefix, outList, startingPath, file);
@@ -989,7 +993,7 @@ public final class Reflect
 	// Scans a directory for classes.
 	private static void scanDirectory(String prefix, List<String> outList, String startingPath, File file)
 	{
-		for (File f : Files.explodeFiles(file))
+		for (File f : FileUtils.explodeFiles(file))
 		{
 			String path = f.getPath();
 			int classExtIndex = path.endsWith(".class") ? path.indexOf(".class") : -1;
@@ -1027,7 +1031,7 @@ public final class Reflect
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
-			IO.close(jarFile);
+			IOUtils.close(jarFile);
 		}
 	}
 	
@@ -1056,7 +1060,7 @@ public final class Reflect
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
-			IO.close(jmodFile);
+			IOUtils.close(jmodFile);
 		}
 	}
 	

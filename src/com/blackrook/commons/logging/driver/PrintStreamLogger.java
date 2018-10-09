@@ -12,9 +12,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 
-import com.blackrook.commons.IO;
 import com.blackrook.commons.logging.LoggingDriver;
 import com.blackrook.commons.logging.LoggingFactory.LogLevel;
+import com.blackrook.commons.util.IOUtils;
 
 /**
  * A standard logger for outputting to a print stream.
@@ -48,7 +48,7 @@ public class PrintStreamLogger implements LoggingDriver
 			throwable.printStackTrace(pw);
 			pw.flush();
 			pw.close();
-			IO.close(sw);
+			IOUtils.close(sw);
 			out.println(sw);
 		}
 	}

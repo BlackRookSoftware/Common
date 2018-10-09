@@ -1,7 +1,10 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+
+import com.blackrook.commons.Reflect;
+import com.blackrook.commons.Sizable;
 
 /**
  * Simple utility functions around plain objects.
@@ -9,9 +12,9 @@ import java.util.Collection;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class Objects
+public final class ObjectUtils
 {
-	private Objects() {}
+	private ObjectUtils() {}
 
 	/**
 	 * Returns the first object if it is not null, otherwise returns the second. 

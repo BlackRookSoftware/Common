@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,9 +21,9 @@ import com.blackrook.commons.math.RMath;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class Files
+public final class FileUtils
 {
-	private Files() {}
+	private FileUtils() {}
 
 	/**
 	 * Creates a blank file or updates its last modified date.
@@ -72,11 +72,12 @@ public final class Files
 	 * @param file the file to delete.
 	 * @param passes the amount of passes for overwriting this file.
 	 * The last pass is always zero-filled. If less than 1, it is 1.
+	 * @return true if the file was deleted, false otherwise.
 	 * @throws FileNotFoundException if the file does not exist.
 	 * @throws IOException if the delete cannot be completed.
 	 * @since 2.9.0
 	 */
-	public static void secureDelete(File file, int passes) throws IOException
+	public static boolean secureDelete(File file, int passes) throws IOException
 	{
 		passes = passes < 1 ? 1 : passes;
 		boolean bitval = passes == 1 ? false : (passes % 2) == 0;
@@ -84,21 +85,24 @@ public final class Files
 		// Overwrite.
 		RandomAccessFile raf = new RandomAccessFile(file, "rws");
 		FileLock lock = raf.getChannel().lock();
-		byte[] buffer = new byte[65536];
-		while (passes-- > 0)
-		{
-			Arrays.fill(buffer, (byte)(bitval ? 0xFF : 0x00));
-			long end = raf.length();
-			raf.seek(0L);
-			long n = 0L;
-			while (n < end)
+		try {
+			byte[] buffer = new byte[65536];
+			while (passes-- > 0)
 			{
-				raf.write(buffer, 0, Math.min(buffer.length, (int)(end - n)));
-				n = raf.getFilePointer();
+				Arrays.fill(buffer, (byte)(bitval ? 0xFF : 0x00));
+				long end = raf.length();
+				raf.seek(0L);
+				long n = 0L;
+				while (n < end)
+				{
+					raf.write(buffer, 0, Math.min(buffer.length, (int)(end - n)));
+					n = raf.getFilePointer();
+				}
 			}
+		} finally {
+			lock.release();
+			raf.close();
 		}
-		lock.release();
-		raf.close();
 		
 		// Overwrite filename.
 		String newName = null;
@@ -113,7 +117,7 @@ public final class Files
 			file = ren;
 		}
 		
-		file.delete();
+		return file.delete();
 	}
 
 	/**
@@ -223,7 +227,7 @@ public final class Files
 			targetPath.push(target);
 		}
 		
-		if (OS.isWindows())
+		if (OSUtils.isWindows())
 		{
 			String sroot = sourcePath.peek().getPath();
 			String troot = targetPath.peek().getPath();
@@ -353,7 +357,7 @@ public final class Files
 	 */
 	public static boolean matchWildcardPattern(String pattern, File target)
 	{
-		return matchWildcardPattern(pattern, target, OS.isWindows() ? true : false);
+		return matchWildcardPattern(pattern, target, OSUtils.isWindows() ? true : false);
 	}
 
 	/**
@@ -513,8 +517,8 @@ public final class Files
 	{
 		Queue<File> out = new Queue<File>();
 		
-		boolean slashAgnostic = OS.isWindows();
-		boolean caseInsensitive = OS.isWindows();
+		boolean slashAgnostic = OSUtils.isWindows();
+		boolean caseInsensitive = OSUtils.isWindows();
 		
 		String parent = null;
 		String name = null;

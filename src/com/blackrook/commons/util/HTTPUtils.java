@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,12 +18,12 @@ import java.util.Arrays;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class HTTP
+public final class HTTPUtils
 {
 	// Keep alphabetical.
 	private static final String[] VALID_HTTP = new String[]{"http", "https"};
 
-	private HTTP() {}
+	private HTTPUtils() {}
 	
 	/**
 	 * Gets the content from a opening an HTTP URL, using the default timeout of 30 seconds (30000 milliseconds).
@@ -177,10 +177,10 @@ public final class HTTP
 	        BufferedInputStream in = null;
 	        try {
 	            in = new BufferedInputStream(conn.getInputStream());
-	            IO.relay(in, bos);
+	            IOUtils.relay(in, bos);
 	            out.content = bos.toByteArray();
 	        } finally {
-	        	IO.close(in);
+	        	IOUtils.close(in);
 	        }
 	    }
 	
@@ -232,17 +232,17 @@ public final class HTTP
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(conn.getInputStream());
-			return IO.getBinaryContents(in);
+			return IOUtils.getBinaryContents(in);
 		} catch (IOException e) {
 			throw e;
 		} finally {
-			IO.close(in);
+			IOUtils.close(in);
 			conn.disconnect();
 		}
 	}
 
 	/**
-	 * Gets the byte content from a opening an FTP URL, using a default timeout
+	 * Gets the byte content from a opening a URL, using a default timeout
 	 * of 30 seconds (30000 milliseconds).
 	 * @param url the URL to open and read.
 	 * @return the content from opening an HTTP request.
@@ -256,7 +256,7 @@ public final class HTTP
 	}
 
 	/**
-	 * Gets the byte content from a opening an FTP URL.
+	 * Gets the byte content from a opening a URL.
 	 * @param url the URL to open and read.
 	 * @param socketTimeoutMillis the socket timeout time in milliseconds. 0 is forever.
 	 * @return the content from opening an HTTP request.
@@ -272,11 +272,11 @@ public final class HTTP
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(conn.getInputStream());
-			return IO.getBinaryContents(in);
+			return IOUtils.getBinaryContents(in);
 		} catch (IOException e) {
 			throw e;
 		} finally {
-			IO.close(in);
+			IOUtils.close(in);
 		}
 	}
 

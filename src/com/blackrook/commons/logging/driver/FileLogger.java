@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
-import com.blackrook.commons.IO;
 import com.blackrook.commons.logging.LoggingDriver;
 import com.blackrook.commons.logging.LoggingFactory.LogLevel;
+import com.blackrook.commons.util.IOUtils;
 
 /**
  * A logging driver that writes to a text file.
@@ -53,7 +53,7 @@ public class FileLogger implements LoggingDriver
 		{
 			if (file != null)
 			{
-				IO.close(writer);
+				IOUtils.close(writer);
 				closeFile(file);
 				writer = null;
 				file = null;

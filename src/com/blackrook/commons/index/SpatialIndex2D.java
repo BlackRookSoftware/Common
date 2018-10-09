@@ -9,11 +9,11 @@ package com.blackrook.commons.index;
 
 import com.blackrook.commons.AbstractVector;
 import com.blackrook.commons.ResettableIterator;
-import com.blackrook.commons.ThreadUtils;
 import com.blackrook.commons.hash.Hash;
 import com.blackrook.commons.linkedlist.Queue;
 import com.blackrook.commons.math.RMath;
 import com.blackrook.commons.math.geometry.Point2D;
+import com.blackrook.commons.util.ThreadUtils;
 
 /**
  * A class to be used for two-dimensional Spatial Hashing in a uniform grid.

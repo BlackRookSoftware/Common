@@ -1,4 +1,4 @@
-package com.blackrook.commons;
+package com.blackrook.commons.util;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -11,9 +11,9 @@ import java.util.Iterator;
  * @author Matthew Tropiano
  * @since 2.32.0
  */
-public final class Strings
+public final class StringUtils
 {
-	private Strings() {}
+	private StringUtils() {}
 	
 	/**
 	 * Makes a new String with escape sequences in it.
@@ -238,7 +238,7 @@ public final class Strings
 		for (int i = startIndex; i < strings.length; i++)
 		{
 			sb.append(strings[i]);
-			if (!Objects.isEmpty(separator) && i < strings.length - 1)
+			if (!ObjectUtils.isEmpty(separator) && i < strings.length - 1)
 				sb.append(separator);
 		}
 		return sb.toString();

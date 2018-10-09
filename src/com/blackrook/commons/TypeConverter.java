@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.blackrook.commons.TypeProfile.MethodSignature;
 import com.blackrook.commons.list.List;
+import com.blackrook.commons.util.ValueUtils;
 
 /**
  * Type converter class for converting types.
@@ -386,33 +387,33 @@ public class TypeConverter
 	protected final <T> T convertString(String memberName, String s, Class<T> targetType)
 	{
 		if (targetType == Boolean.TYPE)
-			return (T)Boolean.valueOf(Values.parseBoolean(s));
+			return (T)Boolean.valueOf(ValueUtils.parseBoolean(s));
 		else if (targetType == Boolean.class)
-			return targetType.cast(Values.parseBoolean(s));
+			return targetType.cast(ValueUtils.parseBoolean(s));
 		else if (targetType == Byte.TYPE)
-			return (T)Byte.valueOf(Values.parseByte(s));
+			return (T)Byte.valueOf(ValueUtils.parseByte(s));
 		else if (targetType == Byte.class)
-			return targetType.cast(Values.parseByte(s));
+			return targetType.cast(ValueUtils.parseByte(s));
 		else if (targetType == Short.TYPE)
-			return (T)Short.valueOf(Values.parseShort(s));
+			return (T)Short.valueOf(ValueUtils.parseShort(s));
 		else if (targetType == Short.class)
-			return targetType.cast(Values.parseShort(s));
+			return targetType.cast(ValueUtils.parseShort(s));
 		else if (targetType == Integer.TYPE)
-			return (T)Integer.valueOf(Values.parseInt(s));
+			return (T)Integer.valueOf(ValueUtils.parseInt(s));
 		else if (targetType == Integer.class)
-			return targetType.cast(Values.parseInt(s));
+			return targetType.cast(ValueUtils.parseInt(s));
 		else if (targetType == Float.TYPE)
-			return (T)Float.valueOf(Values.parseFloat(s));
+			return (T)Float.valueOf(ValueUtils.parseFloat(s));
 		else if (targetType == Float.class)
-			return targetType.cast(Values.parseFloat(s));
+			return targetType.cast(ValueUtils.parseFloat(s));
 		else if (targetType == Long.TYPE)
-			return (T)Long.valueOf(Values.parseLong(s));
+			return (T)Long.valueOf(ValueUtils.parseLong(s));
 		else if (targetType == Long.class)
-			return targetType.cast(Values.parseLong(s));
+			return targetType.cast(ValueUtils.parseLong(s));
 		else if (targetType == Double.TYPE)
-			return (T)Double.valueOf(Values.parseDouble(s));
+			return (T)Double.valueOf(ValueUtils.parseDouble(s));
 		else if (targetType == Double.class)
-			return targetType.cast(Values.parseDouble(s));
+			return targetType.cast(ValueUtils.parseDouble(s));
 		else if (targetType == Character.TYPE && s.length() == 1)
 			return (T)Character.valueOf(s.charAt(0));
 		else if (targetType == Character.class && s.length() == 1)
