@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2019 Black Rook Software
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ ******************************************************************************/
 package com.blackrook.commons.util;
 
 import java.util.concurrent.Callable;
@@ -179,7 +186,7 @@ public final class AsyncUtils
         /**
          * Sets the current progress message on this task.
          * If the provided value is different from the current value, this will alert the listener.
-         * @param current the new current progress.
+         * @param message the new current message.
          */
         public final void setMessage(String message)
         {
@@ -406,7 +413,7 @@ public final class AsyncUtils
 	
 	    /**
 	     * Makes the calling thread wait for this task instance's completion for, at most, the given interval of time.
-		 * @param timeout the maximum time to wait.
+		 * @param time the time to wait.
 		 * @param unit the time unit of the timeout argument.
 		 * @throws InterruptedException if the current thread was interrupted while waiting.
 	     */

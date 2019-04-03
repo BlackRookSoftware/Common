@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2019 Black Rook Software
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ ******************************************************************************/
 package com.blackrook.commons.util;
 
 import java.io.BufferedReader;
@@ -5,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,7 +20,6 @@ import java.io.OutputStream;
 
 /**
  * Simple IO utility functions.
- * Split from {@link Common}.
  * @author Matthew Tropiano
  * @since 2.32.0
  */
@@ -292,7 +299,7 @@ public final class IOUtils
 	}
 
 	/**
-	 * Sets the size of the buffer in bytes for {@link Common#relay(InputStream, OutputStream)}.
+	 * Sets the size of the buffer in bytes for {@link #relay(InputStream, OutputStream)}.
 	 * Although you may not encounter this problem, it would be unwise to set this during a call to relay().
 	 * Size cannot be 0 or less.
 	 * @param size the size of the relay buffer. 
@@ -305,7 +312,7 @@ public final class IOUtils
 	}
 
 	/**
-	 * @return the size of the relay buffer for {@link Common#relay(InputStream, OutputStream)} in bytes.
+	 * @return the size of the relay buffer for {@link #relay(InputStream, OutputStream)} in bytes.
 	 */
 	public static int getRelayBufferSize()
 	{

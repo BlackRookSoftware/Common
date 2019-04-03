@@ -1,8 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2019 Black Rook Software
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ ******************************************************************************/
 package com.blackrook.commons.util;
 
 /**
  * Simple utility functions around values.
- * Split from {@link Common}.
  * @author Matthew Tropiano
  * @since 2.32.0
  */
@@ -294,7 +300,7 @@ public final class ValueUtils
 	 * @param def the fallback value to return.
 	 * @return the array of booleans or def if the input string is blank.
 	 * @since 2.17.0
-	 * @see Common#parseBoolean(String)
+	 * @see #parseBoolean(String)
 	 */
 	public static boolean[] parseBooleanArray(String s, boolean[] def)
 	{
@@ -311,7 +317,7 @@ public final class ValueUtils
 	 * @param def the fallback value to return.
 	 * @return the array of bytes or def if the input string is blank.
 	 * @since 2.17.0
-	 * @see Common#parseByte(String)
+	 * @see #parseByte(String)
 	 */
 	public static byte[] parseByteArray(String s, byte[] def)
 	{
@@ -328,7 +334,7 @@ public final class ValueUtils
 	 * @param def the fallback value to return.
 	 * @return the array of shorts or def if the input string is blank.
 	 * @since 2.17.0
-	 * @see Common#parseShort(String)
+	 * @see #parseShort(String)
 	 */
 	public static short[] parseShortArray(String s, short[] def)
 	{
@@ -345,7 +351,7 @@ public final class ValueUtils
 	 * @param def the fallback value to return.
 	 * @return the array of characters or def if the input string is blank.
 	 * @since 2.17.0
-	 * @see Common#parseChar(String)
+	 * @see #parseChar(String)
 	 */
 	public static char[] parseCharArray(String s, char[] def)
 	{
@@ -362,7 +368,7 @@ public final class ValueUtils
 	 * @param def the fallback value to return.
 	 * @return the array of integers or def if the input string is blank.
 	 * @since 2.17.0
-	 * @see Common#parseInt(String)
+	 * @see #parseInt(String)
 	 */
 	public static int[] parseIntArray(String s, int[] def)
 	{
@@ -379,7 +385,7 @@ public final class ValueUtils
 	 * @param def the fallback value to return.
 	 * @return the array of floats or def if the input string is blank.
 	 * @since 2.17.0
-	 * @see Common#parseFloat(String)
+	 * @see #parseFloat(String)
 	 */
 	public static float[] parseFloatArray(String s, float[] def)
 	{
@@ -396,7 +402,7 @@ public final class ValueUtils
 	 * @param def the fallback value to return.
 	 * @return the array of long integers or def if the input string is blank.
 	 * @since 2.17.0
-	 * @see Common#parseLong(String)
+	 * @see #parseLong(String)
 	 */
 	public static long[] parseLongArray(String s, long[] def)
 	{
@@ -413,7 +419,7 @@ public final class ValueUtils
 	 * @param def the fallback value to return.
 	 * @return the array of doubles or def if the input string is blank.
 	 * @since 2.17.0
-	 * @see Common#parseDouble(String)
+	 * @see #parseDouble(String)
 	 */
 	public static double[] parseDoubleArray(String s, double[] def)
 	{
@@ -429,7 +435,7 @@ public final class ValueUtils
 	 * @return the array of booleans or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
-	 * @see Common#parseBoolean(String)
+	 * @see #parseBoolean(String)
 	 */
 	public static boolean[] parseBooleanArray(String s, String separatorRegex, boolean[] def)
 	{
@@ -452,7 +458,7 @@ public final class ValueUtils
 	 * @return the array of bytes or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
-	 * @see Common#parseByte(String)
+	 * @see #parseByte(String)
 	 */
 	public static byte[] parseByteArray(String s, String separatorRegex, byte[] def)
 	{
@@ -475,7 +481,7 @@ public final class ValueUtils
 	 * @return the array of shorts or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
-	 * @see Common#parseShort(String)
+	 * @see #parseShort(String)
 	 */
 	public static short[] parseShortArray(String s, String separatorRegex, short[] def)
 	{
@@ -498,7 +504,7 @@ public final class ValueUtils
 	 * @return the array of characters or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
-	 * @see Common#parseChar(String)
+	 * @see #parseChar(String)
 	 */
 	public static char[] parseCharArray(String s, String separatorRegex, char[] def)
 	{
@@ -521,7 +527,7 @@ public final class ValueUtils
 	 * @return the array of integers or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
-	 * @see Common#parseInt(String)
+	 * @see #parseInt(String)
 	 */
 	public static int[] parseIntArray(String s, String separatorRegex, int[] def)
 	{
@@ -544,7 +550,7 @@ public final class ValueUtils
 	 * @return the array of floats or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
-	 * @see Common#parseFloat(String)
+	 * @see #parseFloat(String)
 	 */
 	public static float[] parseFloatArray(String s, String separatorRegex, float[] def)
 	{
@@ -567,7 +573,7 @@ public final class ValueUtils
 	 * @return the array of long integers or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
-	 * @see Common#parseLong(String)
+	 * @see #parseLong(String)
 	 */
 	public static long[] parseLongArray(String s, String separatorRegex, long[] def)
 	{
@@ -590,7 +596,7 @@ public final class ValueUtils
 	 * @return the array of doubles or def if the input string is blank.
 	 * @throws NullPointerException if separatorRegex is null.
 	 * @since 2.17.0
-	 * @see Common#parseDouble(String)
+	 * @see #parseDouble(String)
 	 */
 	public static double[] parseDoubleArray(String s, String separatorRegex, double[] def)
 	{
