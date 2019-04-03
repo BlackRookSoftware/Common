@@ -5,6 +5,7 @@ Slated for 2.32.0
 
 - Split Common class to specific classes - this will cut down size for minimizing
   distributions and other minified packages.
+- Added AsyncUtils.
 
 
 Changed in 2.31.5

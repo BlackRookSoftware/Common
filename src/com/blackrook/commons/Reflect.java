@@ -1035,7 +1035,7 @@ public final class Reflect
 		}
 	}
 	
-	// Scans a JAR file
+	// Scans a JMOD file
 	private static void scanJMODFile(String prefix, List<String> outList, File file)
 	{
 		ZipFile jmodFile = null;
