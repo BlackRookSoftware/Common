@@ -1,6 +1,6 @@
 Commons (C) Black Rook Software, All rights reserved.
 
-Slated for 2.32.0
+Changed in 2.32.0
 =================
 
 - Split Common class to specific classes - this will cut down size for minimizing
