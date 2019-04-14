@@ -1,5 +1,11 @@
 Commons (C) Black Rook Software, All rights reserved.
 
+Slated for 2.33.0
+=================
+
+- Added AsyncUtils.spawn(Process ...).
+
+
 Changed in 2.32.0
 =================
 
